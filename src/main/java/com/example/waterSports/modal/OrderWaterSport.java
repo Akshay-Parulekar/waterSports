@@ -21,11 +21,10 @@ public class OrderWaterSport
     Boolean br;
     Boolean sebr;
     Boolean slbr;
-    Boolean para;
     @CreationTimestamp
     LocalDate date;
 
-    public OrderWaterSport(Long billNo, String customerName, String contact, Double rate, Integer nPerson, Boolean jsr, Boolean br, Boolean sebr, Boolean slbr, Boolean para) {
+    public OrderWaterSport(Long billNo, String customerName, String contact, Double rate, Integer nPerson, Boolean jsr, Boolean br, Boolean sebr, Boolean slbr) {
         this.billNo = billNo;
         this.customerName = customerName;
         this.contact = contact;
@@ -35,7 +34,6 @@ public class OrderWaterSport
         this.br = br;
         this.sebr = sebr;
         this.slbr = slbr;
-        this.para = para;
     }
 
     public Long getId() {
@@ -118,14 +116,6 @@ public class OrderWaterSport
         this.slbr = slbr;
     }
 
-    public Boolean getPara() {
-        return para;
-    }
-
-    public void setPara(Boolean para) {
-        this.para = para;
-    }
-
     public LocalDate getDate() {
         return date;
     }
@@ -147,7 +137,6 @@ public class OrderWaterSport
                 ", br=" + br +
                 ", sebr=" + sebr +
                 ", slbr=" + slbr +
-                ", para=" + para +
                 ", date=" + date +
                 '}';
     }

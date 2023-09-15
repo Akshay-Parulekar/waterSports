@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,10 +17,22 @@ import java.util.List;
 public class WaterSportController
 {
     @Autowired
-    OrderWaterSportRepo waterRepo;
+    OrderWaterSportRepo repo;
 
     @GetMapping("/")
-    public String showData(LocalDate startDate, LocalDate endDate, Model model)
+    public String showData(Model model)
+    {
+
+        LocalDate startDate = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+        LocalDate endDate = LocalDate.now();
+
+        List<OrderWaterSport> list = repo.findByDateBetween(startDate, endDate);
+        model.addAttribute("list", list);
+        return "waterSport";
+    }
+
+    @PostMapping("/find/")
+    public String findData(LocalDate startDate, LocalDate endDate, Model model)
     {
         if(startDate == null)
         {
@@ -29,8 +43,31 @@ public class WaterSportController
             endDate = LocalDate.now();
         }
 
-        List<OrderWaterSport> list = waterRepo.findByDateBetween(startDate, endDate);
+        List<OrderWaterSport> list = repo.findByDateBetween(startDate, endDate);
         model.addAttribute("list", list);
         return "waterSport";
+    }
+
+    @GetMapping("/delete/{id}/")
+    public String delete(@PathVariable Long id)
+    {
+        repo.deleteById(id);
+        return "redirect:/water/";
+    }
+
+    @PostMapping("/")
+    public String findData(Model model, String customerName, String contact, Double rate, Integer nPerson, Boolean jsr, Boolean br, Boolean sebr, Boolean slbr, Boolean para)
+    {
+        Long maxBillNo = repo.findTopByOrderByBillNoDesc();
+
+        if(maxBillNo == null)
+        {
+            maxBillNo = 1L;
+        }
+
+        OrderWaterSport order = new OrderWaterSport(maxBillNo + 1, customerName, contact, rate, nPerson, jsr, br, sebr, slbr);
+        repo.save(order);
+        
+        return "redirect:/water/";
     }
 }
