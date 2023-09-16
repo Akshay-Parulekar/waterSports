@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 public class OrderWaterSport
@@ -139,5 +141,29 @@ public class OrderWaterSport
                 ", slbr=" + slbr +
                 ", date=" + date +
                 '}';
+    }
+
+    public String getActivities()
+    {
+        List<String> list = new ArrayList<>();
+
+        if(jsr)
+        {
+            list.add("Jet Sky");
+        }
+        if(br)
+        {
+            list.add("Banana Ride");
+        }
+        if(sebr)
+        {
+            list.add("Seating Bumper");
+        }
+        if(slbr)
+        {
+            list.add("Sleeping Bumper");
+        }
+
+        return String.join(",", list);
     }
 }
