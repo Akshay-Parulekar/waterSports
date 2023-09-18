@@ -75,7 +75,7 @@ public class WaterSportController
     }
 
     @PostMapping("/")
-    public String findData(Model model, String customerName, String contact, Double rate, Integer nPerson, Boolean jsr, Boolean br, Boolean sebr, Boolean slbr, Boolean para)
+    public String findData(Model model, String customerName, String contact, Double rate, Integer nPerson, Boolean jsr, Boolean br, Boolean sebr, Boolean slbr)
     {
         OrderWaterSport orderSaved = repo.findTopByOrderByBillNoDesc();
         Long maxBillNo = null;

@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface OrderParasalingRepo extends JpaRepository<OrderParasailing, Long>
 {
-    List<OrderParasailing> findByDateBetween(LocalDate startDate, LocalDate endDate);
-    Long findTopByOrderByBillNoDesc();
+    List<OrderParasailing> findByDateBetweenOrderByBillNoDesc(LocalDate startDate, LocalDate endDate);
+    OrderParasailing findTopByOrderByBillNoDesc();
 }

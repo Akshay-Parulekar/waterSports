@@ -15,17 +15,19 @@ public class OrderParasailing
     String customerName;
     String contact;
     Double rate;
+    Integer nPerson;
     @CreationTimestamp
     LocalDate date;
 
     public OrderParasailing() {
     }
 
-    public OrderParasailing(Long billNo, String customerName, String contact, Double rate) {
+    public OrderParasailing(Long billNo, String customerName, String contact, Double rate, Integer nPerson) {
         this.billNo = billNo;
         this.customerName = customerName;
         this.contact = contact;
         this.rate = rate;
+        this.nPerson = nPerson;
     }
 
     public Long getId() {
@@ -68,6 +70,14 @@ public class OrderParasailing
         this.rate = rate;
     }
 
+    public Integer getnPerson() {
+        return nPerson;
+    }
+
+    public void setnPerson(Integer nPerson) {
+        this.nPerson = nPerson;
+    }
+
     public LocalDate getDate() {
         return date;
     }
@@ -84,6 +94,7 @@ public class OrderParasailing
                 ", customerName='" + customerName + '\'' +
                 ", contact='" + contact + '\'' +
                 ", rate=" + rate +
+                ", nPerson=" + nPerson +
                 ", date=" + date +
                 '}';
     }

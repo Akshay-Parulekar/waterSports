@@ -35,13 +35,6 @@ public class ConfigController
         String usernameCurDb = repo.findOneByProp("username").getVal();
         String passwordCurDb = repo.findOneByProp("password").getVal();
 
-        System.out.println("userNameCurDb = " + usernameCurDb);
-        System.out.println("passwordCurDb = " + passwordCurDb);
-        System.out.println("usernameCur = " + usernameCur);
-        System.out.println("usernameNew = " + usernameNew);
-        System.out.println("passwordCur = " + passwordCur);
-        System.out.println("passwordNew = " + passwordNew);
-
         if(usernameCurDb.equals(usernameCur) && passwordCurDb.equals(passwordCur))
         {
             repo.save(new Config("username", usernameNew));
