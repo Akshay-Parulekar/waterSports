@@ -11,8 +11,7 @@ import java.util.List;
 public class OrderWaterSport
 {
     @Id
-    @SequenceGenerator(name = "seqWaterSport")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqWaterSport")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     Long billNo;
     String customerName;
@@ -26,16 +25,19 @@ public class OrderWaterSport
     @CreationTimestamp
     LocalDate date;
 
+    public OrderWaterSport() {
+    }
+
     public OrderWaterSport(Long billNo, String customerName, String contact, Double rate, Integer nPerson, Boolean jsr, Boolean br, Boolean sebr, Boolean slbr) {
         this.billNo = billNo;
         this.customerName = customerName;
         this.contact = contact;
         this.rate = rate;
         this.nPerson = nPerson;
-        this.jsr = jsr;
-        this.br = br;
-        this.sebr = sebr;
-        this.slbr = slbr;
+        this.jsr = checkNull(jsr);
+        this.br = checkNull(br);
+        this.sebr = checkNull(sebr);
+        this.slbr = checkNull(slbr);
     }
 
     public Long getId() {
@@ -91,7 +93,7 @@ public class OrderWaterSport
     }
 
     public void setJsr(Boolean jsr) {
-        this.jsr = jsr;
+        this.jsr = checkNull(jsr);
     }
 
     public Boolean getBr() {
@@ -99,7 +101,7 @@ public class OrderWaterSport
     }
 
     public void setBr(Boolean br) {
-        this.br = br;
+        this.br = checkNull(br);
     }
 
     public Boolean getSebr() {
@@ -107,7 +109,7 @@ public class OrderWaterSport
     }
 
     public void setSebr(Boolean sebr) {
-        this.sebr = sebr;
+        this.sebr = checkNull(sebr);
     }
 
     public Boolean getSlbr() {
@@ -115,7 +117,7 @@ public class OrderWaterSport
     }
 
     public void setSlbr(Boolean slbr) {
-        this.slbr = slbr;
+        this.slbr = checkNull(slbr);
     }
 
     public LocalDate getDate() {
@@ -149,7 +151,7 @@ public class OrderWaterSport
 
         if(jsr)
         {
-            list.add("Jet Sky");
+            list.add("Jet Sky Ride");
         }
         if(br)
         {
@@ -157,13 +159,25 @@ public class OrderWaterSport
         }
         if(sebr)
         {
-            list.add("Seating Bumper");
+            list.add("Seating Bumper Ride");
         }
         if(slbr)
         {
-            list.add("Sleeping Bumper");
+            list.add("Sleeping Bumper Ride");
         }
 
-        return String.join(",", list);
+        return String.join(", ", list);
+    }
+
+    public boolean checkNull(Boolean b)
+    {
+        if(b == null)
+        {
+            return false;
+        }
+        else
+        {
+            return b;
+        }
     }
 }

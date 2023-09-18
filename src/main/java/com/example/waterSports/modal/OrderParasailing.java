@@ -9,8 +9,7 @@ import java.time.LocalDate;
 public class OrderParasailing
 {
     @Id
-    @SequenceGenerator(name = "seqWaterSport")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seqWaterSport")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     Long billNo;
     String customerName;
@@ -18,6 +17,9 @@ public class OrderParasailing
     Double rate;
     @CreationTimestamp
     LocalDate date;
+
+    public OrderParasailing() {
+    }
 
     public OrderParasailing(Long billNo, String customerName, String contact, Double rate) {
         this.billNo = billNo;

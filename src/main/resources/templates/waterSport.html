@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Water Sports</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/assets/css/Navbar-Right-Links-icons.css">
+    <script src="/assets/myJs/utils.js"></script>
+    <script src="/assets/myJs/sweetalert.js"></script>
+
+    <script th:inline="javascript">
+
+    window.onload = function ()
+    {
+        var msg = [[${msg}]]
+
+        console.log("msg = " + msg);
+
+        if(msg != null)
+        {
+            if(msg.includes('success'))
+            {
+                Swal.fire('Done!', msg, 'success');
+            }
+            else
+            {
+                Swal.fire('Oops!', msg, 'error');
+            }
+        }
+    }
+
+    </script>
+
+</head>
+<body style="background: var(--bs-gray-200);">
+
+<!--Header-->
+<div th:replace="fragments.html :: header(tabIndex=1)"></div>
+
+<div class="card" style="margin: 10px;padding: 10px;">
+    <div class="card-body" style="padding: 0px;">
+        <div class="container">
+            <div class="row">
+                <form method="post" action="/water/find/">
+                <div class="col-md-12">
+                    <button class="btn btn-success" type="button" style="padding: 5px 11px;" data-bs-target="#modalAddNewItem" data-bs-toggle="modal"><i class="fas fa-plus"></i> Add</button>
+
+                            <small class="form-text">&nbsp; Show Report From&nbsp;</small>
+                            <input type="date" name="dateFrom" th:value="${dateFrom}" required>
+
+                            <small class="form-text">&nbsp;To&nbsp;</small>
+                            <input type="date" name="dateTo" th:value="${dateTo}" required>
+
+                            <button class="btn btn-primary" type="submit" style="margin-left: 10px;margin-right: 10px;"><i class="fas fa-search"></i>&nbsp;Search</button>
+
+                    <small class="form-text">&nbsp;Filter By Keyword&nbsp;&nbsp;</small><input type="search" id="search" name="search" onkeypress="filterTbl(this)" style="margin-right: 10px;">
+
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card" style="margin: 10px;">
+    <div class="card-body" style="padding: 0px;box-shadow: -4px 4px 3px 0px var(--bs-gray-500);">
+        <div class="table-responsive">
+            <table class="table" id="tbl">
+                <thead>
+                <tr>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Bill No</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Date</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Customer Name</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Contact</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Activities</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Rate</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="order : ${list}">
+
+                    <td style="text-align: right;padding: 4px;" th:text="${order.billNo}">1</td>
+                    <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${order.customerName + ' (' + order.nPerson + ' Person)'}">Akshay Parulekar</td>
+                    <td style="text-align: center;padding: 4px;" th:text="${order.contact}">9966332211</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${order.getActivities()}">Activity1, Activity2, Activity3</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${order.rate}">1000</td>
+
+                    <td style="text-align: center;padding: 4px;">
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-warning" id="btnPrint" type="button" style="color: var(--bs-gray-200);" th:onClick="printToPOS([[${order.id}]])">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" style="color: var(--bs-btn-hover-color);">
+                                    <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
+                                    <path d="M448 192H64C28.65 192 0 220.7 0 256v96c0 17.67 14.33 32 32 32h32v96c0 17.67 14.33 32 32 32h320c17.67 0 32-14.33 32-32v-96h32c17.67 0 32-14.33 32-32V256C512 220.7 483.3 192 448 192zM384 448H128v-96h256V448zM432 296c-13.25 0-24-10.75-24-24c0-13.27 10.75-24 24-24s24 10.73 24 24C456 285.3 445.3 296 432 296zM128 64h229.5L384 90.51V160h64V77.25c0-8.484-3.375-16.62-9.375-22.62l-45.25-45.25C387.4 3.375 379.2 0 370.8 0H96C78.34 0 64 14.33 64 32v128h64V64z"></path>
+                                </svg>
+                            </button>
+                            <a class="btn btn-danger" role="button" id="btnDelete" onClick="return confirm('Are you sure you want to delete this record?');" style="border-color: var(--bs-pink);" th:href="@{/water/delete/{id}/(id=${order.id})}"><i class="fas fa-trash"></i></a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" role="dialog" tabindex="-1" id="modalAddNewItem" style="text-align: right;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--bs-gray-400);">
+                <h2 class="modal-title" style="text-align: center;width: 100%;">Order Details</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background: var(--bs-gray-200);">
+                <form method="post" action="/water/">
+                    <div class="form-check d-flex d-lg-flex justify-content-start justify-content-lg-start"><input class="form-check-input" type="checkbox" id="formCheck-1" name="jsr"><label class="form-check-label d-xl-flex justify-content-xl-start" for="formCheck-1" style="margin-left: 5px;">Jet Ski Ride</label></div>
+                    <div class="form-check d-flex d-lg-flex justify-content-start justify-content-lg-start"><input class="form-check-input" type="checkbox" id="formCheck-2" name="br"><label class="form-check-label d-xl-flex justify-content-xl-start" for="formCheck-2" style="margin-left: 5px;">Banana Ride</label></div>
+                    <div class="form-check d-flex d-lg-flex justify-content-start justify-content-lg-start"><input class="form-check-input" type="checkbox" id="formCheck-3" name="sebr"><label class="form-check-label d-xl-flex justify-content-xl-start" for="formCheck-3" style="margin-left: 5px;">Seating Bumper Ride</label></div>
+                    <div class="form-check d-flex d-lg-flex justify-content-start justify-content-lg-start"><input class="form-check-input" type="checkbox" id="formCheck-4" name="slbr"><label class="form-check-label d-xl-flex justify-content-xl-start" for="formCheck-4" style="margin-left: 5px;">Sleeping Bumper Ride</label></div>
+                    <div class="text-center mb-3">
+                        <div class="row">
+                            <div class="col" style="padding-right: 2px;min-width: 40%;"><input id="customer" class="form-control" type="text" placeholder="Name of Customer" name="customerName" required /></div>
+                            <div class="col" style="padding-left: 2px;min-width: 25%;padding-right: 2px;"><input class="form-control" type="text" id="contact" placeholder="Cotnact No" name="contact" inputmode="numeric" required=""></div>
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;min-width: 15%;"><input class="form-control" type="number" placeholder="Rate" name="rate" required=""></div>
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;min-width: 15%;"><input class="form-control" type="number" placeholder="Persons" name="nPerson" value="1" min="1" required=""></div>
+                        </div>
+                    </div>
+                    <div class="mb-3"></div>
+                    <div class="mb-3"></div>
+                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" role="dialog" tabindex="-1" id="settingsModal" style="text-align: right;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--bs-gray-400);">
+                <h2 class="modal-title" style="text-align: center;width: 100%;">Settings</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background: var(--bs-gray-200);">
+                <form method="post" action="/config/info/">
+
+                    <small class="form-text float-start">Enter Name of Company</small>
+                    <input class="form-control" type="text" id="title" name="title" th:value="${title}">
+
+                    <small class="form-text float-start">Header</small>
+                    <input class="form-control" type="text" id="header" name="header" th:value="${header}">
+
+                    <small class="form-text float-start">Footer</small>
+                    <input class="form-control" type="text" id="footer-2" name="footer" th:value="${footer}">
+
+                    <small class="form-text float-start">Contact</small>
+                    <input class="form-control" type="text" id="contact1" name="contact" th:value="${contact}">
+
+                    <small class="form-text float-start">Address</small>
+                    <input class="form-control" type="text" id="address" name="address" th:value="${address}">
+
+
+                    <div class="text-center mb-3" style="margin-top: 10px;margin-bottom: 10px;"></div>
+                    <div class="mb-3"></div>
+                    <div class="mb-3"></div>
+                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
+                </form>
+                <h4 style="text-align: center;">Change Login Credentials</h4>
+                <form method="post" action="/config/login/">
+                    <small class="form-text float-start">Enter Current Username</small>
+                    <input class="form-control" type="text" id="curUsername" name="usernameCur">
+
+                    <small class="form-text float-start">Enter Current Password</small>
+                    <input class="form-control" type="password" id="curPassword" name="passwordCur">
+
+                    <small class="form-text float-start">Enter New Username</small>
+                    <input class="form-control" type="text" id="newUsername" name="usernameNew">
+
+                    <small class="form-text float-start">Enter New Password</small>
+                    <input class="form-control" type="password" id="newPassword" name="passwordNew">
+
+                    <div class="text-center mb-3" style="margin-top: 10px;margin-bottom: 10px;"></div>
+                    <div class="mb-3"></div>
+                    <div class="mb-3"></div>
+                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

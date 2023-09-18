@@ -26,16 +26,23 @@ public class ConfigController
 
         model.addAttribute("msg", "Data saved successfully!");
 
-        return "config";
+        return "redirect:/water/";
     }
 
     @PostMapping("/login/")
     public String saveLogin(Model model, String usernameCur, String usernameNew, String passwordCur, String passwordNew)
     {
-        String usernameCurDb = repo.findOneByProp("username");
-        String passwordCurDb = repo.findOneByProp("password");
+        String usernameCurDb = repo.findOneByProp("username").getVal();
+        String passwordCurDb = repo.findOneByProp("password").getVal();
 
-        if(usernameCurDb == usernameCur && passwordCurDb == passwordCur)
+        System.out.println("userNameCurDb = " + usernameCurDb);
+        System.out.println("passwordCurDb = " + passwordCurDb);
+        System.out.println("usernameCur = " + usernameCur);
+        System.out.println("usernameNew = " + usernameNew);
+        System.out.println("passwordCur = " + passwordCur);
+        System.out.println("passwordNew = " + passwordNew);
+
+        if(usernameCurDb.equals(usernameCur) && passwordCurDb.equals(passwordCur))
         {
             repo.save(new Config("username", usernameNew));
             repo.save(new Config("password", passwordNew));
@@ -46,6 +53,6 @@ public class ConfigController
             model.addAttribute("msg", "Invalid Username or Password!");
         }
 
-        return "config";
+        return "redirect:/water/";
     }
 }

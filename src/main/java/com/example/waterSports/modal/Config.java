@@ -10,6 +10,9 @@ public class Config
     String prop;
     String val;
 
+    public Config() {
+    }
+
     public Config(String prop, String val) {
         this.prop = prop;
         this.val = val;

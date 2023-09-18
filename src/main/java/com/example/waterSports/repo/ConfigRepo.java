@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ConfigRepo extends JpaRepository<Config, String>
 {
-    String findOneByProp(String prop);
+    Config findOneByProp(String prop);
 }

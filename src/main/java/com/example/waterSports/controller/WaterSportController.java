@@ -1,6 +1,7 @@
 package com.example.waterSports.controller;
 
 import com.example.waterSports.modal.OrderWaterSport;
+import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.OrderWaterSportRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,33 +19,51 @@ public class WaterSportController
 {
     @Autowired
     OrderWaterSportRepo repo;
+    @Autowired
+    ConfigRepo configRepo;
 
     @GetMapping("/")
     public String showData(Model model)
     {
 
-        LocalDate startDate = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
-        LocalDate endDate = LocalDate.now();
+        LocalDate dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+        LocalDate dateTo = LocalDate.now();
 
-        List<OrderWaterSport> list = repo.findByDateBetween(startDate, endDate);
+        List<OrderWaterSport> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
         model.addAttribute("list", list);
+        model.addAttribute("dateFrom", dateFrom);
+        model.addAttribute("dateTo", dateTo);
+        model.addAttribute("title",configRepo.findOneByProp("title").getVal());
+        model.addAttribute("header", configRepo.findOneByProp("header").getVal());
+        model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
+        model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
+        model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+
         return "waterSport";
     }
 
     @PostMapping("/find/")
-    public String findData(LocalDate startDate, LocalDate endDate, Model model)
+    public String findData(LocalDate dateFrom, LocalDate dateTo, Model model)
     {
-        if(startDate == null)
+        if(dateFrom == null)
         {
-            startDate = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+            dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
         }
-        if(endDate == null)
+        if(dateTo == null)
         {
-            endDate = LocalDate.now();
+            dateTo = LocalDate.now();
         }
 
-        List<OrderWaterSport> list = repo.findByDateBetween(startDate, endDate);
+        List<OrderWaterSport> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
         model.addAttribute("list", list);
+        model.addAttribute("dateFrom", dateFrom);
+        model.addAttribute("dateTo", dateTo);
+        model.addAttribute("title",configRepo.findOneByProp("title").getVal());
+        model.addAttribute("header", configRepo.findOneByProp("header").getVal());
+        model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
+        model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
+        model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+
         return "waterSport";
     }
 
@@ -58,14 +77,20 @@ public class WaterSportController
     @PostMapping("/")
     public String findData(Model model, String customerName, String contact, Double rate, Integer nPerson, Boolean jsr, Boolean br, Boolean sebr, Boolean slbr, Boolean para)
     {
-        Long maxBillNo = repo.findTopByOrderByBillNoDesc();
+        OrderWaterSport orderSaved = repo.findTopByOrderByBillNoDesc();
+        Long maxBillNo = null;
 
-        if(maxBillNo == null)
+        if(orderSaved == null)
         {
-            maxBillNo = 1L;
+            maxBillNo = 0L;
+        }
+        else
+        {
+            maxBillNo = orderSaved.getBillNo();
         }
 
         OrderWaterSport order = new OrderWaterSport(maxBillNo + 1, customerName, contact, rate, nPerson, jsr, br, sebr, slbr);
+        System.out.println("Order to be saved = " + order.toString());
         repo.save(order);
         
         return "redirect:/water/";

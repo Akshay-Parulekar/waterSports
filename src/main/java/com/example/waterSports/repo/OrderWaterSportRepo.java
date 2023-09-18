@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface OrderWaterSportRepo extends JpaRepository<OrderWaterSport, Long>
 {
-    List<OrderWaterSport> findByDateBetween(LocalDate startDate, LocalDate endDate);
-    Long findTopByOrderByBillNoDesc();
+    List<OrderWaterSport> findByDateBetweenOrderByBillNoDesc(LocalDate startDate, LocalDate endDate);
+    OrderWaterSport findTopByOrderByBillNoDesc();
 }
