@@ -22,7 +22,38 @@ function filterTbl(input)
   }
 }
 
-function printToPOS()
+function printPos(id, type)
 {
+    var endpoint;
 
+    if(type == 1)
+    {
+        endpoint = '/water/print/' + id + '/';
+    }
+    else
+    {
+        endpoint = '/para/print/' + id + '/';
+    }
+
+    axios
+      .get(endpoint)
+      .then((response) =>
+      {
+          var status = response.data;
+          console.log("status = " + status);
+
+          if(status == 1)
+          {
+              Swal.fire('Success', 'Receipt is ready', 'success');
+          }
+          else
+          {
+              Swal.fire('Oops!', 'Printer not Connected. Check power supply', 'error');
+          }
+      })
+      .catch((error) =>
+      {
+          console.log("error " + error);
+          Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+      });
 }

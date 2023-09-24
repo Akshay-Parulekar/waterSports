@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
     <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
     <link rel="stylesheet" href="/assets/css/Navbar-Right-Links-icons.css">
-    <script src="/assets/myJs/utils.js"></script>
+    <script src="/assets/myJs/axios.js"></script>
+    <script src="/assets/myJs/jquery.js"></script>
     <script src="/assets/myJs/sweetalert.js"></script>
+    <script src="/assets/myJs/utils.js"></script>
 
     <script th:inline="javascript">
 
@@ -91,7 +93,7 @@
 
                     <td style="text-align: center;padding: 4px;">
                         <div class="btn-group" role="group">
-                            <button class="btn btn-warning" id="btnPrint" type="button" style="color: var(--bs-gray-200);" th:onClick="printPosPS([[${order.id}]])">
+                            <button class="btn btn-warning" id="btnPrint" type="button" style="color: var(--bs-gray-200);" th:onClick="printPos([[${order.id}]], 0)">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" style="color: var(--bs-btn-hover-color);">
                                     <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
                                     <path d="M448 192H64C28.65 192 0 220.7 0 256v96c0 17.67 14.33 32 32 32h32v96c0 17.67 14.33 32 32 32h320c17.67 0 32-14.33 32-32v-96h32c17.67 0 32-14.33 32-32V256C512 220.7 483.3 192 448 192zM384 448H128v-96h256V448zM432 296c-13.25 0-24-10.75-24-24c0-13.27 10.75-24 24-24s24 10.73 24 24C456 285.3 445.3 296 432 296zM128 64h229.5L384 90.51V160h64V77.25c0-8.484-3.375-16.62-9.375-22.62l-45.25-45.25C387.4 3.375 379.2 0 370.8 0H96C78.34 0 64 14.33 64 32v128h64V64z"></path>

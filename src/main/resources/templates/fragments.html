@@ -39,19 +39,19 @@
                 <form method="post" action="/config/info/">
 
                     <small class="form-text float-start">Enter Name of Company</small>
-                    <input class="form-control" type="text" id="title" name="title" th:value="${title}">
+                    <input class="form-control" type="text" id="title" name="title" th:value="${title}" maxlength="32">
 
                     <small class="form-text float-start">Header</small>
                     <input class="form-control" type="text" id="header" name="header" th:value="${header}">
 
                     <small class="form-text float-start">Footer</small>
-                    <input class="form-control" type="text" id="footer-2" name="footer" th:value="${footer}">
+                    <input class="form-control" type="text" id="footer-2" name="footer" th:value="${footer}" maxlength="32">
 
                     <small class="form-text float-start">Contact</small>
-                    <input class="form-control" type="text" id="contact1" name="contact" th:value="${contact}">
+                    <input class="form-control" type="text" id="contact1" name="contact" th:value="${contact}" maxlength="32">
 
                     <small class="form-text float-start">Address</small>
-                    <input class="form-control" type="text" id="address" name="address" th:value="${address}">
+                    <input class="form-control" type="text" id="address" name="address" th:value="${address}" maxlength="32">
 
 
                     <div class="text-center mb-3" style="margin-top: 10px;margin-bottom: 10px;"></div>
