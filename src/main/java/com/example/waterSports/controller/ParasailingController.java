@@ -90,7 +90,6 @@ public class ParasailingController
         }
 
         OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, contact, rate, nPerson);
-        System.out.println("Order to be saved = " + order.toString());
         repo.save(order);
 
         Helper.PrintBill(
@@ -99,6 +98,7 @@ public class ParasailingController
                 configRepo.findOneByProp("footer").getVal(),
                 configRepo.findOneByProp("address").getVal(),
                 configRepo.findOneByProp("contact").getVal(),
+                configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
                 order.getCustomerName(),
                 "Parasailing",
@@ -114,8 +114,6 @@ public class ParasailingController
     @ResponseBody
     public Integer printBill(@PathVariable Long id)
     {
-        System.out.println("inside bill printing controller");
-
         Integer status = 0;
 
         OrderParasailing order = repo.getReferenceById(id);
@@ -125,6 +123,7 @@ public class ParasailingController
                 configRepo.findOneByProp("footer").getVal(),
                 configRepo.findOneByProp("address").getVal(),
                 configRepo.findOneByProp("contact").getVal(),
+                configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
                 order.getCustomerName(),
                 "Parasailing",

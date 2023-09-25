@@ -13,7 +13,7 @@ public class Helper
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static DecimalFormat decimalFormat = new DecimalFormat("#.##");
 
-    public static int PrintBill(String title, String header, String footer, String address, String contact, Long billNo, String customerName, String activities, Integer nPerson, Double rate, String date)
+    public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String customerName, String activities, Integer nPerson, Double rate, String date)
     {
         // Setup Printer
         DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PAGEABLE;
@@ -30,7 +30,7 @@ public class Helper
         PrintService myService = null;
         for (PrintService printService : printServices) {
             System.out.println(printService.getName());
-            if (printService.getName().equals("POS-58-Series")) {
+            if (printService.getName().equals(printerName)) {
                 myService = printService;
                 break;
             }
@@ -91,9 +91,6 @@ public class Helper
 
         // Cutting the page
         expected.writeBytes(POS.POSPrinter.CutPage());
-
-        System.out.println("---------------");
-        System.out.println(expected.toString());
 
         // Printing the content to paper
         DocPrintJob job = myService.createPrintJob();

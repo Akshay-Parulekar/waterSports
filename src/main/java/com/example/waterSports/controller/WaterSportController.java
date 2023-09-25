@@ -89,7 +89,6 @@ public class WaterSportController
         }
 
         OrderWaterSport order = new OrderWaterSport(maxBillNo + 1, customerName, contact, rate, nPerson, jsr, br, sebr, slbr);
-        System.out.println("Order to be saved = " + order.toString());
         repo.save(order);
 
         Helper.PrintBill(
@@ -98,6 +97,7 @@ public class WaterSportController
                 configRepo.findOneByProp("footer").getVal(),
                 configRepo.findOneByProp("address").getVal(),
                 configRepo.findOneByProp("contact").getVal(),
+                configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
                 order.getCustomerName(),
                 order.getActivities(),
@@ -113,8 +113,6 @@ public class WaterSportController
     @ResponseBody
     public Integer printBill(@PathVariable Long id)
     {
-        System.out.println("inside bill printing controller");
-
         Integer status = 0;
 
         OrderWaterSport order = repo.getReferenceById(id);
@@ -124,6 +122,7 @@ public class WaterSportController
                 configRepo.findOneByProp("footer").getVal(),
                 configRepo.findOneByProp("address").getVal(),
                 configRepo.findOneByProp("contact").getVal(),
+                configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
                 order.getCustomerName(),
                 order.getActivities(),

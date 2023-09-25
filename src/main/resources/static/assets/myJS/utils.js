@@ -22,6 +22,33 @@ function filterTbl(input)
   }
 }
 
+function confirmDelete(url)
+{
+    Swal.fire({
+      title: 'Are you sure you want to delete this record?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Deleted!',
+          'Record has been deleted successfully.',
+          'success'
+        ).then((result) =>
+        {
+             if (result.isConfirmed)
+             {
+                window.location.replace(url);
+             }
+         });
+      }
+    })
+}
+
 function printPos(id, type)
 {
     var endpoint;
@@ -48,13 +75,13 @@ function printPos(id, type)
           }
           else
           {
-              Swal.fire('Oops!', 'Printer not Connected. Check power supply', 'error');
+              Swal.fire('Oops!', 'Printer may not be Connected or Check power supply', 'error');
           }
       })
       .catch((error) =>
       {
           console.log("error " + error);
-          Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+              Swal.fire('Oops!', 'Printer may not be Connected or Check power supply', 'error');
       });
 }
 
@@ -81,9 +108,7 @@ $(document).ready(function() {
             data.append('footer', $('#footer').val());
             data.append('contact', $('#contactNo').val());
             data.append('address', $('#address').val());
-
-            console.log('data = ' + data);
-            console.log('data.toString() = ' + data.toString());
+            data.append('printer', $('#printer').val());
 
             axios.post(endpoint, data)
             .then((response) =>
