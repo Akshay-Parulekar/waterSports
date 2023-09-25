@@ -57,3 +57,107 @@ function printPos(id, type)
           Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
       });
 }
+
+$(document).ready(function() {
+    var formInfo = $('#formInfo');
+    var formLogin = $('#formLogin');
+    var btnSaveInfo = $('#btnSaveInfo');
+    var btnSaveLogin = $('#btnSaveLogin');
+
+    formInfo.on('submit', function(event) 
+    {
+        if (formInfo[0].checkValidity()) 
+        {
+            event.preventDefault();
+
+            btnSaveInfo.val('Please Wait');
+            btnSaveInfo.addClass('disabled')
+
+            var endpoint = '/config/info/';
+
+            var data = new FormData();
+            data.append('title', $('#title').val());
+            data.append('header', $('#header').val());
+            data.append('footer', $('#footer').val());
+            data.append('contact', $('#contactNo').val());
+            data.append('address', $('#address').val());
+
+            console.log('data = ' + data);
+            console.log('data.toString() = ' + data.toString());
+
+            axios.post(endpoint, data)
+            .then((response) =>
+                  {
+                      var status = response.data;
+                      console.log("status = " + status);
+            
+                      if(status == 1)
+                      {
+                          Swal.fire('Success', 'Data Saved Successfully', 'success');
+                      }
+                      else
+                      {
+                          Swal.fire('Oops!', 'Something went wrong. Please Try again', 'error');
+                      }
+                  })
+                  .catch((error) =>
+                  {
+                      console.log("error " + error);
+                      Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+                  })
+                  .finally(() => {
+                     btnSaveInfo.val('Save');
+                     btnSaveInfo.removeClass('disabled')
+                  });
+        }
+    });
+    
+    formLogin.on('submit', function(event) 
+        {
+            if (formLogin[0].checkValidity()) 
+            {
+                event.preventDefault();
+    
+                btnSaveLogin.val('Please Wait');
+                btnSaveLogin.addClass('disabled')
+    
+                var endpoint = '/config/login/';
+
+                var data = new FormData();
+                data.append('usernameCur', $('#usernameCur').val());
+                data.append('usernameNew', $('#usernameNew').val());
+                data.append('passwordCur', $('#passwordCur').val());
+                data.append('passwordNew', $('#passwordNew').val());
+    
+                console.log('data = ' + data);
+                console.log('data.toString() = ' + data.toString());
+    
+                axios.post(endpoint, data)
+                .then((response) =>
+                      {
+                          var status = response.data;
+                          console.log("status = " + status);
+                
+                          if(status == 1)
+                          {
+                              Swal.fire('Success', 'Login credentials updated Successfully', 'success');
+                              formLogin[0].reset();
+                          }
+                          else
+                          {
+                              Swal.fire('Oops!', 'Invalid Username or Password', 'error');
+                          }
+                      })
+                      .catch((error) =>
+                      {
+                          console.log("error " + error);
+                          Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+                      })
+                      .finally(() =>
+                      {
+                             btnSaveLogin.val('Save');
+                             btnSaveLogin.removeClass('disabled')
+                      });;
+                }
+        });
+});

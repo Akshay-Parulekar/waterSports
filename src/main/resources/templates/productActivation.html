@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Activation Key</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/fonts/ionicons.min.css">
+    <link rel="stylesheet" href="/assets/css/Login-Form-Clean.css">
+    <link rel="stylesheet" href="/assets/css/Registration-Form-with-Photo.css">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+
+    <script src="/assets/myJs/jquery.js"></script>
+    <script src="/assets/myJs/sweetalert.js"></script>
+    <script src="/assets/myJs/utils.js"></script>
+</head>
+
+<body>
+
+<script th:inline="javascript">
+
+    var str = [[${msg}]];
+
+    if (str != null) {
+        if (str.includes("success")) {
+              Swal.fire('Success', str, 'success');
+        }
+        else {
+              Swal.fire('Success', str, 'error');
+        }
+    }
+</script>
+
+<section class="login-clean">
+    <form  method="post" action="/activation/activate/">
+        <h3 style="text-align: center;color: var(--pink);">Product Activation</h3>
+        <div class="illustration"><i class="icon ion-ios-locked"></i></div>
+        <div class="form-group"><small class="form-text text-muted">Months</small><input th:value="${month_count}" class="form-control" type="number" data-toggle="tooltip" data-bss-tooltip="" name="monthCount" value="12" step="1" required="" pattern="[0-9]+"></div>
+        <div class="form-group"><small class="form-text text-muted">Activation Key</small><textarea th:text="${activation_key}" class="form-control" name="activation_key" style="height: 70px;"></textarea></div>
+        <div class="form-group"><small class="form-text text-muted">Serial Key</small><textarea class="form-control" name="serial_key" style="height: 70px;"></textarea></div>
+        <div class="form-group d-sm-flex justify-content-sm-center align-items-sm-end"><button class="btn btn-info btn-block" type="reset" style="margin-left: 2px;margin-right: 2px;">Clear</button><button name="strBtn" class="btn btn-warning btn-block" type="submit" style="margin-left: 2px;margin-right: 2px;" value="generate">Generate</button><button name="strBtn" class="btn btn-success btn-block" type="submit" style="margin-left: 2px;margin-right: 2px;" value="activate">Activate</button></div>
+    </form>
+</section>
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="/assets/js/bs-init.js"></script>
+</body>
+
+</html>

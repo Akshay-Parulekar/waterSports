@@ -9,7 +9,6 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
@@ -41,11 +40,11 @@ public class MySecurityConfig
                 //    .usernameParameter("customHtmlNameValueForUsername")
                 //    .passwordParameter("customHtmlNameValueForPassword")
                 //    .loginProcessingUrl("/login")
-                .defaultSuccessUrl("/water/", true)
+                .defaultSuccessUrl("/", true)
                 .and()
                 .logout().invalidateHttpSession(true).clearAuthentication(true)
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").permitAll()
+        //        .logoutSuccessUrl("/login").permitAll()
                 .and()
                 .rememberMe().rememberMeParameter("remember_me").key("mySecreteKey").tokenValiditySeconds(60 * 60 * 60 * 24 * 7);
 
@@ -57,8 +56,8 @@ public class MySecurityConfig
         List<UserDetails> listUser = new ArrayList<>();
         listUser.add(
                 User.builder()
-                        .username(configRepo.findOneByProp("username").getVal())
-                        .password(configRepo.findOneByProp("password").getVal())
+                        .username(getPasswordEncoder().encode(configRepo.findOneByProp("username").getVal()))
+                        .password(getPasswordEncoder().encode(configRepo.findOneByProp("password").getVal()))
                         .roles("ADMIN")
                         .build()
         );

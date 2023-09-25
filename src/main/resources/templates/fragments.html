@@ -36,7 +36,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="background: var(--bs-gray-200);">
-                <form method="post" action="/config/info/">
+                <form id="formInfo" method="post">
 
                     <small class="form-text float-start">Enter Name of Company</small>
                     <input class="form-control" type="text" id="title" name="title" th:value="${title}" maxlength="32">
@@ -45,10 +45,10 @@
                     <input class="form-control" type="text" id="header" name="header" th:value="${header}">
 
                     <small class="form-text float-start">Footer</small>
-                    <input class="form-control" type="text" id="footer-2" name="footer" th:value="${footer}" maxlength="32">
+                    <input class="form-control" type="text" id="footer" name="footer" th:value="${footer}" maxlength="32">
 
                     <small class="form-text float-start">Contact</small>
-                    <input class="form-control" type="text" id="contact1" name="contact" th:value="${contact}" maxlength="32">
+                    <input class="form-control" type="text" id="contactNo" name="contact" th:value="${contact}" maxlength="32">
 
                     <small class="form-text float-start">Address</small>
                     <input class="form-control" type="text" id="address" name="address" th:value="${address}" maxlength="32">
@@ -57,26 +57,26 @@
                     <div class="text-center mb-3" style="margin-top: 10px;margin-bottom: 10px;"></div>
                     <div class="mb-3"></div>
                     <div class="mb-3"></div>
-                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
+                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit" id="btnSaveInfo">Save</button></div>
                 </form>
                 <h4 style="text-align: center;">Change Login Credentials</h4>
-                <form method="post" action="/config/login/">
+                <form id="formLogin" method="post">
                     <small class="form-text float-start">Enter Current Username</small>
-                    <input class="form-control" type="text" id="curUsername" name="usernameCur">
+                    <input class="form-control" type="text" id="usernameCur" name="usernameCur">
 
                     <small class="form-text float-start">Enter Current Password</small>
-                    <input class="form-control" type="password" id="curPassword" name="passwordCur">
+                    <input class="form-control" type="password" id="passwordCur" name="passwordCur">
 
                     <small class="form-text float-start">Enter New Username</small>
-                    <input class="form-control" type="text" id="newUsername" name="usernameNew">
+                    <input class="form-control" type="text" id="usernameNew" name="usernameNew">
 
                     <small class="form-text float-start">Enter New Password</small>
-                    <input class="form-control" type="password" id="newPassword" name="passwordNew">
+                    <input class="form-control" type="password" id="passwordNew" name="passwordNew">
 
                     <div class="text-center mb-3" style="margin-top: 10px;margin-bottom: 10px;"></div>
                     <div class="mb-3"></div>
                     <div class="mb-3"></div>
-                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
+                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit" id="btnSaveLogin">Save</button></div>
                 </form>
             </div>
         </div>
