@@ -13,7 +13,9 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +28,12 @@ public class MySecurityConfig
     ConfigRepo configRepo;
 
     @Bean
-    protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    protected SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/assets/**").permitAll()
-                .requestMatchers("/water/**", "/para/**").hasRole("ADMIN")
+                .requestMatchers(mvc.pattern("/assets/**")).permitAll()
+                .requestMatchers(mvc.pattern("/water/**"), mvc.pattern("/para/**")).hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
@@ -69,6 +71,11 @@ public class MySecurityConfig
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return NoOpPasswordEncoder.getInstance();
+    }
+
+    @Bean
+    MvcRequestMatcher.Builder mvc(HandlerMappingIntrospector introspector) {
+        return new MvcRequestMatcher.Builder(introspector);
     }
 }
 
