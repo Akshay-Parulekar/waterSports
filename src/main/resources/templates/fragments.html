@@ -23,7 +23,7 @@
         <li class="nav-item"><a class="nav-link" th:classappend="${tabIndex==1} ? 'active'" href="/water/">Watersports</a></li>
         <li class="nav-item"><a class="nav-link" th:classappend="${tabIndex==2} ? 'active'" href="/para/">Parasailing</a></li>
       </ul>
-      <button class="btn btn-primary" type="button" style="background: var(--bs-gray-500);border-color: var(--bs-gray-600);margin-right: 5px;" data-bs-target="#settingsModal" data-bs-toggle="modal"><i class="fa fa-gear" style="color: var(--bs-navbar-brand-color);"></i>&nbsp;</button><a class="btn btn-danger" role="button" href="/logout"><i class="fas fa-lock"></i>&nbsp;Logout</a>
+      <button class="btn btn-primary" type="button" style="background: var(--bs-gray-500);border-color: var(--bs-gray-600);margin-right: 5px;" data-bs-target="#settingsModal" data-bs-toggle="modal"><i class="fa fa-gear" style="color: var(--bs-navbar-brand-color);"></i>&nbsp;</button><button class="btn btn-danger" role="button" onclick="confirmLogout()"><i class="fas fa-lock"></i>&nbsp;Logout</button>
     </div>
   </div>
 </nav>

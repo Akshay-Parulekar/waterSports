@@ -28,6 +28,10 @@
             {
                 Swal.fire('Done!', msg, 'success');
             }
+            else if(msg.includes('expire'))
+            {
+                Swal.fire('Warning', msg, 'warning');
+            }
             else
             {
                 Swal.fire('Oops!', msg, 'error');
@@ -59,7 +63,7 @@
 
                             <button class="btn btn-primary" type="submit" style="margin-left: 10px;margin-right: 10px;"><i class="fas fa-search"></i>&nbsp;Search</button>
 
-                    <small class="form-text">&nbsp;Filter By Keyword&nbsp;&nbsp;</small><input type="search" id="search" name="search" onkeypress="filterTbl(this)" style="margin-right: 10px;">
+                    <small class="form-text">&nbsp;Filter By Keyword&nbsp;&nbsp;</small><input type="search" id="filter" name="filter" style="margin-right: 10px;">
 
                 </div>
                 </form>
