@@ -53,7 +53,7 @@
             <div class="row">
                 <form method="post" action="/water/find/">
                 <div class="col-md-12">
-                    <button class="btn btn-success" type="button" style="padding: 5px 11px;" data-bs-target="#modalAddNewItem" data-bs-toggle="modal"><i class="fas fa-plus"></i> Add</button>
+                    <button id="btnAdd" class="btn btn-success" type="button" style="padding: 5px 11px;" data-bs-target="#modalAddNewItem" data-bs-toggle="modal"><i class="fas fa-plus"></i> New</button>
 
                             <small class="form-text">&nbsp; Show Report From&nbsp;</small>
                             <input type="date" name="dateFrom" th:value="${dateFrom}" required>
@@ -129,7 +129,7 @@
             <div class="modal-body" style="background: var(--bs-gray-200);padding-bottom: 0px;">
                 <form id="formOrderDet" method="post">
 
-                    <input type="hidden" id="billNO">
+                    <input type="hidden" id="billNo">
 
                     <div class="text-center mb-3" style="padding-right: 10px;padding-left: 10px;">
                         <div class="row">
@@ -152,7 +152,7 @@
                     <div class="mb-3">
                         <div class="card">
                             <div class="card-body" style="padding: 0px;">
-                                <div class="table-responsive" style="min-height: 200px;background: var(--bs-gray-400);">
+                                <div class="table-responsive" style="min-height: 230px;background: var(--bs-gray-300);">
                                     <table class="table" id="tblOrder">
                                         <thead>
                                         <tr>
@@ -185,6 +185,12 @@
                         <strong>Total = </strong>
                     </label>
                     <label id="total" class="form-label" style="text-align: left;">0</label>
+                </div>
+
+                <div class="text-center">
+                    <button id="btnPrintOrder" class="btn btn-warning" type="button" style="margin-bottom: 10px;" onClick="printPos($('#billNo').val(), 1)">
+                        <i class="fa fa-print"></i> Print
+                    </button>
                 </div>
             </div>
         </div>

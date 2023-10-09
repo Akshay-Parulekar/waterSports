@@ -74,17 +74,22 @@ public class WaterSportController
     @GetMapping("/delete/{id}/")
     public String delete(@PathVariable Long id)
     {
+
+        Long billNo = repoOrder.getReferenceById(id).getBillNo();
         repoOrder.deleteById(id);
+        repoOrderDet.deleteByBillNo(billNo);
         return "redirect:/water/";
     }
 
-    @GetMapping("/order/{id}/")
+    @GetMapping("/order/{billNo}/")
+    @ResponseBody
     public OrderWaterSport getOrder(@PathVariable Long billNo)
     {
         return repoOrder.findByBillNo(billNo);
     }
 
-    @GetMapping("/orderdet/{id}/")
+    @GetMapping("/orderdet/{billNo}/")
+    @ResponseBody
     public List<OrderDetailsWaterSport> getOrderDet(@PathVariable Long billNo)
     {
         return repoOrderDet.findByBillNo(billNo);
@@ -104,8 +109,7 @@ public class WaterSportController
     @ResponseBody
     public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, String contact, Double rate, Integer persons, Integer idActivity)
     {
-        System.out.println("params recieved are : " + billNo + ", " + customerName + ", " + rate + ", " + persons + ", " +idActivity);
-
+        System.out.println("billNo = " + billNo);
         OrderWaterSport orderSaved;
 
         if(billNo == null) // For New Bill
@@ -118,7 +122,7 @@ public class WaterSportController
             }
             else
             {
-                billNo = orderSaved.getBillNo();
+                billNo = orderSaved.getBillNo() + 1;
             }
 
             OrderWaterSport order = new OrderWaterSport(billNo, customerName, contact);

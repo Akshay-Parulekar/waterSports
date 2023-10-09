@@ -1,3 +1,5 @@
+var isEditing = 0;
+
 function confirmDelete(url)
 {
     Swal.fire({
@@ -51,6 +53,10 @@ function deleteOrderDet(id, btnDelete)
 
 function showData(billNo)
 {
+    isEditing = 1;
+    $('#formOrderDet')[0].reset();
+    $('#tblOrder > tbody').empty();
+
     axios.get("/water/orderdet/" + billNo + "/")
         .then((response) =>
           {
@@ -69,7 +75,7 @@ function showData(billNo)
 //                      row.append($("<td style='text-align: right;padding: 4px;'>").text(obj.rate));
 
                       var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
-                      tbl.append(str);
+                      $('#tblOrder > tbody').append(str);
                   });
 
                   var columnIndex = 3;
@@ -96,6 +102,7 @@ function showData(billNo)
         .then((response) =>
           {
               var obj = response.data;
+              console.log("obj = " + obj.toString());
 
               if(obj == null)
               {
@@ -103,10 +110,9 @@ function showData(billNo)
               }
               else
               {
+                  $('#billNo').val(obj.billNo);
                   $('#customerName').val(obj.customerName);
-                  $('#rate').val(obj.rate);
-                  $('#persons').val(obj.price);
-                  $("#idActivity").prop("selectedIndex", obj.idActivity);
+                  $('#contact').val(obj.contact);
               }
           })
           .catch((error) =>
@@ -179,8 +185,6 @@ $(document).ready(function() {
 
     formOrderDet.on('submit', function(event) 
     {
-        console.log('orderdetails submitting form');
-
         if (formOrderDet[0].checkValidity()) 
         {
             event.preventDefault();
@@ -214,8 +218,9 @@ $(document).ready(function() {
                           tbl.append(str);
 
                           $("#idActivity").prop("selectedIndex", 0);
-                          $('#rate').val('')
-                          $('#persons').val('')
+                          $('#rate').val('');
+                          $('#persons').val('');
+                          $('#billNo').val(obj.billNo);
 
                           var columnIndex = 3;
                           var sum = 0;
@@ -337,11 +342,27 @@ $(document).ready(function() {
                 }
         });
 
+    $("#btnAdd").click(function()
+    {
+        isEditing = 0;
+        $('#formOrderDet')[0].reset();
+        $('#tblOrder > tbody').empty();
+    });
+
+    $("#modalAddNewItem").on("hide.bs.modal", function () {
+        var billNo = $("#billNo").val();
+        if(billNo && isEditing === 0)
+        {
+            window.location.replace('/water/');
+        }
+
+        isEditing = 0;
+    });
+
     $("#filter").on("keyup", function() {
         var value = $(this).val().toLowerCase();
         $("#tbl tbody tr").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
     });
-
 });
