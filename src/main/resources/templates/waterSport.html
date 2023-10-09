@@ -81,8 +81,6 @@
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Date</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Customer Name</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Contact</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Activities</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Rate</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Action</th>
                 </tr>
                 </thead>
@@ -92,19 +90,24 @@
 
                     <td style="text-align: right;padding: 4px;" th:text="${order.billNo}">1</td>
                     <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
-                    <td style="text-align: left;padding: 4px;" th:text="${order.customerName + ' (' + order.nPerson + ' Person)'}">Akshay Parulekar</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${order.customerName}">Akshay Parulekar</td>
                     <td style="text-align: center;padding: 4px;" th:text="${order.contact}">9966332211</td>
-                    <td style="text-align: left;padding: 4px;" th:text="${order.getActivities()}">Activity1, Activity2, Activity3</td>
-                    <td style="text-align: right;padding: 4px;" th:text="${order.rate}">1000</td>
 
                     <td style="text-align: center;padding: 4px;">
                         <div class="btn-group" role="group">
                             <button class="btn btn-warning" id="btnPrint" type="button" style="color: var(--bs-gray-200);" th:onClick="printPos([[${order.id}]], 1)">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor" style="color: var(--bs-btn-hover-color);">
-                                    <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
                                     <path d="M448 192H64C28.65 192 0 220.7 0 256v96c0 17.67 14.33 32 32 32h32v96c0 17.67 14.33 32 32 32h320c17.67 0 32-14.33 32-32v-96h32c17.67 0 32-14.33 32-32V256C512 220.7 483.3 192 448 192zM384 448H128v-96h256V448zM432 296c-13.25 0-24-10.75-24-24c0-13.27 10.75-24 24-24s24 10.73 24 24C456 285.3 445.3 296 432 296zM128 64h229.5L384 90.51V160h64V77.25c0-8.484-3.375-16.62-9.375-22.62l-45.25-45.25C387.4 3.375 379.2 0 370.8 0H96C78.34 0 64 14.33 64 32v128h64V64z"></path>
                                 </svg>
                             </button>
+
+                            <button class="btn btn-primary" id="btnEdit" type="button" data-bs-target="#modalAddNewItem" data-bs-toggle="modal" th:onClick="showData([[${order.billNo}]])">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor">
+                                    <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
+                                    <path d="M362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32zM421.7 220.3L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3z"></path>
+                                </svg>
+                            </button>
+
 <!--                            <a class="btn btn-danger" role="button" id="btnDelete" onClick="return confirm('Are you sure you want to delete this record?');" style="border-color: var(&#45;&#45;bs-pink);" th:href="@{/water/delete/{id}/(id=${order.id})}"><i class="fas fa-trash"></i></a>-->
                             <button class="btn btn-danger" role="button" id="btnDelete" style="border-color: var(--bs-pink);" th:onClick="|confirmDelete('/water/delete/${order.id}/')|"><i class="fas fa-trash"></i></button>
                         </div>
@@ -121,27 +124,68 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background: var(--bs-gray-400);">
-                <h2 class="modal-title" style="text-align: center;width: 100%;">Order Details</h2>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h2 class="modal-title" id="lblOrder" style="text-align: center;width: 100%;">Order Details</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body" style="background: var(--bs-gray-200);">
-                <form method="post" action="/water/">
-                    <div class="form-check d-flex d-lg-flex justify-content-start justify-content-lg-start"><input class="form-check-input" type="checkbox" id="formCheck-1" name="jsr"><label class="form-check-label d-xl-flex justify-content-xl-start" for="formCheck-1" style="margin-left: 5px;">Jet Ski Ride</label></div>
-                    <div class="form-check d-flex d-lg-flex justify-content-start justify-content-lg-start"><input class="form-check-input" type="checkbox" id="formCheck-2" name="br"><label class="form-check-label d-xl-flex justify-content-xl-start" for="formCheck-2" style="margin-left: 5px;">Banana Ride</label></div>
-                    <div class="form-check d-flex d-lg-flex justify-content-start justify-content-lg-start"><input class="form-check-input" type="checkbox" id="formCheck-3" name="sebr"><label class="form-check-label d-xl-flex justify-content-xl-start" for="formCheck-3" style="margin-left: 5px;">Seating Bumper Ride</label></div>
-                    <div class="form-check d-flex d-lg-flex justify-content-start justify-content-lg-start"><input class="form-check-input" type="checkbox" id="formCheck-4" name="slbr"><label class="form-check-label d-xl-flex justify-content-xl-start" for="formCheck-4" style="margin-left: 5px; margin-bottom: 5px">Sleeping Bumper Ride</label></div>
-                    <div class="text-center mb-3">
+            <div class="modal-body" style="background: var(--bs-gray-200);padding-bottom: 0px;">
+                <form id="formOrderDet" method="post">
+
+                    <input type="hidden" id="billNO">
+
+                    <div class="text-center mb-3" style="padding-right: 10px;padding-left: 10px;">
                         <div class="row">
-                            <div class="col" style="padding-right: 2px;min-width: 40%;"><input id="customer" class="form-control" type="text" placeholder="Name of Customer" name="customerName" required /></div>
-                            <div class="col" style="padding-left: 2px;min-width: 25%;padding-right: 2px;"><input class="form-control" type="text" id="contact" placeholder="Cotnact No" name="contact" inputmode="numeric" required=""></div>
-                            <div class="col" style="padding-left: 2px;padding-right: 2px;min-width: 15%;"><input class="form-control" type="number" placeholder="Rate" name="rate" required=""></div>
-                            <div class="col" style="padding-left: 2px;padding-right: 2px;min-width: 15%;"><input class="form-control" type="number" placeholder="Persons" name="nPerson" value="1" min="1" required=""></div>
+                            <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 2px;"><input class="form-control" type="text" id="customerName" placeholder="Name of Customer" name="customerName" required=""></div>
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;"><input class="form-control" type="text" id="contact" placeholder="Cotnact No" name="contact" inputmode="numeric" required=""></div>
+                        </div>
+                        <div class="row" style="padding-top: 10px;">
+                            <div class="col" style="padding-right: 2px;padding-left: 2px;min-width: 40%;"><select class="form-select" id="idActivity" name="idActivity" required>
+                                <option value="" selected="" disabled>Select Activity</option>
+                                <option value="1">Jet Ski Ride</option>
+                                <option value="2">Banana Ride</option>
+                                <option value="3">Seating Bumper</option>
+                                <option value="4">Sleeping Bumper</option>
+                            </select></div>
+                            <div class="col" id="rate2" style="padding-left: 2px;padding-right: 2px;"><input class="form-control" type="number" id="rate" name="rate" min="0" placeholder="Rate" required></div>
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;"><input class="form-control" type="number" id="persons" name="persons" min="1" value="1" placeholder="Persons" required></div>
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;"><button class="btn btn-primary" id="btnAddOrder" type="submit"><i class="fa fa-plus"></i>&nbsp;Add</button></div>
                         </div>
                     </div>
-                    <div class="mb-3"></div>
-                    <div class="mb-3"></div>
-                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
+                    <div class="mb-3">
+                        <div class="card">
+                            <div class="card-body" style="padding: 0px;">
+                                <div class="table-responsive" style="min-height: 200px;background: var(--bs-gray-400);">
+                                    <table class="table" id="tblOrder">
+                                        <thead>
+                                        <tr>
+                                            <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Activity</th>
+                                            <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Rate</th>
+                                            <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Persons</th>
+                                            <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Amount</th>
+                                            <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+<!--                                        <tr style="background: var(&#45;&#45;bs-modal-bg);">-->
+<!--                                            <td style="text-align: left;padding: 4px;">activity</td>-->
+<!--                                            <td style="text-align: right;padding: 4px;">rate</td>-->
+<!--                                            <td style="text-align: right;padding: 4px;">persons</td>-->
+<!--                                            <td style="text-align: right;padding: 4px;">amount</td>-->
+<!--                                            <td style="text-align: center;padding: 4px;">-->
+<!--                                                <div class="btn-group" role="group"><button class="btn btn-danger" id="btnDelete2" type="button" style="border-color: var(&#45;&#45;bs-pink);"><i class="fas fa-trash"></i></button></div>-->
+<!--                                            </td>-->
+<!--                                        </tr>-->
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
+                <div class="text-center">
+                    <label class="form-label" style="text-align: right;">
+                        <strong>Total = </strong>
+                    </label>
+                    <label id="total" class="form-label" style="text-align: left;">0</label>
+                </div>
             </div>
         </div>
     </div>

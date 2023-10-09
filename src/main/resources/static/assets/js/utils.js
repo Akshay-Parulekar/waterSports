@@ -25,6 +25,97 @@ function confirmDelete(url)
     })
 }
 
+function deleteOrderDet(id, btnDelete)
+{
+    axios.get("/water/order/delete/" + id + "/")
+    .then((response) =>
+      {
+          var status = response.data;
+          console.log("status = " + status);
+
+          if(status == 1)
+          {
+              $(btnDelete).closest('tr').remove();
+          }
+          else
+          {
+              Swal.fire('Oops!', 'Something went wrong. Please Try again', 'error');
+          }
+      })
+      .catch((error) =>
+      {
+          console.log("error " + error);
+          Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+      })
+}
+
+function showData(billNo)
+{
+    axios.get("/water/orderdet/" + billNo + "/")
+        .then((response) =>
+          {
+              var listObj = response.data;
+
+              if(listObj == null)
+              {
+                  Swal.fire('Oops!', 'Something went wrong. Please Try again', 'error');
+              }
+              else
+              {
+                  $.each(listObj, function (index, obj)
+                  {
+//                      const row = $("<tr style='background: var(--bs-modal-bg);'>");
+//                      row.append($("<td style='text-align: left;padding: 4px;'>").text($("#idActivity option[value='" + obj.idActivity + "']").text()));
+//                      row.append($("<td style='text-align: right;padding: 4px;'>").text(obj.rate));
+
+                      var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
+                      tbl.append(str);
+                  });
+
+                  var columnIndex = 3;
+                  var sum = 0;
+
+                  $("#tblOrder tbody tr").each(function() {
+                      var cellValue = parseFloat($(this).find("td:eq(" + columnIndex + ")").text());
+                      if (!isNaN(cellValue)) {
+                          sum += cellValue;
+                      }
+                  });
+
+                  // Display the sum
+                  $("#total").text(sum);
+              }
+          })
+          .catch((error) =>
+          {
+              console.log("error " + error);
+              Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+          })
+
+    axios.get("/water/order/" + billNo + "/")
+        .then((response) =>
+          {
+              var obj = response.data;
+
+              if(obj == null)
+              {
+                  Swal.fire('Oops!', 'Something went wrong. Please Try again', 'error');
+              }
+              else
+              {
+                  $('#customerName').val(obj.customerName);
+                  $('#rate').val(obj.rate);
+                  $('#persons').val(obj.price);
+                  $("#idActivity").prop("selectedIndex", obj.idActivity);
+              }
+          })
+          .catch((error) =>
+          {
+              console.log("error " + error);
+              Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+          })
+}
+
 function confirmLogout()
 {
     Swal.fire({
@@ -67,7 +158,7 @@ function printPos(id, type)
           }
           else
           {
-              Swal.fire('Oops!', 'Printer may not be Connected or Check power supply', 'error');
+              Swal.fire('Oops!', 'Something went wrong. Please Try again', 'error');
           }
       })
       .catch((error) =>
@@ -80,8 +171,76 @@ function printPos(id, type)
 $(document).ready(function() {
     var formInfo = $('#formInfo');
     var formLogin = $('#formLogin');
+    var formOrderDet = $('#formOrderDet');
     var btnSaveInfo = $('#btnSaveInfo');
     var btnSaveLogin = $('#btnSaveLogin');
+    var btnAddOrder = $('#btnAddOrder');
+    var tbl = $('#tblOrder > tbody');
+
+    formOrderDet.on('submit', function(event) 
+    {
+        console.log('orderdetails submitting form');
+
+        if (formOrderDet[0].checkValidity()) 
+        {
+            event.preventDefault();
+
+            btnAddOrder.addClass('disabled')
+
+            const endpoint = '/water/add/';
+
+            var data = {
+              billNo:  $('#billNo').val(),
+              customerName: $('#customerName').val(),
+              contact: $('#contact').val(),
+              rate: $('#rate').val(),
+              persons: $('#persons').val(),
+              idActivity: $('#idActivity').val()
+            };
+
+            axios.post(endpoint, {}, {params:data})
+                .then((response) =>
+                  {
+                      var obj = response.data;
+            
+                      if(obj == null)
+                      {
+                          Swal.fire('Oops!', 'Something went wrong. Please Try again', 'error');
+                      }
+                      else
+                      {
+                          var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
+
+                          tbl.append(str);
+
+                          $("#idActivity").prop("selectedIndex", 0);
+                          $('#rate').val('')
+                          $('#persons').val('')
+
+                          var columnIndex = 3;
+                          var sum = 0;
+
+                          $("#tblOrder tbody tr").each(function() {
+                              var cellValue = parseFloat($(this).find("td:eq(" + columnIndex + ")").text());
+                              if (!isNaN(cellValue)) {
+                                  sum += cellValue;
+                              }
+                          });
+
+                          // Display the sum
+                          $("#total").text(sum);
+                      }
+                  })
+                  .catch((error) =>
+                  {
+                      console.log("error " + error);
+                      Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+                  })
+                  .finally(() => {
+                     btnAddOrder.removeClass('disabled')
+                  });
+        }
+    });
 
     formInfo.on('submit', function(event) 
     {
@@ -174,7 +333,7 @@ $(document).ready(function() {
                       {
                              btnSaveLogin.val('Save');
                              btnSaveLogin.removeClass('disabled')
-                      });;
+                      });
                 }
         });
 
@@ -184,4 +343,5 @@ $(document).ready(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
     });
+
 });

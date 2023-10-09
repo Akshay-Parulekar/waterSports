@@ -1,9 +1,10 @@
 package com.example.waterSports.controller;
 
+import com.example.waterSports.modal.OrderDetailsWaterSport;
+import com.example.waterSports.repo.OrderDetailsWaterSportRepo;
 import com.example.waterSports.modal.OrderWaterSport;
 import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.OrderWaterSportRepo;
-import com.example.waterSports.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,7 +18,9 @@ import java.util.List;
 public class WaterSportController
 {
     @Autowired
-    OrderWaterSportRepo repo;
+    OrderWaterSportRepo repoOrder;
+    @Autowired
+    OrderDetailsWaterSportRepo repoOrderDet;
     @Autowired
     ConfigRepo configRepo;
 
@@ -28,7 +31,7 @@ public class WaterSportController
         LocalDate dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
         LocalDate dateTo = LocalDate.now();
 
-        List<OrderWaterSport> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
         model.addAttribute("list", list);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
@@ -37,6 +40,7 @@ public class WaterSportController
         model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+        model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
 
         return "waterSport";
     }
@@ -53,7 +57,7 @@ public class WaterSportController
             dateTo = LocalDate.now();
         }
 
-        List<OrderWaterSport> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
         model.addAttribute("list", list);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
@@ -62,6 +66,7 @@ public class WaterSportController
         model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+        model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
 
         return "waterSport";
     }
@@ -69,44 +74,76 @@ public class WaterSportController
     @GetMapping("/delete/{id}/")
     public String delete(@PathVariable Long id)
     {
-        repo.deleteById(id);
+        repoOrder.deleteById(id);
         return "redirect:/water/";
     }
 
-    @PostMapping("/")
-    public String findData(Model model, String customerName, String contact, Double rate, Integer nPerson, Boolean jsr, Boolean br, Boolean sebr, Boolean slbr)
+    @GetMapping("/order/{id}/")
+    public OrderWaterSport getOrder(@PathVariable Long billNo)
     {
-        OrderWaterSport orderSaved = repo.findTopByOrderByBillNoDesc();
-        Long maxBillNo = null;
+        return repoOrder.findByBillNo(billNo);
+    }
 
-        if(orderSaved == null)
+    @GetMapping("/orderdet/{id}/")
+    public List<OrderDetailsWaterSport> getOrderDet(@PathVariable Long billNo)
+    {
+        return repoOrderDet.findByBillNo(billNo);
+    }
+
+    @GetMapping("/order/delete/{id}/")
+    @ResponseBody
+    public Integer deleteOrderDet(@PathVariable Long id)
+    {
+        Integer status = 0;
+        repoOrderDet.deleteById(id);
+        status = 1;
+        return status;
+    }
+
+    @PostMapping("/add/")
+    @ResponseBody
+    public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, String contact, Double rate, Integer persons, Integer idActivity)
+    {
+        System.out.println("params recieved are : " + billNo + ", " + customerName + ", " + rate + ", " + persons + ", " +idActivity);
+
+        OrderWaterSport orderSaved;
+
+        if(billNo == null) // For New Bill
         {
-            maxBillNo = 0L;
-        }
-        else
-        {
-            maxBillNo = orderSaved.getBillNo();
+            orderSaved = repoOrder.findTopByOrderByBillNoDesc();
+
+            if(orderSaved == null)
+            {
+                billNo = 1L;
+            }
+            else
+            {
+                billNo = orderSaved.getBillNo();
+            }
+
+            OrderWaterSport order = new OrderWaterSport(billNo, customerName, contact);
+            repoOrder.save(order);
         }
 
-        OrderWaterSport order = new OrderWaterSport(maxBillNo + 1, customerName, contact, rate, nPerson, jsr, br, sebr, slbr);
-        repo.save(order);
+        OrderDetailsWaterSport orderDetails = new OrderDetailsWaterSport(billNo, idActivity, persons, rate);
+        OrderDetailsWaterSport orderDetailsSaved = repoOrderDet.save(orderDetails);
 
-        Helper.PrintBill(
-                configRepo.findOneByProp("title").getVal(),
-                configRepo.findOneByProp("header").getVal(),
-                configRepo.findOneByProp("footer").getVal(),
-                configRepo.findOneByProp("address").getVal(),
-                configRepo.findOneByProp("contact").getVal(),
-                configRepo.findOneByProp("printer").getVal(),
-                order.getBillNo(),
-                order.getCustomerName(),
-                order.getActivities(),
-                order.getnPerson(),
-                order.getRate(),
-                Helper.formatter.format(order.getDate())
-        );
-        
-        return "redirect:/water/";
+//        Helper.PrintBill(
+//                configRepo.findOneByProp("title").getVal(),
+//                configRepo.findOneByProp("header").getVal(),
+//                configRepo.findOneByProp("footer").getVal(),
+//                configRepo.findOneByProp("address").getVal(),
+//                configRepo.findOneByProp("contact").getVal(),
+//                configRepo.findOneByProp("printer").getVal(),
+//                order.getBillNo(),
+//                order.getCustomerName(),
+//                order.getActivities(),
+//                order.getnPerson(),
+//                order.getRate(),
+//                Helper.formatter.format(order.getDate())
+//        );
+
+        return orderDetailsSaved;
     }
 
     @GetMapping("/print/{id}/")
@@ -115,21 +152,21 @@ public class WaterSportController
     {
         Integer status = 0;
 
-        OrderWaterSport order = repo.getReferenceById(id);
-        status = Helper.PrintBill(
-                configRepo.findOneByProp("title").getVal(),
-                configRepo.findOneByProp("header").getVal(),
-                configRepo.findOneByProp("footer").getVal(),
-                configRepo.findOneByProp("address").getVal(),
-                configRepo.findOneByProp("contact").getVal(),
-                configRepo.findOneByProp("printer").getVal(),
-                order.getBillNo(),
-                order.getCustomerName(),
-                order.getActivities(),
-                order.getnPerson(),
-                order.getRate(),
-                Helper.formatter.format(order.getDate())
-        );
+//        OrderWaterSport order = repo.getReferenceById(id);
+//        status = Helper.PrintBill(
+//                configRepo.findOneByProp("title").getVal(),
+//                configRepo.findOneByProp("header").getVal(),
+//                configRepo.findOneByProp("footer").getVal(),
+//                configRepo.findOneByProp("address").getVal(),
+//                configRepo.findOneByProp("contact").getVal(),
+//                configRepo.findOneByProp("printer").getVal(),
+//                order.getBillNo(),
+//                order.getCustomerName(),
+//                order.getActivities(),
+//                order.getnPerson(),
+//                order.getRate(),
+//                Helper.formatter.format(order.getDate())
+//        );
 
         return status;
     }
