@@ -1,7 +1,9 @@
 package com.example.waterSports.controller;
 
+import com.example.waterSports.modal.ActivityLog;
 import com.example.waterSports.modal.OrderParasailing;
 import com.example.waterSports.modal.OrderWaterSport;
+import com.example.waterSports.repo.ActivityLogRepo;
 import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.OrderParasalingRepo;
 import com.example.waterSports.utils.Helper;
@@ -21,6 +23,8 @@ public class ParasailingController
     OrderParasalingRepo repo;
     @Autowired
     ConfigRepo configRepo;
+    @Autowired
+    ActivityLogRepo repoActivityLog;
 
     @GetMapping("/")
     public String showData(Model model)
@@ -70,12 +74,15 @@ public class ParasailingController
     @GetMapping("/delete/{id}/")
     public String delete(@PathVariable Long id)
     {
+        OrderParasailing order = repo.getReferenceById(id);
         repo.deleteById(id);
+        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + order.getBillNo() + ", persons = " + order.getnPerson() + ", rate = " + order.getRate() + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact()));
+
         return "redirect:/para/";
     }
 
     @PostMapping("/")
-    public String findData(Model model, String customerName, String contact, Double rate, Integer nPerson)
+    public String addData(Model model, String customerName, String contact, Double rate, Integer nPerson)
     {
         OrderParasailing orderSaved = repo.findTopByOrderByBillNoDesc();
         Long maxBillNo = null;
@@ -91,6 +98,8 @@ public class ParasailingController
 
         OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, contact, rate, nPerson);
         repo.save(order);
+
+        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact()));
 
         Helper.PrintBill(
                 configRepo.findOneByProp("title").getVal(),

@@ -1,10 +1,13 @@
 package com.example.waterSports.controller;
 
+import com.example.waterSports.modal.ActivityLog;
 import com.example.waterSports.modal.OrderDetailsWaterSport;
+import com.example.waterSports.repo.ActivityLogRepo;
 import com.example.waterSports.repo.OrderDetailsWaterSportRepo;
 import com.example.waterSports.modal.OrderWaterSport;
 import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.OrderWaterSportRepo;
+import com.example.waterSports.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +26,8 @@ public class WaterSportController
     OrderDetailsWaterSportRepo repoOrderDet;
     @Autowired
     ConfigRepo configRepo;
+    @Autowired
+    ActivityLogRepo repoActivityLog;
 
     @GetMapping("/")
     public String showData(Model model)
@@ -78,6 +83,9 @@ public class WaterSportController
         Long billNo = repoOrder.getReferenceById(id).getBillNo();
         repoOrder.deleteById(id);
         repoOrderDet.deleteByBillNo(billNo);
+
+        repoActivityLog.save(new ActivityLog("WaterSports : Order was Deleted with BillNo = " + billNo));
+
         return "redirect:/water/";
     }
 
@@ -100,8 +108,12 @@ public class WaterSportController
     public Integer deleteOrderDet(@PathVariable Long id)
     {
         Integer status = 0;
+        OrderDetailsWaterSport orderDet = repoOrderDet.getReferenceById(id);
         repoOrderDet.deleteById(id);
         status = 1;
+
+        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Deleted with BillNo = " + orderDet.getBillNo() + ", Activity = " + Helper.arrayActivity[orderDet.getIdActivity()-1] + ", persons = " + orderDet.getPersons() + ", rate = " + orderDet.getRate()));
+
         return status;
     }
 
@@ -132,20 +144,7 @@ public class WaterSportController
         OrderDetailsWaterSport orderDetails = new OrderDetailsWaterSport(billNo, idActivity, persons, rate);
         OrderDetailsWaterSport orderDetailsSaved = repoOrderDet.save(orderDetails);
 
-//        Helper.PrintBill(
-//                configRepo.findOneByProp("title").getVal(),
-//                configRepo.findOneByProp("header").getVal(),
-//                configRepo.findOneByProp("footer").getVal(),
-//                configRepo.findOneByProp("address").getVal(),
-//                configRepo.findOneByProp("contact").getVal(),
-//                configRepo.findOneByProp("printer").getVal(),
-//                order.getBillNo(),
-//                order.getCustomerName(),
-//                order.getActivities(),
-//                order.getnPerson(),
-//                order.getRate(),
-//                Helper.formatter.format(order.getDate())
-//        );
+        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", contact = " + contact));
 
         return orderDetailsSaved;
     }

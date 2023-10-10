@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Activity Logs</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/assets/css/Navbar-Right-Links-icons.css">
+    <script src="/assets/js/axios.js"></script>
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/js/sweetalert.js"></script>
+    <script src="/assets/js/utils.js"></script>
+
+</head>
+<body style="background: var(--bs-gray-200);">
+
+<!--Header-->
+<div th:replace="fragments.html :: header(tabIndex=3)"></div>
+
+<div class="card" style="margin: 10px;padding: 10px;">
+    <div class="card-body" style="padding: 0px;">
+        <div class="container">
+            <div class="row">
+                <form method="post" action="/logs/find/">
+                <div class="col-md-12">
+                            <small class="form-text">&nbsp; Show Logs From&nbsp;</small>
+                            <input type="datetime-local" name="dateFrom" th:value="${dateFrom}" required>
+
+                            <small class="form-text">&nbsp;To&nbsp;</small>
+                            <input type="datetime-local" name="dateTo" th:value="${dateTo}" required>
+
+                            <button class="btn btn-primary" type="submit" style="margin-left: 10px;margin-right: 10px;"><i class="fas fa-search"></i>&nbsp;Search</button>
+
+                    <small class="form-text">&nbsp;Filter By Keyword&nbsp;&nbsp;</small><input type="search" id="filter" name="filter" style="margin-right: 10px;">
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card" style="margin: 10px;">
+    <div class="card-body" style="padding: 0px;box-shadow: -4px 4px 3px 0px var(--bs-gray-500);">
+        <div class="table-responsive">
+            <table class="table" id="tbl">
+                <thead>
+                <tr>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Log ID</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Timestamp</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Details</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="log : ${list}">
+                    <td style="text-align: right;padding: 4px;" th:text="${log.id}"></td>
+                    <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(log.timestampAct, 'dd-MM-yyyy hh:mm:ss')}"></td>
+                    <td style="text-align: left;padding: 4px;" th:text="${log.details}"></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Setting Modal -->
+<div th:replace="fragments.html :: config"></div>
+
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
