@@ -24,7 +24,13 @@
         <li class="nav-item"><a class="nav-link" th:classappend="${tabIndex==2} ? 'active'" href="/para/">Parasailing</a></li>
         <li class="nav-item"><a class="nav-link" th:classappend="${tabIndex==3} ? 'active'" href="/logs/">Logs</a></li>
       </ul>
-      <button class="btn btn-primary" type="button" style="background: var(--bs-gray-500);border-color: var(--bs-gray-600);margin-right: 5px;" data-bs-target="#settingsModal" data-bs-toggle="modal"><i class="fa fa-gear" style="color: var(--bs-navbar-brand-color);"></i>&nbsp;</button><button class="btn btn-danger" role="button" onclick="confirmLogout()"><i class="fas fa-lock"></i>&nbsp;Logout</button>
+        <button class="btn btn-primary" type="button" style="background: var(--bs-gray-500);border-color: var(--bs-gray-600);margin-right: 5px;" data-bs-target="#reportModal" data-bs-toggle="modal">
+            <i class="fa fa-table" style="color: var(--bs-navbar-brand-color);"></i>&nbsp;
+        </button>
+        <button class="btn btn-primary" type="button" style="background: var(--bs-gray-500);border-color: var(--bs-gray-600);margin-right: 5px;" data-bs-target="#settingsModal" data-bs-toggle="modal">
+            <i class="fa fa-gear" style="color: var(--bs-navbar-brand-color);"></i>&nbsp;
+        </button>
+        <button class="btn btn-danger" role="button" onclick="confirmLogout()"><i class="fas fa-lock"></i>&nbsp;Logout</button>
     </div>
   </div>
 </nav>
@@ -81,6 +87,40 @@
                     <div class="mb-3"></div>
                     <div class="mb-3"></div>
                     <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit" id="btnSaveLogin">Save</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:fragment="report" class="modal fade" role="dialog" tabindex="-1" id="reportModal" style="text-align: right;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--bs-gray-400);">
+                <h2 class="modal-title" id="lblOrder" style="text-align: center;width: 100%;">Reports</h2><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background: var(--bs-gray-200);padding-bottom: 0px;">
+                <form method="post" action="/report/" target="_blank">
+                    <div class="text-center mb-3" style="padding-right: 10px;padding-left: 10px;">
+                        <div class="row">
+                            <div class="col" style="padding-right: 2px;padding-left: 2px;"><small class="form-text">Date From</small><input class="form-control" type="date" name="dateFrom"></div>
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;"><small class="form-text">Date To</small><input class="form-control" type="date" name="dateTo"></div>
+                        </div>
+                        <div class="row">
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;"><small class="form-text">Activities</small><select class="form-select" name="idActivity">
+                                <optgroup label="This is a group">
+                                    <option value="0" selected="">Water Sports</option>
+                                    <option value="1">Parasailing</option>
+                                </optgroup>
+                            </select></div>
+                            <div class="col" style="padding-right: 2px;padding-left: 2px;"><small class="form-text">Group By</small><select class="form-select" name="idGroup">
+                                <option value="0" selected="">Day</option>
+                                <option value="1">Month</option>
+                                <option value="2">Year</option>
+                            </select></div>
+                        </div>
+                    </div>
+                    <div class="text-center"><button class="btn btn-warning" id="btnPrint" type="submit" style="margin-bottom: 10px;"><i class="fa fa-print"></i>&nbsp;Print</button></div>
                 </form>
             </div>
         </div>

@@ -13,6 +13,7 @@ public class Helper
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static DecimalFormat decimalFormat = new DecimalFormat("#.##");
     public static String[] arrayActivity = {"Jet Ski Ride", "Banana Ride", "Seating Bumper", "Sleeping Bumper"};
+    public static String[] arrayMonth = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
     public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String customerName, String activities, Integer nPerson, Double rate, String date)
     {

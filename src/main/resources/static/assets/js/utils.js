@@ -1,5 +1,32 @@
 var isEditing = 0;
 
+function confirmClearLogs(url)
+{
+    Swal.fire({
+      title: 'Are you sure you want to clear all Logs?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        Swal.fire(
+          'Done!',
+          'All Logs has been cleared successfully.',
+          'success'
+        ).then((result) =>
+        {
+             if (result.isConfirmed)
+             {
+                window.location.replace(url);
+             }
+         });
+      }
+    })
+}
+
 function confirmDelete(url)
 {
     Swal.fire({
@@ -215,7 +242,15 @@ $(document).ready(function() {
                       {
                           var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
 
-                          tbl.append(str);
+                           if ($("#tblOrder td:nth-child(1):contains('" + $("#idActivity option[value='" + obj.idActivity + "']").text() + "')").length > 0)
+                           {
+                                $("#tblOrder td:nth-child(2)").text(obj.rate);
+                                $("#tblOrder td:nth-child(3)").text(obj.persons);
+                           }
+                           else
+                           {
+                                tbl.append(str);
+                           }
 
                           $("#idActivity").prop("selectedIndex", 0);
                           $('#rate').val('');

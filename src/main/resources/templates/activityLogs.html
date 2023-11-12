@@ -35,6 +35,8 @@
                             <button class="btn btn-primary" type="submit" style="margin-left: 10px;margin-right: 10px;"><i class="fas fa-search"></i>&nbsp;Search</button>
 
                     <small class="form-text">&nbsp;Filter By Keyword&nbsp;&nbsp;</small><input type="search" id="filter" name="filter" style="margin-right: 10px;">
+                    <button class="btn btn-danger" role="button" id="btnDelete" style="border-color: var(--bs-pink);" th:onClick="|confirmClearLogs('/logs/clear/')|"><i class="fas fa-trash"></i> Clear</button>
+
                 </div>
                 </form>
             </div>
@@ -47,7 +49,7 @@
             <table class="table" id="tbl">
                 <thead>
                 <tr>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Log ID</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">ID</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Timestamp</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Details</th>
                 </tr>

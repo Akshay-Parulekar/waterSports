@@ -141,7 +141,17 @@ public class WaterSportController
             repoOrder.save(order);
         }
 
-        OrderDetailsWaterSport orderDetails = new OrderDetailsWaterSport(billNo, idActivity, persons, rate);
+        OrderDetailsWaterSport orderDetails = repoOrderDet.findByBillNoAndIdActivity(billNo, idActivity);
+
+        if(orderDetails == null)
+        {
+            orderDetails = new OrderDetailsWaterSport(billNo, idActivity, persons, rate);
+        }
+        else
+        {
+            orderDetails.setPersons(persons);
+            orderDetails.setRate(rate);
+        }
         OrderDetailsWaterSport orderDetailsSaved = repoOrderDet.save(orderDetails);
 
         repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", contact = " + contact));

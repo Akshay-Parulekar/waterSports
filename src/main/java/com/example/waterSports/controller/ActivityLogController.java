@@ -67,4 +67,11 @@ public class ActivityLogController
 
         return "activityLogs";
     }
+
+    @GetMapping("/clear/")
+    public String clearLogs()
+    {
+        repo.deleteAll();
+        return "redirect:/logs/";
+    }
 }

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <script src="/assets/js/jquery.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        let sum = 0;
+        $('#tbl tr').each(function() {
+          let value = parseFloat($(this).find('td:nth-child(2)').text().replace(',',''));
+          if (!isNaN(value)) {
+            sum += value;
+          }
+        });
+
+        $('#total').text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
+      });
+    </script>
+
+    <style>
+        h1, h2, h3, h4, h5, h6
+        {
+            text-align:center;
+            margin-top: 0;
+            margin-bottom: 0.25em;
+        }
+    </style>
+
+</head>
+<body>
+<h2 th:text="${title}">  </h2>
+<h2 th:if="${idGroup == 0}"> DAILY REPORT </h2>
+<h2 th:if="${idGroup == 1}"> MONTHLY REPORT </h2>
+<h2 th:if="${idGroup == 2}"> YEAR REPORT </h2>
+<h3 th:if="${idActivity == 0}"> Water Sports</h3>
+<h3 th:if="${idActivity == 1}"> Parasailing</h3>
+<h4 th:text="|From ${#temporals.format(dateFrom, 'dd-MM-yyyy')} To ${#temporals.format(dateTo, 'dd-MM-yyyy')}|"></h4>
+<hr>
+<div align="center">
+    <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
+        <tr>
+            <th th:if="${idGroup == 0}"> DAY </th>
+            <th th:if="${idGroup == 1}"> MONTH </th>
+            <th th:if="${idGroup == 2}"> YEAR </th>
+            <th> AMOUNT </th>
+        </tr>
+
+        <tr th:each="report : ${list}">
+            <td align="right" th:if="${idGroup == 0}" th:text="|${report.day}-${arrayMonth[report.month-1]}-${report.year}|"></td>
+            <td align="right" th:if="${idGroup == 1}" th:text="|${arrayMonth[report.month-1]}-${report.year}|"></td>
+            <td align="right" th:if="${idGroup == 2}" th:text="${report.year}"></td>
+
+            <td align="right" th:text="${#numbers.formatDecimal(report.rate, 0, 'COMMA', 2, 'POINT')}"></td>
+        </tr>
+
+        <tr>
+            <th align="right"> Total </th>
+            <th align="right" id="total"> </th>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
