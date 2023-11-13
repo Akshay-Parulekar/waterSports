@@ -1,5 +1,7 @@
 package com.example.waterSports.utils;
 
+import com.example.waterSports.modal.OrderDetailsWaterSport;
+
 import javax.print.*;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
@@ -7,6 +9,7 @@ import javax.print.attribute.standard.Sides;
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class Helper
 {
@@ -15,7 +18,12 @@ public class Helper
     public static String[] arrayActivity = {"Jet Ski Ride", "Banana Ride", "Seating Bumper", "Sleeping Bumper"};
     public static String[] arrayMonth = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
-    public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String customerName, String activities, Integer nPerson, Double rate, String date)
+    public static int particularsWidth = 15;
+    public static int rateWidth = 6;
+    public static int quantityWidth = 4;
+    public static int amountWidth = 7;
+
+    public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String customerName, String activities, Integer nPerson, Double rate, String date, List<OrderDetailsWaterSport> listOrderDet)
     {
         // Setup Printer
         DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PAGEABLE;
@@ -54,7 +62,7 @@ public class Helper
         expected.writeBytes((title + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.CharSize.Normal());
-        expected.writeBytes((wordWrap(address, 32) + "\n").getBytes());
+        expected.writeBytes((wrapTextOld(address, 32).toString() + "\n").getBytes());
         expected.writeBytes(("Phone : " + contact + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Left));
@@ -65,13 +73,44 @@ public class Helper
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
 
         expected.writeBytes(("-".repeat(32) + "\n").getBytes());
-        expected.writeBytes((wordWrap("Activities : " + activities, 32) + "\n").getBytes());
+
+        String columnHeads = String.format("%-" + particularsWidth + "s%"+ rateWidth +"s%" + quantityWidth + "s%" + amountWidth + "s", "Activities", "Rate", "Qty", "Amount");
+        expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.Bold));
+        expected.writeBytes((columnHeads + "\n").getBytes());
+
+        expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
+
+        if(activities == null) // Watersports
+        {
+            for (OrderDetailsWaterSport orderDet:listOrderDet)
+            {
+                String row = generateReceiptRow(Helper.arrayActivity[orderDet.getIdActivity()-1], orderDet.getRate(), orderDet.getPersons(), (orderDet.getRate() * orderDet.getPersons()));
+                expected.writeBytes((row).getBytes());
+            }
+        }
+        else // Parasailing
+        {
+            String row = generateReceiptRow(activities, rate, nPerson, (rate * nPerson));
+            expected.writeBytes((row).getBytes());
+        }
+
+        expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
+        expected.writeBytes(("-".repeat(32) + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Center));
-        expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.Bold));
-        expected.writeBytes(("Total = " + decimalFormat.format(rate) + " X " + nPerson + " = " + decimalFormat.format(rate * nPerson) + "\n").getBytes());
+        double grandTotal = 0;
 
-        expected.writeBytes(("-".repeat(32) + "\n").getBytes());
+        if(activities == null) // Water Sports
+        {
+            grandTotal = calculateTotal(listOrderDet);
+        }
+        else // Parasailing
+        {
+            grandTotal = rate * nPerson;
+        }
+
+        expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.Bold));
+        expected.writeBytes(("Grand Total Rs " + (int)grandTotal + " only" + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
         expected.writeBytes((footer + "\n\n\n\n").getBytes());
@@ -94,6 +133,10 @@ public class Helper
         // Cutting the page
         expected.writeBytes(POS.POSPrinter.CutPage());
 
+        // Preview output on Console
+//        System.out.println("------------------");
+//        System.out.println(expected);
+
         // Printing the content to paper
         DocPrintJob job = myService.createPrintJob();
         Doc doc = new SimpleDoc(expected.toByteArray(), DocFlavor.BYTE_ARRAY.AUTOSENSE, null);
@@ -105,11 +148,49 @@ public class Helper
             e.printStackTrace();
             return 0;
         }
-    //    return 1;
+//        return 1;
     }
-    
 
-    public static String wordWrap(String text, int lineLength) {
+    public static String generateReceiptRow(String particulars, double rate, int quantity, double amount) {
+        String[] wrappedParticulars = wrapText(particulars, particularsWidth);
+
+        StringBuilder formattedParticulars = new StringBuilder();
+
+        for (int i = 0; i < wrappedParticulars.length; i++) {
+            formattedParticulars.append(String.format("%-" + particularsWidth + "s", wrappedParticulars[i]));
+
+            // Add quantity and amount on the last line of particulars
+            if (i == wrappedParticulars.length - 1) {
+                formattedParticulars.append(String.format("%" + (rateWidth + quantity + amountWidth) + "s",
+                        String.format("%" + rateWidth + "s", (int)rate) +
+                                String.format("%" + quantityWidth + "s", quantity) +
+                                String.format("%" + amountWidth + "s", (int)amount)
+                ));
+            }
+
+            formattedParticulars.append("\n");
+        }
+
+        return formattedParticulars.toString();
+    }
+
+    public static String[] wrapText(String text, int width) {
+        if (text.length() <= width) {
+            return new String[]{text};
+        } else {
+            int numSubstrings = (int) Math.ceil((double) text.length() / width);
+            String[] lines = new String[numSubstrings];
+
+            for (int i = 0; i < numSubstrings - 1; i++) {
+                lines[i] = text.substring(i * width, (i + 1) * width);
+            }
+            lines[numSubstrings - 1] = text.substring((numSubstrings - 1) * width);
+
+            return lines;
+        }
+    }
+
+    public static String wrapTextOld(String text, int lineLength) {
         StringBuilder wrappedText = new StringBuilder();
         int currentLineLength = 0;
 
@@ -129,5 +210,15 @@ public class Helper
         }
 
         return wrappedText.toString();
+    }
+
+    public static double calculateTotal(List<OrderDetailsWaterSport> listOrderDet)
+    {
+        double sum = 0;
+        for (OrderDetailsWaterSport orderDet:listOrderDet)
+        {
+            sum = sum + (orderDet.getRate() * orderDet.getPersons());
+        }
+        return sum;
     }
 }

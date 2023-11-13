@@ -165,21 +165,29 @@ public class WaterSportController
     {
         Integer status = 0;
 
-//        OrderWaterSport order = repo.getReferenceById(id);
-//        status = Helper.PrintBill(
-//                configRepo.findOneByProp("title").getVal(),
-//                configRepo.findOneByProp("header").getVal(),
-//                configRepo.findOneByProp("footer").getVal(),
-//                configRepo.findOneByProp("address").getVal(),
-//                configRepo.findOneByProp("contact").getVal(),
-//                configRepo.findOneByProp("printer").getVal(),
-//                order.getBillNo(),
-//                order.getCustomerName(),
-//                order.getActivities(),
-//                order.getnPerson(),
-//                order.getRate(),
-//                Helper.formatter.format(order.getDate())
-//        );
+        OrderWaterSport order = repoOrder.getReferenceById(id);
+
+        System.out.println("order = " + order.toString());
+
+        List<OrderDetailsWaterSport> listOrderDet = repoOrderDet.findByBillNo(order.getBillNo());
+
+        System.out.println("orderDet = " + listOrderDet.toString());
+
+        status = Helper.PrintBill(
+                configRepo.findOneByProp("title").getVal(),
+                configRepo.findOneByProp("header").getVal(),
+                configRepo.findOneByProp("footer").getVal(),
+                configRepo.findOneByProp("address").getVal(),
+                configRepo.findOneByProp("contact").getVal(),
+                configRepo.findOneByProp("printer").getVal(),
+                order.getBillNo(),
+                order.getCustomerName(),
+                null,
+                null,
+                null,
+                Helper.formatter.format(order.getDate()),
+                listOrderDet
+        );
 
         return status;
     }

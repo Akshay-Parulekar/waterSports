@@ -113,7 +113,8 @@ public class ParasailingController
                 "Parasailing",
                 order.getnPerson(),
                 order.getRate(),
-                Helper.formatter.format(order.getDate())
+                Helper.formatter.format(order.getDate()),
+                null
         );
 
         return "redirect:/para/";
@@ -138,7 +139,8 @@ public class ParasailingController
                 "Parasailing",
                 order.getnPerson(),
                 order.getRate(),
-                Helper.formatter.format(order.getDate())
+                Helper.formatter.format(order.getDate()),
+                null
         );
 
         return status;

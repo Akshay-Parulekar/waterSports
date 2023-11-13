@@ -1,4 +1,4 @@
-var isEditing = 0;
+var isNew = 0;
 
 function confirmClearLogs(url)
 {
@@ -80,7 +80,7 @@ function deleteOrderDet(id, btnDelete)
 
 function showData(billNo)
 {
-    isEditing = 1;
+    isNew = 0;
     $('#formOrderDet')[0].reset();
     $('#tblOrder > tbody').empty();
 
@@ -137,6 +137,7 @@ function showData(billNo)
               }
               else
               {
+                  $('#idOrder').val(obj.id);
                   $('#billNo').val(obj.billNo);
                   $('#customerName').val(obj.customerName);
                   $('#contact').val(obj.contact);
@@ -256,6 +257,7 @@ $(document).ready(function() {
                           $('#rate').val('');
                           $('#persons').val('');
                           $('#billNo').val(obj.billNo);
+                          $('#idOrder').val(obj.id);
 
                           var columnIndex = 3;
                           var sum = 0;
@@ -379,19 +381,23 @@ $(document).ready(function() {
 
     $("#btnAdd").click(function()
     {
-        isEditing = 0;
+        isNew = 1;
+        $('#idOrder').val('');
+        $('#billNo').val('');
+
         $('#formOrderDet')[0].reset();
         $('#tblOrder > tbody').empty();
     });
 
     $("#modalAddNewItem").on("hide.bs.modal", function () {
         var billNo = $("#billNo").val();
-        if(billNo && isEditing === 0)
+        if(billNo && isNew)
         {
             window.location.replace('/water/');
         }
 
-        isEditing = 0;
+        $('#idOrder').val('');
+        $('#billNo').val('');
     });
 
     $("#filter").on("keyup", function() {

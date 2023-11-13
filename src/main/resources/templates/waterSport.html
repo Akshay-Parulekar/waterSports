@@ -129,6 +129,7 @@
             <div class="modal-body" style="background: var(--bs-gray-200);padding-bottom: 0px;">
                 <form id="formOrderDet" method="post">
 
+                    <input type="hidden" id="idOrder">
                     <input type="hidden" id="billNo">
 
                     <div class="text-center mb-3" style="padding-right: 10px;padding-left: 10px;">
@@ -188,7 +189,7 @@
                 </div>
 
                 <div class="text-center">
-                    <button id="btnPrintOrder" class="btn btn-warning" type="button" style="margin-bottom: 10px;" onClick="printPos($('#billNo').val(), 1)">
+                    <button id="btnPrintOrder" class="btn btn-warning" type="button" style="margin-bottom: 10px;" onClick="printPos($('#idOrder').val(), 1)">
                         <i class="fa fa-print"></i> Print
                     </button>
                 </div>
