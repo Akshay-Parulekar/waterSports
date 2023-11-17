@@ -9,6 +9,7 @@ import javax.print.attribute.standard.Sides;
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Helper
@@ -18,10 +19,11 @@ public class Helper
     public static String[] arrayActivity = {"Jet Ski Ride", "Banana Ride", "Seating Bumper", "Sleeping Bumper"};
     public static String[] arrayMonth = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
-    public static int particularsWidth = 15;
-    public static int rateWidth = 6;
-    public static int quantityWidth = 4;
-    public static int amountWidth = 7;
+    public static int particularsWidth = 24;
+    public static int rateWidth = 8;
+    public static int quantityWidth = 7;
+    public static int amountWidth = 9;
+    public static int maxChars = 48;
 
     public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String customerName, String activities, Integer nPerson, Double rate, String date, List<OrderDetailsWaterSport> listOrderDet)
     {
@@ -58,21 +60,24 @@ public class Helper
         expected.writeBytes(POS.POSPrinter.CharSize.Normal());
         expected.writeBytes((header.replaceAll("/","\n") + "\n").getBytes());
 
-        expected.writeBytes(POS.POSPrinter.CharSize.DoubleHeight3());
+        expected.writeBytes(POS.POSPrinter.CharSize.DoubleHeight2());
         expected.writeBytes((title + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.CharSize.Normal());
         expected.writeBytes((wrapTextOld(address, 32).toString() + "\n").getBytes());
         expected.writeBytes(("Phone : " + contact + "\n").getBytes());
 
-        expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Left));
+        expected.writeBytes(("-".repeat(maxChars) + "\n").getBytes());
 
-        expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.Bold));
-        expected.writeBytes(("BillNo : " + billNo + ", Date : " + date + "\n").getBytes());
+        expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Left));
+        int middleSpace = maxChars - ("BillNo : " + billNo).length() - ("Date : " + date).length();
+        String strBillNoDate = String.format("%s%" + middleSpace + "s%s", "BillNo : " + billNo, "", "Date : " + date + "\n");
+
+        expected.writeBytes((strBillNoDate).getBytes());
         expected.writeBytes(("Customer : " + customerName + "\n").getBytes());
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
 
-        expected.writeBytes(("-".repeat(32) + "\n").getBytes());
+        expected.writeBytes(("-".repeat(maxChars) + "\n").getBytes());
 
         String columnHeads = String.format("%-" + particularsWidth + "s%"+ rateWidth +"s%" + quantityWidth + "s%" + amountWidth + "s", "Activities", "Rate", "Qty", "Amount");
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.Bold));
@@ -95,7 +100,7 @@ public class Helper
         }
 
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
-        expected.writeBytes(("-".repeat(32) + "\n").getBytes());
+        expected.writeBytes(("-".repeat(maxChars) + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Center));
         double grandTotal = 0;
@@ -113,7 +118,7 @@ public class Helper
         expected.writeBytes(("Grand Total Rs " + (int)grandTotal + " only" + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
-        expected.writeBytes((footer + "\n\n\n\n").getBytes());
+        expected.writeBytes((footer + "\n\n\n\n\n\n\n").getBytes());
 
         // QR Code, Bar Code
 
@@ -132,6 +137,8 @@ public class Helper
 
         // Cutting the page
         expected.writeBytes(POS.POSPrinter.CutPage());
+
+        System.out.println(expected.toString().replace("\u0001", "").replace("\u001B","").replace("!", ""));
 
         // Preview output on Console
 //        System.out.println("------------------");
@@ -152,7 +159,7 @@ public class Helper
     }
 
     public static String generateReceiptRow(String particulars, double rate, int quantity, double amount) {
-        String[] wrappedParticulars = wrapText(particulars, particularsWidth);
+        String[] wrappedParticulars = wrapWords(particulars, particularsWidth);
 
         StringBuilder formattedParticulars = new StringBuilder();
 
@@ -174,20 +181,27 @@ public class Helper
         return formattedParticulars.toString();
     }
 
-    public static String[] wrapText(String text, int width) {
-        if (text.length() <= width) {
-            return new String[]{text};
-        } else {
-            int numSubstrings = (int) Math.ceil((double) text.length() / width);
-            String[] lines = new String[numSubstrings];
+    public static String[] wrapWords(String text, int width) {
+        List<String> lines = new ArrayList<>();
+        StringBuilder currentLine = new StringBuilder();
 
-            for (int i = 0; i < numSubstrings - 1; i++) {
-                lines[i] = text.substring(i * width, (i + 1) * width);
+        for (String word : text.split("\\s+")) {
+            if (currentLine.length() + word.length() <= width) {
+                if (currentLine.length() > 0) {
+                    currentLine.append(" "); // Add space between words
+                }
+                currentLine.append(word);
+            } else {
+                lines.add(currentLine.toString());
+                currentLine = new StringBuilder(word);
             }
-            lines[numSubstrings - 1] = text.substring((numSubstrings - 1) * width);
-
-            return lines;
         }
+
+        if (currentLine.length() > 0) {
+            lines.add(currentLine.toString());
+        }
+
+        return lines.toArray(new String[0]);
     }
 
     public static String wrapTextOld(String text, int lineLength) {

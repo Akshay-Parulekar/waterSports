@@ -33,7 +33,7 @@ public class MySecurityConfig
                 .csrf().disable()
                 .authorizeHttpRequests()
                 .requestMatchers(mvc.pattern("/assets/**")).permitAll()
-                .requestMatchers(mvc.pattern("/water/**"), mvc.pattern("/para/**")).hasRole("ADMIN")
+                .requestMatchers(mvc.pattern("/water/**"), mvc.pattern("/para/**"), mvc.pattern("/backup/**")).hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
                 .and()
