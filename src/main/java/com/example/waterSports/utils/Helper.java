@@ -118,7 +118,7 @@ public class Helper
         expected.writeBytes(("Grand Total Rs " + (int)grandTotal + " only" + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
-        expected.writeBytes((footer + "\n\n\n\n\n\n\n").getBytes());
+        expected.writeBytes((footer + "\n\n").getBytes());
 
         // QR Code, Bar Code
 
