@@ -5,6 +5,7 @@ import com.example.waterSports.repo.ConfigRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,6 +48,30 @@ public class ConfigController
         {
             repo.save(new Config("username", usernameNew));
             repo.save(new Config("password", passwordNew));
+            status = 1;
+        }
+
+        return status;
+    }
+
+    @GetMapping("/adminpassword/")
+    @ResponseBody
+    public String getAdminPasswordd()
+    {
+        return repo.findOneByProp("adminpassword").getVal();
+    }
+
+    @PostMapping("/adminpassword/")
+    @ResponseBody
+    public Integer saveAdminPassword(Model model, String passwordCur, String passwordNew)
+    {
+        int status = 0;
+
+        String passwordCurDb = repo.findOneByProp("adminpassword").getVal();
+
+        if(passwordCurDb.equals(passwordCur))
+        {
+            repo.save(new Config("adminpassword", passwordNew));
             status = 1;
         }
 

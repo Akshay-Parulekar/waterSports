@@ -2,29 +2,55 @@ var isNew = 0;
 
 function confirmClearLogs(url)
 {
-    Swal.fire({
-      title: 'Are you sure you want to clear all Logs?',
-      text: "You won't be able to revert this!",
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-      if (result.isConfirmed) {
-        Swal.fire(
-          'Done!',
-          'All Logs has been cleared successfully.',
-          'success'
-        ).then((result) =>
-        {
-             if (result.isConfirmed)
-             {
-                window.location.replace(url);
-             }
-         });
-      }
-    })
+    axios.get("/config/adminpassword/")
+    .then((response) =>
+      {
+          var passwordCurDb = response.data;
+          console.log("passwordCurDb = " + passwordCurDb);
+
+          if(passwordCurDb)
+          {
+            async () => {
+              const { value: password } = await Swal.fire({
+                title: "Enter admin password",
+                input: "password",
+                inputLabel: "Password",
+                inputPlaceholder: "Enter admin password",
+                inputAttributes: {
+          //        maxlength: "10",
+          //        autocapitalize: "off",
+          //        autocorrect: "off"
+                }
+              });
+              if (password === passwordCurDb) {
+                Swal.fire(
+                  'Done!',
+                  'All Logs has been cleared successfully.',
+                  'success'
+                ).then((result) =>
+                {
+                     if (result.isConfirmed)
+                     {
+                        window.location.replace(url);
+                     }
+                 });
+              }
+              else
+              {
+                Swal.fire('Invalid Password!', 'You have entered an Invalid Password', 'error');
+              }
+            }
+          }
+          else
+          {
+              Swal.fire('Oops!', 'Something went wrong. Please Try again', 'error');
+          }
+      })
+      .catch((error) =>
+      {
+          console.log("error " + error);
+          Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+      })
 }
 
 function confirmDelete(url)
@@ -206,9 +232,11 @@ $(document).ready(function() {
     var formInfo = $('#formInfo');
     var formLogin = $('#formLogin');
     var formOrderDet = $('#formOrderDet');
+    var formAdminPassword = $('#formAdminPassword');
     var btnSaveInfo = $('#btnSaveInfo');
     var btnSaveLogin = $('#btnSaveLogin');
     var btnAddOrder = $('#btnAddOrder');
+    var btnSaveAdminPassword = $('#btnSaveAdminPassword');
     var tbl = $('#tblOrder > tbody');
 
     formOrderDet.on('submit', function(event) 
@@ -378,6 +406,53 @@ $(document).ready(function() {
                       });
                 }
         });
+
+    formAdminPassword.on('submit', function(event)
+    {
+        if (formAdminPassword[0].checkValidity())
+        {
+            event.preventDefault();
+
+            btnSaveAdminPassword.val('Please Wait');
+            btnSaveAdminPassword.addClass('disabled')
+
+            var endpoint = '/config/adminpassword/';
+
+            var data = new FormData();
+            data.append('passwordCur', $('#passwordAdminCur').val());
+            data.append('passwordNew', $('#passwordAdminNew').val());
+
+            console.log('data = ' + data);
+            console.log('data.toString() = ' + data.toString());
+
+            axios.post(endpoint, data)
+            .then((response) =>
+                  {
+                      var status = response.data;
+                      console.log("status = " + status);
+
+                      if(status == 1)
+                      {
+                          Swal.fire('Success', 'Admin Password updated Successfully', 'success');
+                          formAdminPassword[0].reset();
+                      }
+                      else
+                      {
+                          Swal.fire('Oops!', 'Invalid Current Admin Password', 'error');
+                      }
+                  })
+                  .catch((error) =>
+                  {
+                      console.log("error " + error);
+                      Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+                  })
+                  .finally(() =>
+                  {
+                         btnSaveAdminPassword.val('Save');
+                         btnSaveAdminPassword.removeClass('disabled')
+                  });
+            }
+    });
 
     $("#btnAdd").click(function()
     {
