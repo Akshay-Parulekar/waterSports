@@ -6,40 +6,42 @@ function confirmClearLogs(url)
     .then((response) =>
       {
           var passwordCurDb = response.data;
-          console.log("passwordCurDb = " + passwordCurDb);
 
           if(passwordCurDb)
           {
-            async () => {
-              const { value: password } = await Swal.fire({
-                title: "Enter admin password",
-                input: "password",
-                inputLabel: "Password",
-                inputPlaceholder: "Enter admin password",
-                inputAttributes: {
-          //        maxlength: "10",
-          //        autocapitalize: "off",
-          //        autocorrect: "off"
-                }
-              });
-              if (password === passwordCurDb) {
-                Swal.fire(
-                  'Done!',
-                  'All Logs has been cleared successfully.',
-                  'success'
-                ).then((result) =>
-                {
-                     if (result.isConfirmed)
-                     {
-                        window.location.replace(url);
-                     }
-                 });
-              }
-              else
-              {
-                Swal.fire('Invalid Password!', 'You have entered an Invalid Password', 'error');
-              }
-            }
+                (async () => {
+                      const { value: password } = await Swal.fire({
+                        title: "Enter admin password",
+                        input: "password",
+                        inputLabel: "To clear logs, you must be an Admin",
+                        inputPlaceholder: "Enter admin password",
+//                        inputAttributes: {
+//                          maxlength: "10",
+//                          autocapitalize: "off",
+//                          autocorrect: "off"
+//                        }
+                      });
+
+                      if (password == passwordCurDb)
+                      {
+                          Swal.fire(
+                            'Done!',
+                            'All Logs has been cleared successfully.',
+                            'success'
+                          ).then((result) =>
+                          {
+                               if (result.isConfirmed)
+                               {
+                                  window.location.replace(url);
+                               }
+                           });
+                        }
+                        else
+                        {
+                          Swal.fire('Invalid Password!', 'You have entered an Invalid Password', 'error');
+                        }
+
+                })()
           }
           else
           {
