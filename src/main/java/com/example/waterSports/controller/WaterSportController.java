@@ -165,7 +165,7 @@ public class WaterSportController
     {
         Integer status = 0;
 
-        OrderWaterSport order = repoOrder.getReferenceById(id);
+        OrderWaterSport order = repoOrder.findByBillNo(id);
 
         System.out.println("order = " + order.toString());
 
