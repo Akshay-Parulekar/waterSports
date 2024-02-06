@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Para Sailing</title>
+    <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
+    <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="/assets/fonts/fontawesome5-overrides.min.css">
+    <link rel="stylesheet" href="/assets/css/Navbar-Right-Links-icons.css">
+    <script src="/assets/js/axios.js"></script>
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/js/sweetalert.js"></script>
+    <script src="/assets/js/utils.js"></script>
+
+    <script th:inline="javascript">
+
+    window.onload = function ()
+    {
+        var msg = [[${msg}]]
+
+        console.log("msg = " + msg);
+
+        if(msg != null)
+        {
+            if(msg.includes('success'))
+            {
+                Swal.fire('Done!', msg, 'success');
+            }
+            else if(msg.includes('expire'))
+            {
+                Swal.fire('Warning', msg, 'warning');
+            }
+            else
+            {
+                Swal.fire('Oops!', msg, 'error');
+            }
+        }
+    }
+
+    </script>
+
+</head>
+<body style="background: var(--bs-gray-200);">
+
+<!--Header-->
+<div th:replace="fragments.html :: header(tabIndex=3)"></div>
+
+<div class="card" style="margin: 10px;padding: 10px;">
+    <div class="card-body" style="padding: 0px;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <small class="form-text">&nbsp;Filter By Keyword&nbsp;&nbsp;</small><input type="search" id="filter" name="filter" style="margin-right: 10px;">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="card" style="margin: 10px;">
+    <div class="card-body" style="padding: 0px;box-shadow: -4px 4px 3px 0px var(--bs-gray-500);">
+        <div class="table-responsive">
+            <table class="table" id="tbl">
+                <thead>
+                <tr>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">No</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Name</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Owner</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr th:each="ref, iter : ${list}">
+
+                    <td style="text-align: right;padding: 4px;" th:text="${iter.index}">1</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${ref.name}">Akshay Parulekar</td>
+                    <td style="text-align: center;padding: 4px;" th:text="${ref.idOwner}">9966332211</td>
+
+                    <td style="text-align: center;padding: 4px;">
+                        <div class="btn-group" role="group">
+
+                            <button class="btn btn-primary" id="btnEdit" type="button" data-bs-target="#modalAddNewItem" data-bs-toggle="modal" th:onClick="showData([[${ref.id}]])">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor">
+                                    <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
+                                    <path d="M362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32zM421.7 220.3L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3z"></path>
+                                </svg>
+                            </button>
+
+                            <button class="btn btn-danger" role="button" id="btnDelete" style="border-color: var(--bs-pink);" th:onClick="|confirmDelete('/ref/delete/${ref.id}/')|"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" role="dialog" tabindex="-1" id="modalAddNewItem" style="text-align: right;">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="background: var(--bs-gray-400);">
+                <h2 class="modal-title" style="text-align: center;width: 100%;">Referee Details</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background: var(--bs-gray-200);">
+                <form method="post" action="/para/">
+                    <div class="text-center mb-3">
+                        <div class="row">
+                            <div class="col" style="padding-right: 2px;min-width: 40%;"><input id="customer" class="form-control" type="text" placeholder="Name of Referee" name="name" required /></div>
+
+                        </div>
+                    </div>
+                    <div class="mb-3"></div>
+                    <div class="mb-3"></div>
+                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Setting Modal -->
+<div th:replace="fragments.html :: config"></div>
+
+<!-- Report Modal -->
+<div th:replace="fragments.html :: report"></div>
+
+<script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>
