@@ -14,6 +14,9 @@
     <script src="/assets/js/sweetalert.js"></script>
     <script src="/assets/js/utils.js"></script>
 
+    <link href="/assets/css/select2.min.css" rel="stylesheet" />
+    <script src="/assets/js/select2.min.js"></script>
+
     <script th:inline="javascript">
 
     window.onload = function ()
@@ -52,6 +55,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
+                    <button class="btn btn-success" type="button" style="padding: 5px 11px;" data-bs-target="#modalAddNewItem" data-bs-toggle="modal"><i class="fas fa-plus"></i> New</button>
                     <small class="form-text">&nbsp;Filter By Keyword&nbsp;&nbsp;</small><input type="search" id="filter" name="filter" style="margin-right: 10px;">
                 </div>
             </div>
@@ -111,6 +115,16 @@
                     <div class="text-center mb-3">
                         <div class="row">
                             <div class="col" style="padding-right: 2px;min-width: 40%;"><input id="customer" class="form-control" type="text" placeholder="Name of Referee" name="name" required /></div>
+
+                            <select class="js-example-basic-single" name="idOwner">
+                                <option value="1"> Narayan </option>
+                                <option value="2"> Laxmi </option>
+                                <option value="3"> Shankar </option>
+                                <option value="4"> Parvati </option>
+
+
+                                <option th:each="ref : ${list}" value="${ref.id}" th:text="${ref.name}"></option>
+                            </select>
 
                         </div>
                     </div>
