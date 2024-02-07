@@ -106,6 +106,13 @@ function deleteOrderDet(id, btnDelete)
       })
 }
 
+function showRefData(id, name, idOwner)
+{
+    $('#id').val(id);
+    $('#name').val(name);
+    $('#idOwner').val(idOwner);
+}
+
 function showData(billNo)
 {
     isNew = 0;
@@ -233,7 +240,9 @@ function printPos(id, type)
 $(document).ready(function() {
 
     $('.js-example-basic-single').select2({
-                                            dropdownParent: $('#modalAddNewItem')
+                                            placeholder: "Select Owner",
+                                             allowClear: true,
+                                             dropdownParent: $('#modalAddNewItem')
                                           });
 
     var formInfo = $('#formInfo');
@@ -469,6 +478,14 @@ $(document).ready(function() {
 
         $('#formOrderDet')[0].reset();
         $('#tblOrder > tbody').empty();
+    });
+
+    $("#btnAddRef").click(function()
+    {
+        $('#id').val('');
+        $('#name').val('');
+        $('#idOwner').val('');
+        $('#formRef')[0].reset();
     });
 
     $("#modalAddNewItem").on("hide.bs.modal", function () {

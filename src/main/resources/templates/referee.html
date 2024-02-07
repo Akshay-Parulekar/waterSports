@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Para Sailing</title>
+    <title>Referee</title>
     <link rel="stylesheet" href="/assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/assets/fonts/fontawesome-all.min.css">
     <link rel="stylesheet" href="/assets/fonts/font-awesome.min.css">
@@ -55,7 +55,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-12">
-                    <button class="btn btn-success" type="button" style="padding: 5px 11px;" data-bs-target="#modalAddNewItem" data-bs-toggle="modal"><i class="fas fa-plus"></i> New</button>
+                    <button id="btnAddRef" class="btn btn-success" type="button" style="padding: 5px 11px;" data-bs-target="#modalAddNewItem" data-bs-toggle="modal"><i class="fas fa-plus"></i> New</button>
                     <small class="form-text">&nbsp;Filter By Keyword&nbsp;&nbsp;</small><input type="search" id="filter" name="filter" style="margin-right: 10px;">
                 </div>
             </div>
@@ -80,12 +80,12 @@
 
                     <td style="text-align: right;padding: 4px;" th:text="${iter.index}">1</td>
                     <td style="text-align: left;padding: 4px;" th:text="${ref.name}">Akshay Parulekar</td>
-                    <td style="text-align: center;padding: 4px;" th:text="${ref.idOwner}">9966332211</td>
+                    <td style="text-align: center;padding: 4px;" th:text="${ref.idOwner == -1} ? 'Self' : ${repo.getReferenceById(ref.idOwner).name}">9966332211</td>
 
                     <td style="text-align: center;padding: 4px;">
                         <div class="btn-group" role="group">
 
-                            <button class="btn btn-primary" id="btnEdit" type="button" data-bs-target="#modalAddNewItem" data-bs-toggle="modal" th:onClick="showData([[${ref.id}]])">
+                            <button class="btn btn-primary" id="btnEdit" type="button" data-bs-target="#modalAddNewItem" data-bs-toggle="modal" th:onClick="showRefData([[${ref.id}]], [[${ref.name}]], [[${ref.idOwner}]])">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor">
                                     <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
                                     <path d="M362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32zM421.7 220.3L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3z"></path>
@@ -103,7 +103,7 @@
 </div>
 
 
-<div class="modal fade" role="dialog" tabindex="-1" id="modalAddNewItem" style="text-align: right;">
+<div class="modal fade" role="dialog" tabindex="-1" id="modalAddNewItem" style="text-align: left;">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header" style="background: var(--bs-gray-400);">
@@ -111,26 +111,25 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="background: var(--bs-gray-200);">
-                <form method="post" action="/para/">
+                <form id="formRef" method="post" action="/ref/">
                     <div class="text-center mb-3">
                         <div class="row">
-                            <div class="col" style="padding-right: 2px;min-width: 40%;"><input id="customer" class="form-control" type="text" placeholder="Name of Referee" name="name" required /></div>
+                            <div class="col" style="padding-right: 2px;min-width: 40%;">
+                                <input type="hidden" id="id">
+                                <input id="name" class="form-control" type="text" placeholder="Name of Referee" name="name" required title="Please Enter Referee Name" />
+                            </div>
 
-                            <select class="js-example-basic-single" name="idOwner">
-                                <option value="1"> Narayan </option>
-                                <option value="2"> Laxmi </option>
-                                <option value="3"> Shankar </option>
-                                <option value="4"> Parvati </option>
-
-
-                                <option th:each="ref : ${list}" value="${ref.id}" th:text="${ref.name}"></option>
+                            <select id="idOwner" class="js-example-basic-single" name="idOwner" required="true" title="Please Select the Owner">
+                                <option> </option>
+                                <option value="-1"> Self </option>
+                                <option th:each="ref : ${list}" th:value="${ref.id}" th:text="${ref.name}"></option>
                             </select>
 
                         </div>
                     </div>
                     <div class="mb-3"></div>
                     <div class="mb-3"></div>
-                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" data-bs-dismiss="modal" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
+                    <div class="d-xl-flex justify-content-xl-center mb-3"><button class="btn btn-light" type="reset" style="margin-right: 10px;">Clear</button><button class="btn btn-primary" type="submit">Save</button></div>
                 </form>
             </div>
         </div>

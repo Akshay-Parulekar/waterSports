@@ -12,9 +12,12 @@ public class Referee
     @GeneratedValue(strategy = GenerationType.AUTO)
     Long id;
     String name;
-    Integer idOwner;
+    Long idOwner;
 
-    public Referee(String name, Integer idOwner)
+    public Referee() {
+    }
+
+    public Referee(String name, Long idOwner)
     {
         this.name = name;
         this.idOwner = idOwner;
@@ -36,11 +39,11 @@ public class Referee
         this.name = name;
     }
 
-    public Integer getIdOwner() {
+    public Long getIdOwner() {
         return idOwner;
     }
 
-    public void setIdOwner(Integer idOwner) {
+    public void setIdOwner(Long idOwner) {
         this.idOwner = idOwner;
     }
 }
