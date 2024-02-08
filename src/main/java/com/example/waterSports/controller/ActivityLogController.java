@@ -40,6 +40,7 @@ public class ActivityLogController
         model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+        model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
 
         return "activityLogs";
     }
@@ -65,6 +66,7 @@ public class ActivityLogController
         model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+        model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
 
         return "activityLogs";
     }

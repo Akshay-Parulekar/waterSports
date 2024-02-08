@@ -160,7 +160,7 @@ public class WaterSportController
         }
         OrderDetailsWaterSport orderDetailsSaved = repoOrderDet.save(orderDetails);
 
-        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", contact = " + contact));
+        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", contact = " + contact + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
 
         return orderDetailsSaved;
     }
@@ -179,6 +179,10 @@ public class WaterSportController
 
         System.out.println("orderDet = " + listOrderDet.toString());
 
+        Referee ref = repoRef.getReferenceById(order.getIdRef());
+        String refName = ref.getName();
+        String ownerName = repoRef.getReferenceById(ref.getIdOwner()).getName();
+
         status = Helper.PrintBill(
                 configRepo.findOneByProp("title").getVal(),
                 configRepo.findOneByProp("header").getVal(),
@@ -187,6 +191,9 @@ public class WaterSportController
                 configRepo.findOneByProp("contact").getVal(),
                 configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
+                order.getSerialNo(),
+                refName,
+                ownerName,
                 order.getCustomerName(),
                 null,
                 null,

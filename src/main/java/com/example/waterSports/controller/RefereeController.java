@@ -20,10 +20,8 @@ public class RefereeController
 {
     @Autowired
     RefereeRepo repo;
-
     @Autowired
     ConfigRepo configRepo;
-
     @Autowired
     ActivityLogRepo activityLogRepo;
 
@@ -38,6 +36,7 @@ public class RefereeController
         model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+        model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
 
         return "referee";
     }

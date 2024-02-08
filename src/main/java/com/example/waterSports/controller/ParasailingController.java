@@ -49,6 +49,7 @@ public class ParasailingController
         model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+        model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
 
         return "paraSailing";
     }
@@ -77,6 +78,7 @@ public class ParasailingController
         model.addAttribute("footer", configRepo.findOneByProp("footer").getVal());
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
+        model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
 
         return "paraSailing";
     }
@@ -109,7 +111,11 @@ public class ParasailingController
         OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, contact, rate, nPerson, idRef, serialNo);
         repo.save(order);
 
-        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact()));
+        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact() + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
+
+        Referee ref = repoRef.getReferenceById(order.getIdRef());
+        String refName = ref.getName();
+        String ownerName = repoRef.getReferenceById(ref.getIdOwner()).getName();
 
         Helper.PrintBill(
                 configRepo.findOneByProp("title").getVal(),
@@ -119,6 +125,9 @@ public class ParasailingController
                 configRepo.findOneByProp("contact").getVal(),
                 configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
+                order.getSerialNo(),
+                refName,
+                ownerName,
                 order.getCustomerName(),
                 "Parasailing",
                 order.getnPerson(),
@@ -137,6 +146,11 @@ public class ParasailingController
         Integer status = 0;
 
         OrderParasailing order = repo.getReferenceById(id);
+
+        Referee ref = repoRef.getReferenceById(order.getIdRef());
+        String refName = ref.getName();
+        String ownerName = repoRef.getReferenceById(ref.getIdOwner()).getName();
+
         status = Helper.PrintBill(
                 configRepo.findOneByProp("title").getVal(),
                 configRepo.findOneByProp("header").getVal(),
@@ -145,6 +159,9 @@ public class ParasailingController
                 configRepo.findOneByProp("contact").getVal(),
                 configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
+                order.getSerialNo(),
+                refName,
+                ownerName,
                 order.getCustomerName(),
                 "Parasailing",
                 order.getnPerson(),
