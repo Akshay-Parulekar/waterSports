@@ -2,11 +2,9 @@ package com.example.waterSports.controller;
 
 import com.example.waterSports.modal.ActivityLog;
 import com.example.waterSports.modal.OrderDetailsWaterSport;
-import com.example.waterSports.repo.ActivityLogRepo;
-import com.example.waterSports.repo.OrderDetailsWaterSportRepo;
+import com.example.waterSports.modal.Referee;
+import com.example.waterSports.repo.*;
 import com.example.waterSports.modal.OrderWaterSport;
-import com.example.waterSports.repo.ConfigRepo;
-import com.example.waterSports.repo.OrderWaterSportRepo;
 import com.example.waterSports.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,6 +26,8 @@ public class WaterSportController
     ConfigRepo configRepo;
     @Autowired
     ActivityLogRepo repoActivityLog;
+    @Autowired
+    RefereeRepo repoRef;
 
     @GetMapping("/")
     public String showData(Model model)
@@ -37,7 +37,10 @@ public class WaterSportController
         LocalDate dateTo = LocalDate.now();
 
         List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
+        model.addAttribute("listRef", listRef);
+        model.addAttribute("repoRef", repoRef);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("title",configRepo.findOneByProp("title").getVal());
@@ -63,7 +66,10 @@ public class WaterSportController
         }
 
         List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
+        model.addAttribute("listRef", listRef);
+        model.addAttribute("repoRef", repoRef);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("title",configRepo.findOneByProp("title").getVal());
@@ -119,7 +125,7 @@ public class WaterSportController
 
     @PostMapping("/add/")
     @ResponseBody
-    public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, String contact, Double rate, Integer persons, Integer idActivity)
+    public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, String contact, Double rate, Integer persons, Integer idActivity, Long idRef, String serialNo)
     {
         System.out.println("billNo = " + billNo);
         OrderWaterSport orderSaved;
@@ -137,7 +143,7 @@ public class WaterSportController
                 billNo = orderSaved.getBillNo() + 1;
             }
 
-            OrderWaterSport order = new OrderWaterSport(billNo, customerName, contact);
+            OrderWaterSport order = new OrderWaterSport(billNo, customerName, contact, idRef, serialNo);
             repoOrder.save(order);
         }
 

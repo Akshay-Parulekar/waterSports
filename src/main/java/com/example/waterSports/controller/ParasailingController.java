@@ -3,9 +3,11 @@ package com.example.waterSports.controller;
 import com.example.waterSports.modal.ActivityLog;
 import com.example.waterSports.modal.OrderParasailing;
 import com.example.waterSports.modal.OrderWaterSport;
+import com.example.waterSports.modal.Referee;
 import com.example.waterSports.repo.ActivityLogRepo;
 import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.OrderParasalingRepo;
+import com.example.waterSports.repo.RefereeRepo;
 import com.example.waterSports.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +27,8 @@ public class ParasailingController
     ConfigRepo configRepo;
     @Autowired
     ActivityLogRepo repoActivityLog;
+    @Autowired
+    RefereeRepo repoRef;
 
     @GetMapping("/")
     public String showData(Model model)
@@ -34,7 +38,10 @@ public class ParasailingController
         LocalDate dateTo = LocalDate.now();
 
         List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
+        model.addAttribute("listRef", listRef);
+        model.addAttribute("repoRef", repoRef);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("title",configRepo.findOneByProp("title").getVal());
@@ -59,7 +66,10 @@ public class ParasailingController
         }
 
         List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
+        model.addAttribute("listRef", listRef);
+        model.addAttribute("repoRef", repoRef);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("title",configRepo.findOneByProp("title").getVal());
@@ -82,7 +92,7 @@ public class ParasailingController
     }
 
     @PostMapping("/")
-    public String addData(Model model, String customerName, String contact, Double rate, Integer nPerson)
+    public String addData(Model model, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String serialNo)
     {
         OrderParasailing orderSaved = repo.findTopByOrderByBillNoDesc();
         Long maxBillNo = null;
@@ -96,7 +106,7 @@ public class ParasailingController
             maxBillNo = orderSaved.getBillNo();
         }
 
-        OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, contact, rate, nPerson);
+        OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, contact, rate, nPerson, idRef, serialNo);
         repo.save(order);
 
         repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact()));

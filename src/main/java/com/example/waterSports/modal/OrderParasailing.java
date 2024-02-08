@@ -14,6 +14,8 @@ public class OrderParasailing
     Long billNo;
     String customerName;
     String contact;
+    Long idRef;
+    String serialNo;
     Double rate;
     Integer nPerson;
     @CreationTimestamp
@@ -22,12 +24,14 @@ public class OrderParasailing
     public OrderParasailing() {
     }
 
-    public OrderParasailing(Long billNo, String customerName, String contact, Double rate, Integer nPerson) {
+    public OrderParasailing(Long billNo, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String serialNo) {
         this.billNo = billNo;
         this.customerName = customerName;
         this.contact = contact;
         this.rate = rate;
         this.nPerson = nPerson;
+        this.idRef = idRef;
+        this.serialNo = serialNo;
     }
 
     public Long getId() {
@@ -86,6 +90,22 @@ public class OrderParasailing
         this.date = date;
     }
 
+    public Long getIdRef() {
+        return idRef;
+    }
+
+    public void setIdRef(Long idRef) {
+        this.idRef = idRef;
+    }
+
+    public String getSerialNo() {
+        return serialNo;
+    }
+
+    public void setSerialNo(String serialNo) {
+        this.serialNo = serialNo;
+    }
+
     @Override
     public String toString() {
         return "OrderParasailing{" +
@@ -93,6 +113,8 @@ public class OrderParasailing
                 ", billNo=" + billNo +
                 ", customerName='" + customerName + '\'' +
                 ", contact='" + contact + '\'' +
+                ", idRef=" + idRef +
+                ", serialNo='" + serialNo + '\'' +
                 ", rate=" + rate +
                 ", nPerson=" + nPerson +
                 ", date=" + date +

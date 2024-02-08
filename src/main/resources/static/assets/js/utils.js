@@ -269,6 +269,8 @@ $(document).ready(function() {
               billNo:  $('#billNo').val(),
               customerName: $('#customerName').val(),
               contact: $('#contact').val(),
+              serialNo: $('#serialNo').val(),
+              idRef: $('#idRef').val(),
               rate: $('#rate').val(),
               persons: $('#persons').val(),
               idActivity: $('#idActivity').val()
