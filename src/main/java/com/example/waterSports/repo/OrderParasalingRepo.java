@@ -15,16 +15,20 @@ public interface OrderParasalingRepo extends JpaRepository<OrderParasailing, Lon
     List<OrderParasailing> findByDateBetweenOrderByBillNoDesc(LocalDate startDate, LocalDate endDate);
     OrderParasailing findTopByOrderByBillNoDesc();
 
-    @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM date), null, null, sum(rate * nPerson)) FROM OrderParasailing\n" +
+    @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM date), EXTRACT(MONTH FROM date), EXTRACT(YEAR FROM date), sum(rate * nPerson), 0L) FROM OrderParasailing\n" +
             "where date between :dateFrom and :dateTo group by date")
     List<Report> getDailyReportWaterSport(LocalDate dateFrom, LocalDate dateTo);
 
-    @Query("SELECT new com.example.waterSports.modal.Report(null, EXTRACT(MONTH FROM date), EXTRACT(YEAR FROM date), sum(rate * nPerson)) FROM OrderParasailing\n" +
+    @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM date), EXTRACT(MONTH FROM date), EXTRACT(YEAR FROM date), sum(rate * nPerson), 0L) FROM OrderParasailing\n" +
             "where date between :dateFrom and :dateTo group by EXTRACT(MONTH from date), EXTRACT(YEAR from date)")
     List<Report> getMonthlyReportWaterSport(LocalDate dateFrom, LocalDate dateTo);
 
-    @Query("SELECT new com.example.waterSports.modal.Report(null, null, EXTRACT(YEAR FROM date), sum(rate * nPerson)) FROM OrderParasailing\n" +
+    @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM date), EXTRACT(MONTH FROM date), EXTRACT(YEAR FROM date), sum(rate * nPerson), 0L) FROM OrderParasailing\n" +
             "where date between :dateFrom and :dateTo group by EXTRACT(YEAR from date)")
     List<Report> getYearlyReportWaterSport(LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("SELECT new com.example.waterSports.modal.Report(0, 0, 0, sum(o.rate * o.nPerson), r.idOwner) FROM OrderParasailing o inner join Referee r on o.idRef = r.id\n" +
+            "where date between :dateFrom and :dateTo group by r.idOwner")
+    List<Report> getReportReferee(LocalDate dateFrom, LocalDate dateTo);
 
 }

@@ -32,9 +32,10 @@
 </head>
 <body>
 <h2 th:text="${title}">  </h2>
-<h2 th:if="${idGroup == 0}"> DAILY REPORT </h2>
-<h2 th:if="${idGroup == 1}"> MONTHLY REPORT </h2>
-<h2 th:if="${idGroup == 2}"> YEAR REPORT </h2>
+<h2 th:if="${idReport >= 2}"> REPORT </h2>
+<h2 th:if="${idReport < 2 && idGroup == 0}"> DAY-WISE REPORT </h2>
+<h2 th:if="${idReport < 2 && idGroup == 1}"> MONTH-WISE REPORT </h2>
+<h2 th:if="${idReport < 2 && idGroup == 2}"> YEAR-WISE REPORT </h2>
 <h3 th:if="${idActivity == 0}"> Water Sports</h3>
 <h3 th:if="${idActivity == 1}"> Parasailing</h3>
 <h4 th:text="|From ${#temporals.format(dateFrom, 'dd-MM-yyyy')} To ${#temporals.format(dateTo, 'dd-MM-yyyy')}|"></h4>
@@ -42,16 +43,18 @@
 <div align="center">
     <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
         <tr>
-            <th th:if="${idGroup == 0}"> DAY </th>
-            <th th:if="${idGroup == 1}"> MONTH </th>
-            <th th:if="${idGroup == 2}"> YEAR </th>
+            <th th:if="${idReport >= 2}"> REFEREE </th>
+            <th th:if="${idReport < 2 && idGroup == 0}"> DAY </th>
+            <th th:if="${idReport < 2 && idGroup == 1}"> MONTH </th>
+            <th th:if="${idReport < 2 && idGroup == 2}"> YEAR </th>
             <th> AMOUNT </th>
         </tr>
 
         <tr th:each="report : ${list}">
-            <td align="right" th:if="${idGroup == 0}" th:text="|${report.day}-${arrayMonth[report.month-1]}-${report.year}|"></td>
-            <td align="right" th:if="${idGroup == 1}" th:text="|${arrayMonth[report.month-1]}-${report.year}|"></td>
-            <td align="right" th:if="${idGroup == 2}" th:text="${report.year}"></td>
+            <td align="left" th:if="${idReport >= 2}" th:text="${repoRef.getReferenceById(report.idRef).name}"></td>
+            <td align="right" th:if="${idReport < 2 && idGroup == 0}" th:text="|${report.day}-${arrayMonth[report.month-1]}-${report.year}|"></td>
+            <td align="right" th:if="${idReport < 2 && idGroup == 1}" th:text="|${arrayMonth[report.month-1]}-${report.year}|"></td>
+            <td align="right" th:if="${idReport < 2 && idGroup == 2}" th:text="${report.year}"></td>
 
             <td align="right" th:text="${#numbers.formatDecimal(report.rate, 0, 'COMMA', 2, 'POINT')}"></td>
         </tr>

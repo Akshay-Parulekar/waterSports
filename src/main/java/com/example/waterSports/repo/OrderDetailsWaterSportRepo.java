@@ -22,22 +22,28 @@ public interface OrderDetailsWaterSportRepo extends JpaRepository<OrderDetailsWa
     void deleteByBillNo(Long billNo);
     OrderDetailsWaterSport findByBillNoAndIdActivity(Long billNo, Integer idActivity);
 
-    @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM o.date), EXTRACT(MONTH FROM o.date), EXTRACT(YEAR FROM o.date), sum(od.rate * od.persons)) FROM OrderWaterSport o\n" +
+    @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM o.date), EXTRACT(MONTH FROM o.date), EXTRACT(YEAR FROM o.date), sum(od.rate * od.persons), o.idRef) FROM OrderWaterSport o\n" +
             "inner join OrderDetailsWaterSport od\n" +
             "on o.billNo = od.billNo\n" +
             "where o.date between :dateFrom and :dateTo group by o.date")
     List<Report> getDailyReportWaterSport(LocalDate dateFrom, LocalDate dateTo);
 
-    @Query("SELECT new com.example.waterSports.modal.Report(0, EXTRACT(MONTH FROM o.date), EXTRACT(YEAR FROM o.date), sum(od.rate * od.persons)) FROM OrderWaterSport o\n" +
+    @Query("SELECT new com.example.waterSports.modal.Report(0, EXTRACT(MONTH FROM o.date), EXTRACT(YEAR FROM o.date), sum(od.rate * od.persons), o.idRef) FROM OrderWaterSport o\n" +
             "inner join OrderDetailsWaterSport od\n" +
             "on o.billNo = od.billNo\n" +
             "where o.date between :dateFrom and :dateTo group by EXTRACT(MONTH from o.date), EXTRACT(YEAR from o.date)")
     List<Report> getMonthlyReportWaterSport(LocalDate dateFrom, LocalDate dateTo);
 
-    @Query("SELECT new com.example.waterSports.modal.Report(0, 0, EXTRACT(YEAR FROM o.date), sum(od.rate * od.persons)) FROM OrderWaterSport o\n" +
+    @Query("SELECT new com.example.waterSports.modal.Report(0, 0, EXTRACT(YEAR FROM o.date), sum(od.rate * od.persons), o.idRef) FROM OrderWaterSport o\n" +
             "inner join OrderDetailsWaterSport od\n" +
             "on o.billNo = od.billNo\n" +
             "where o.date between :dateFrom and :dateTo group by EXTRACT(YEAR from o.date)")
     List<Report> getYearlyReportWaterSport(LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("SELECT new com.example.waterSports.modal.Report(0, 0, 0, sum(od.rate * od.persons), r.idOwner) FROM OrderWaterSport o inner join Referee r on o.idRef = r.id\n" +
+            "inner join OrderDetailsWaterSport od\n" +
+            "on o.billNo = od.billNo\n" +
+            "where o.date between :dateFrom and :dateTo group by r.idOwner")
+    List<Report> getReportReferee(LocalDate dateFrom, LocalDate dateTo);
 
 }

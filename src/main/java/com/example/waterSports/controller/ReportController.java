@@ -4,6 +4,7 @@ import com.example.waterSports.modal.Report;
 import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.OrderDetailsWaterSportRepo;
 import com.example.waterSports.repo.OrderParasalingRepo;
+import com.example.waterSports.repo.RefereeRepo;
 import com.example.waterSports.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,20 +21,20 @@ public class ReportController
 {
     @Autowired
     OrderDetailsWaterSportRepo orderWatersportRepo;
-
     @Autowired
     OrderParasalingRepo orderParasalingRepo;
-
     @Autowired
     ConfigRepo configRepo;
+    @Autowired
+    RefereeRepo repoRef;
 
 
     @PostMapping("/")
-    public String showReport(Model model, LocalDate dateFrom, LocalDate dateTo, Integer idGroup, Integer idActivity)
+    public String showReport(Model model, LocalDate dateFrom, LocalDate dateTo, Integer idGroup, Integer idReport)
     {
         List<Report> list = null;
 
-        if(idActivity == 0) // Watersports
+        if(idReport == 0) // Watersports
         {
             if(idGroup == 0)
             {
@@ -48,7 +49,7 @@ public class ReportController
                 list = orderWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo);
             }
         }
-        else if(idActivity == 1) // Parasailing
+        else if(idReport == 1) // Parasailing
         {
             if(idGroup == 0)
             {
@@ -63,12 +64,21 @@ public class ReportController
                 list = orderParasalingRepo.getYearlyReportWaterSport(dateFrom, dateTo);
             }
         }
+        else if(idReport == 2) // Watersport Referee Report
+        {
+            list = orderWatersportRepo.getReportReferee(dateFrom, dateTo);
+        }
+        else if(idReport == 3) // Parasailing Referee Report
+        {
+            list = orderParasalingRepo.getReportReferee(dateFrom, dateTo);
+        }
 
         model.addAttribute("list", list);
+        model.addAttribute("repoRef", repoRef);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("idGroup", idGroup);
-        model.addAttribute("idActivity", idActivity);
+        model.addAttribute("idReport", idReport);
         model.addAttribute("arrayMonth", Helper.arrayMonth);
         model.addAttribute("title", configRepo.findOneByProp("title").getVal());
 

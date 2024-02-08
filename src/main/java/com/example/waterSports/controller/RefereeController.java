@@ -45,12 +45,14 @@ public class RefereeController
     @PostMapping("/")
     public String add(Referee referee)
     {
-        if(referee.getId() == referee.getIdOwner())
+        Referee refSaved = repo.save(referee);
+
+        if(referee.getIdOwner() == -1)
         {
-            referee.setIdOwner(-1L);
+            refSaved.setIdOwner(refSaved.getId());
+            repo.save(refSaved);
         }
 
-        repo.save(referee);
         return "redirect:/ref/";
     }
 

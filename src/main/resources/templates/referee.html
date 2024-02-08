@@ -80,7 +80,7 @@
 
                     <td style="text-align: right;padding: 4px;" th:text="${iter.index}">1</td>
                     <td style="text-align: left;padding: 4px;" th:text="${ref.name}">Akshay Parulekar</td>
-                    <td style="text-align: center;padding: 4px;" th:text="${ref.idOwner == -1} ? 'Self' : ${repo.getReferenceById(ref.idOwner).name}">9966332211</td>
+                    <td style="text-align: center;padding: 4px;" th:text="${ref.idOwner == ref.id} ? 'Self' : ${repo.getReferenceById(ref.idOwner).name}">9966332211</td>
 
                     <td style="text-align: center;padding: 4px;">
                         <div class="btn-group" role="group">

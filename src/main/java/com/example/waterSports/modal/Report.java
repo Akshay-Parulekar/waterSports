@@ -6,12 +6,14 @@ public class Report
     Integer month;
     Integer year;
     Double rate;
+    Long idRef;
 
-    public Report(Integer day, Integer month, Integer year, Double rate) {
+    public Report(Integer day, Integer month, Integer year, Double rate, Long idRef) {
         this.day = day;
         this.month = month;
         this.year = year;
         this.rate = rate;
+        this.idRef = idRef;
     }
 
     public Integer getDay() {
@@ -46,6 +48,14 @@ public class Report
         this.rate = rate;
     }
 
+    public Long getIdRef() {
+        return idRef;
+    }
+
+    public void setIdRef(Long idRef) {
+        this.idRef = idRef;
+    }
+
     @Override
     public String toString() {
         return "Report{" +
@@ -53,6 +63,7 @@ public class Report
                 ", month=" + month +
                 ", year=" + year +
                 ", rate=" + rate +
+                ", idRef=" + idRef +
                 '}';
     }
 }

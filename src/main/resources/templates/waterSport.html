@@ -94,7 +94,7 @@
 
                     <td style="text-align: right;padding: 4px;" th:text="${order.billNo}">1</td>
                     <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
-                    <td style="text-align: left;padding: 4px;" th:text="${order.idRef == repoRef.getReferenceById(order.idRef).idOwner} ? ${repoRef.getReferenceById(order.idRef).name} : ${repoRef.getReferenceById(order.idRef).name} + ' / ' + ${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).idOwner == order.idRef} ? ${repoRef.getReferenceById(order.idRef).name} : ${repoRef.getReferenceById(order.idRef).name} + ' / ' + ${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
                     <td style="text-align: left;padding: 4px;" th:text="${order.customerName}">Akshay Parulekar</td>
                     <td style="text-align: center;padding: 4px;" th:text="${order.contact}">9966332211</td>
 
@@ -142,7 +142,7 @@
                             <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 2px;">
                                 <select id="idRef" class="js-example-basic-single" name="idRef" required="true" title="Please Select Referee">
                                     <option> </option>
-                                    <option th:each="ref : ${listRef}" th:value="${ref.id}" th:text="${ref.idOwner == -1} ? ${ref.name} : ${ref.name + ' / ' + repoRef.getReferenceById(ref.idOwner).name}"></option>
+                                    <option th:each="ref : ${listRef}" th:value="${ref.id}" th:text="${ref.id == ref.idOwner} ? ${ref.name} : ${ref.name + ' / ' + repoRef.getReferenceById(ref.idOwner).name}"></option>
                                 </select>
                             </div>
 
