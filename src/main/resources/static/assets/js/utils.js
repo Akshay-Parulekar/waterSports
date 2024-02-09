@@ -176,6 +176,9 @@ function showData(billNo)
                   $('#billNo').val(obj.billNo);
                   $('#customerName').val(obj.customerName);
                   $('#contact').val(obj.contact);
+                  $('#serialNo').val(obj.serialNo);
+                  $('#idRef').val(obj.idRef);
+                  $('#idRef').trigger('change');
               }
           })
           .catch((error) =>
