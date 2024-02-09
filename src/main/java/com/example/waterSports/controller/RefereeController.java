@@ -1,9 +1,11 @@
 package com.example.waterSports.controller;
 
+import com.example.waterSports.modal.ActivityLog;
 import com.example.waterSports.modal.Referee;
 import com.example.waterSports.repo.ActivityLogRepo;
 import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.RefereeRepo;
+import com.example.waterSports.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,7 +25,7 @@ public class RefereeController
     @Autowired
     ConfigRepo configRepo;
     @Autowired
-    ActivityLogRepo activityLogRepo;
+    ActivityLogRepo repoActivityLog;
 
     @GetMapping("/")
     public String home(Model model)
@@ -52,13 +54,21 @@ public class RefereeController
             repo.save(refSaved);
         }
 
+        repoActivityLog.save(new ActivityLog("Refereee : New Record added. Referee = " + referee.getName() + ", Owner = " + repo.getReferenceById(referee.getIdOwner()).getName()));
+
         return "redirect:/ref/";
     }
 
     @GetMapping("/delete/{id}/")
     public String delete(@PathVariable Long id)
     {
+        Referee referee = repo.getReferenceById(id);
         repo.deleteById(id);
+
+        repoActivityLog.save(new ActivityLog("Refereee : Recorded Deleted. Referee = " + referee.getName() + ", Owner = " + repo.getReferenceById(referee.getIdOwner()).getName()));
+
         return "redirect:/ref/";
+
+
     }
 }

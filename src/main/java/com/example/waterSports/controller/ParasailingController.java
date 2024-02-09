@@ -88,7 +88,7 @@ public class ParasailingController
     {
         OrderParasailing order = repo.getReferenceById(id);
         repo.deleteById(id);
-        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + order.getBillNo() + ", persons = " + order.getnPerson() + ", rate = " + order.getRate() + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact()));
+        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails Deleted with BillNo = " + order.getBillNo() + ", persons = " + order.getnPerson() + ", rate = " + order.getRate() + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact()));
 
         return "redirect:/para/";
     }
