@@ -40,6 +40,8 @@
                 Swal.fire('Oops!', msg, 'error');
             }
         }
+
+        $('#idOwner').select2({placeholder: "Select Owner", allowClear: true, dropdownParent: $('#modalAddNewItem'), width:'auto'});
     }
 
     </script>
@@ -113,8 +115,8 @@
             <div class="modal-body" style="background: var(--bs-gray-200);">
                 <form id="formRef" method="post" action="/ref/">
                     <div class="text-center mb-3">
-                        <div class="row">
-                            <div class="col" style="padding-right: 2px;min-width: 40%;">
+                        <div class="row" style="padding-right:10px;">
+                            <div class="col" style="padding-right: 2px;min-width: 40%; margin-right:5px;">
                                 <input type="hidden" id="id">
                                 <input id="name" class="form-control" type="text" placeholder="Name of Referee" name="name" required title="Please Enter Referee Name" />
                             </div>

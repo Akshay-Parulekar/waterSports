@@ -40,6 +40,8 @@
                 Swal.fire('Oops!', msg, 'error');
             }
         }
+
+        $('#idRef').select2({placeholder: "Select Referee", allowClear: true, dropdownParent: $('#modalAddNewItem'), width:'100%'});
     }
 
     </script>
@@ -130,7 +132,7 @@
                     <div class="text-center mb-3">
 
                         <div class="row">
-                            <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 2px;">
+                            <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 13px;">
                                 <select id="idRef" class="js-example-basic-single" name="idRef" required="true" title="Please Select Referee">
                                     <option> </option>
                                     <option th:each="ref : ${listRef}" th:value="${ref.id}" th:text="${ref.idOwner == ref.id} ? ${ref.name} : ${ref.name + ' / ' + repoRef.getReferenceById(ref.idOwner).name}"></option>

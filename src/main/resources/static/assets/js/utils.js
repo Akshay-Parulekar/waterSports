@@ -239,11 +239,11 @@ function printPos(id, type)
 
 $(document).ready(function() {
 
-    $('.js-example-basic-single').select2({
-                                            placeholder: "Select Owner",
-                                             allowClear: true,
-                                             dropdownParent: $('#modalAddNewItem')
-                                          });
+//    $('.js-example-basic-single').select2({
+//                                            placeholder: "Select Owner",
+//                                             allowClear: true,
+//                                             dropdownParent: $('#modalAddNewItem')
+//                                          });
 
     var formInfo = $('#formInfo');
     var formLogin = $('#formLogin');

@@ -40,6 +40,8 @@
                 Swal.fire('Oops!', msg, 'error');
             }
         }
+
+        $('#idRef').select2({placeholder: "Select Referee", allowClear: true, dropdownParent: $('#modalAddNewItem'), width:'100%'});
     }
 
     </script>
@@ -223,5 +225,6 @@
 <div th:replace="fragments.html :: report"></div>
 
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
+
 </body>
 </html>
