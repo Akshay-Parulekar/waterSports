@@ -12,5 +12,6 @@ import java.util.List;
 @Repository
 public interface RefereeRepo extends JpaRepository<Referee, Long>
 {
-
+    @Query("select count(id) from Referee where idOwner = :idRef")
+    Integer checkOwner(Long idRef);
 }

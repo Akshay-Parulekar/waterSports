@@ -49,6 +49,7 @@ public class WaterSportController
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
         model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
+        model.addAttribute("receiptWidth", configRepo.findOneByProp("receiptWidth").getVal());
 
         return "waterSport";
     }
@@ -78,6 +79,7 @@ public class WaterSportController
         model.addAttribute("contact", configRepo.findOneByProp("contact").getVal());
         model.addAttribute("address", configRepo.findOneByProp("address").getVal());
         model.addAttribute("printer", configRepo.findOneByProp("printer").getVal());
+        model.addAttribute("receiptWidth", configRepo.findOneByProp("receiptWidth").getVal());
 
         return "waterSport";
     }
@@ -199,7 +201,8 @@ public class WaterSportController
                 null,
                 null,
                 Helper.formatter.format(order.getDate()),
-                listOrderDet
+                listOrderDet,
+                Integer.parseInt(configRepo.findOneByProp("receiptWidth").getVal())
         );
 
         return status;

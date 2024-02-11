@@ -31,4 +31,10 @@ public interface OrderParasalingRepo extends JpaRepository<OrderParasailing, Lon
             "where date between :dateFrom and :dateTo group by r.idOwner")
     List<Report> getReportReferee(LocalDate dateFrom, LocalDate dateTo);
 
+    @Query("SELECT sum(if(o.nPerson is null or cast(o.nPerson as text)='', 0, o.nPerson)) FROM OrderParasailing o inner join Referee r on o.idRef = r.id\n" +
+            "where date between :dateFrom and :dateTo and r.idOwner = :idOwner group by r.idOwner")
+    Integer countPerson(Long idOwner, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select count(id) from OrderParasailing where idRef = :idRef")
+    Integer countReferences(Long idRef);
 }

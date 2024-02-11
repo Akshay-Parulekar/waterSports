@@ -94,7 +94,7 @@
                                 </svg>
                             </button>
 
-                            <button class="btn btn-danger" role="button" id="btnDelete" style="border-color: var(--bs-pink);" th:onClick="|confirmDelete('/ref/delete/${ref.id}/')|"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-danger" role="button" id="btnDelete" style="border-color: var(--bs-pink);" th:onClick="|confirmDeleteReferee(${ref.id})|"><i class="fas fa-trash"></i></button>
                         </div>
                     </td>
                 </tr>
@@ -117,7 +117,7 @@
                     <div class="text-center mb-3">
                         <div class="row" style="padding-right:10px;">
                             <div class="col" style="padding-right: 2px;min-width: 40%; margin-right:5px;">
-                                <input type="hidden" id="id">
+                                <input type="hidden" id="id" name="id">
                                 <input id="name" class="form-control" type="text" placeholder="Name of Referee" name="name" required title="Please Enter Referee Name" />
                             </div>
 

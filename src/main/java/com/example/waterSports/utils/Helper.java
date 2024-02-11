@@ -16,15 +16,30 @@ public class Helper
 {
     public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static DecimalFormat decimalFormat = new DecimalFormat("#.##");
-    public static String[] arrayActivity = {"Jet Ski Ride", "Banana Ride", "Seating Bumper", "Sleeping Bumper"};
+    public static String[] arrayActivity = {"All Rides", "Jet Ski Ride", "Banana Ride", "Seating Bumper", "Sleeping Bumper"};
     public static String[] arrayMonth = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
 
     public static int particularsWidth = 25;
     public static int quantityWidth = 7;
     public static int maxChars = 32;
 
-    public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String serialNo, String referee, String owner, String customerName, String activities, Integer nPerson, Double rate, String date, List<OrderDetailsWaterSport> listOrderDet)
+    public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String serialNo, String referee, String owner, String customerName, String activities, Integer nPerson, Double rate, String date, List<OrderDetailsWaterSport> listOrderDet, Integer receiptWidth)
     {
+        if(receiptWidth == 58)
+        {
+            particularsWidth = 25;
+            quantityWidth = 7;
+            maxChars = 32;
+        }
+        else if(receiptWidth == 80)
+        {
+            particularsWidth = 41;
+            quantityWidth = 7;
+            maxChars = 48;
+        }
+
+        System.out.println("maxChars = " + maxChars);
+
         // Setup Printer
         DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PAGEABLE;
         PrintRequestAttributeSet patts = new HashPrintRequestAttributeSet();
@@ -62,24 +77,29 @@ public class Helper
         expected.writeBytes((title + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.CharSize.Normal());
-        expected.writeBytes((wrapTextOld(address, 32).toString() + "\n").getBytes());
-        expected.writeBytes(("Phone:" + contact + "\n").getBytes());
+        expected.writeBytes((wrapTextOld(address, maxChars).toString() + "\n").getBytes());
 
+//        expected.writeBytes(("Phone:" + contact + "\n").getBytes());
+
+
+        expected.writeBytes(POS.POSPrinter.CharSize.Normal());
         expected.writeBytes(("-".repeat(maxChars) + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Center));
-        expected.writeBytes(("BillNo:" + billNo + "\n").getBytes());
+        expected.writeBytes(POS.POSPrinter.CharSize.DoubleHeight2());
+        expected.writeBytes((customerName + "\n").getBytes());
 
+        expected.writeBytes(POS.POSPrinter.CharSize.Normal());
         expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Left));
-        int middleSpace = maxChars - ("SrNo:" + serialNo).length() - ("Date:" + date).length();
-        String strBillNoDate = String.format("%s%" + middleSpace + "s%s", "SrNo:" + serialNo, "", "Date:" + date + "\n");
+        int middleSpace = maxChars - ("BillNo:" + billNo).length() - ("SrNo:" + serialNo).length();
+        String strBillNoDate = String.format("%s%" + middleSpace + "s%s", "BillNo:" + billNo, "", "SrNo:" + serialNo + "\n");
         expected.writeBytes((strBillNoDate).getBytes());
 
         middleSpace = maxChars - ("Own:" + owner).length() - ("Ref:" + referee).length();
         String strOwnRef = String.format("%s%" + middleSpace + "s%s", "Own:" + owner, "", "Ref:" + referee + "\n");
         expected.writeBytes((strOwnRef).getBytes());
         
-        expected.writeBytes(("Customer:" + customerName + "\n").getBytes());
+        expected.writeBytes(("Date:" + date + "\n").getBytes());
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
 
         expected.writeBytes(("-".repeat(maxChars) + "\n").getBytes());

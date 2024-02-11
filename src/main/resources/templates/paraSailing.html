@@ -109,6 +109,12 @@
                                     <path d="M448 192H64C28.65 192 0 220.7 0 256v96c0 17.67 14.33 32 32 32h32v96c0 17.67 14.33 32 32 32h320c17.67 0 32-14.33 32-32v-96h32c17.67 0 32-14.33 32-32V256C512 220.7 483.3 192 448 192zM384 448H128v-96h256V448zM432 296c-13.25 0-24-10.75-24-24c0-13.27 10.75-24 24-24s24 10.73 24 24C456 285.3 445.3 296 432 296zM128 64h229.5L384 90.51V160h64V77.25c0-8.484-3.375-16.62-9.375-22.62l-45.25-45.25C387.4 3.375 379.2 0 370.8 0H96C78.34 0 64 14.33 64 32v128h64V64z"></path>
                                 </svg>
                             </button>
+                            <button class="btn btn-primary" id="btnEdit" type="button" data-bs-target="#modalAddNewItem" data-bs-toggle="modal" th:onClick="showParaData([[${order}]])">
+                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="1em" height="1em" fill="currentColor">
+                                    <!--! Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2022 Fonticons, Inc. -->
+                                    <path d="M362.7 19.32C387.7-5.678 428.3-5.678 453.3 19.32L492.7 58.75C517.7 83.74 517.7 124.3 492.7 149.3L444.3 197.7L314.3 67.72L362.7 19.32zM421.7 220.3L188.5 453.4C178.1 463.8 165.2 471.5 151.1 475.6L30.77 511C22.35 513.5 13.24 511.2 7.03 504.1C.8198 498.8-1.502 489.7 .976 481.2L36.37 360.9C40.53 346.8 48.16 333.9 58.57 323.5L291.7 90.34L421.7 220.3z"></path>
+                                </svg>
+                            </button>
                             <button class="btn btn-danger" role="button" id="btnDelete" style="border-color: var(--bs-pink);" th:onClick="|confirmDelete('/para/delete/${order.id}/')|"><i class="fas fa-trash"></i></button>
                         </div>
                     </td>
@@ -131,6 +137,8 @@
                 <form method="post" action="/para/">
                     <div class="text-center mb-3">
 
+                        <input type="hidden" id="id" name="id">
+
                         <div class="row">
                             <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 13px;">
                                 <select id="idRef" class="js-example-basic-single" name="idRef" required="true" title="Please Select Referee">
@@ -146,9 +154,9 @@
 
                         <div class="row">
                             <div class="col" style="padding-right: 2px;min-width: 40%;"><input id="customer" class="form-control" type="text" placeholder="Name of Customer" name="customerName" required /></div>
-                            <div class="col" style="padding-left: 2px;min-width: 25%;padding-right: 2px;"><input class="form-control" type="text" id="contact" placeholder="Cotnact No" name="contact" inputmode="numeric" required=""></div>
-                            <div class="col" style="padding-left: 2px;padding-right: 2px;min-width: 15%;"><input class="form-control" type="number" placeholder="Rate" name="rate" required=""></div>
-                            <div class="col" style="padding-left: 2px;padding-right: 2px;min-width: 15%;"><input class="form-control" type="number" placeholder="Persons" name="nPerson" value="1" min="1" required=""></div>
+                            <div class="col" style="padding-left: 2px;min-width: 25%;padding-right: 2px;"><input id="contact" class="form-control" type="text" placeholder="Cotnact No" name="contact" inputmode="numeric" required=""></div>
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;min-width: 15%;"><input id="rate" class="form-control" type="number" placeholder="Rate" name="rate" required=""></div>
+                            <div class="col" style="padding-left: 2px;padding-right: 2px;min-width: 15%;"><input id="nPerson" class="form-control" type="number" placeholder="Persons" name="nPerson" value="1" min="1" required=""></div>
                         </div>
 
                     </div>

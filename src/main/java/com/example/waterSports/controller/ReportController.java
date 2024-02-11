@@ -38,43 +38,45 @@ public class ReportController
         {
             if(idGroup == 0)
             {
-                list = orderWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo);
+                list = orderWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
             }
             else if(idGroup == 1)
             {
-                list = orderWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo);
+                list = orderWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
             }
             else if(idGroup == 2)
             {
-                list = orderWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo);
+                list = orderWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
             }
         }
         else if(idReport == 1) // Parasailing
         {
             if(idGroup == 0)
             {
-                list = orderParasalingRepo.getDailyReportWaterSport(dateFrom, dateTo);
+                list = orderParasalingRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
             }
             else if(idGroup == 1)
             {
-                list = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom, dateTo);
+                list = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
             }
             else if(idGroup == 2)
             {
-                list = orderParasalingRepo.getYearlyReportWaterSport(dateFrom, dateTo);
+                list = orderParasalingRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
             }
         }
         else if(idReport == 2) // Watersport Referee Report
         {
-            list = orderWatersportRepo.getReportReferee(dateFrom, dateTo);
+            list = orderWatersportRepo.getReportReferee(dateFrom, dateTo.plusDays(1));
         }
         else if(idReport == 3) // Parasailing Referee Report
         {
-            list = orderParasalingRepo.getReportReferee(dateFrom, dateTo);
+            list = orderParasalingRepo.getReportReferee(dateFrom, dateTo.plusDays(1));
         }
 
         model.addAttribute("list", list);
         model.addAttribute("repoRef", repoRef);
+        model.addAttribute("repoWS", orderWatersportRepo);
+        model.addAttribute("repoPar", orderParasalingRepo);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("idGroup", idGroup);

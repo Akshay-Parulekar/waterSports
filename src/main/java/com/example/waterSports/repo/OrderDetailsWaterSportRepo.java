@@ -46,4 +46,9 @@ public interface OrderDetailsWaterSportRepo extends JpaRepository<OrderDetailsWa
             "where o.date between :dateFrom and :dateTo group by r.idOwner")
     List<Report> getReportReferee(LocalDate dateFrom, LocalDate dateTo);
 
+    @Query("select sum(if(od.persons is null or cast(od.persons as text)='', 0, od.persons)) from OrderDetailsWaterSport od " +
+            "inner join OrderWaterSport o on od.billNo = o.billNo " +
+            "inner join Referee r on o.idRef = r.id " +
+            "where o.date between :dateFrom and :dateTo and r.idOwner = :idOwner and od.idActivity = :idActivity group by r.idOwner")
+    Integer countPerson(Long idOwner, Integer idActivity, LocalDate dateFrom, LocalDate dateTo);
 }

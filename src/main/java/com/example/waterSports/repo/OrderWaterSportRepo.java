@@ -14,4 +14,7 @@ public interface OrderWaterSportRepo extends JpaRepository<OrderWaterSport, Long
     List<OrderWaterSport> findByDateBetweenOrderByBillNoDesc(LocalDate startDate, LocalDate endDate);
     OrderWaterSport findTopByOrderByBillNoDesc();
     OrderWaterSport findByBillNo(Long billNo);
+
+    @Query("select count(id) from OrderWaterSport where idRef = :idRef")
+    Integer countReferences(Long idRef);
 }

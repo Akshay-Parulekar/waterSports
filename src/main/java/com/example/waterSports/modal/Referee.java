@@ -46,4 +46,13 @@ public class Referee
     public void setIdOwner(Long idOwner) {
         this.idOwner = idOwner;
     }
+
+    @Override
+    public String toString() {
+        return "Referee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", idOwner=" + idOwner +
+                '}';
+    }
 }

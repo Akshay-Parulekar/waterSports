@@ -19,7 +19,7 @@ public class ConfigController
 
     @PostMapping("/info/")
     @ResponseBody
-    public Integer saveConfig(Model model, String title, String header, String footer, String contact, String address, String printer)
+    public Integer saveConfig(Model model, String title, String header, String footer, String contact, String address, String printer, String receiptWidth)
     {
         int status = 0;
 
@@ -29,6 +29,7 @@ public class ConfigController
         repo.save(new Config("contact", contact));
         repo.save(new Config("address", address));
         repo.save(new Config("printer", printer));
+        repo.save(new Config("receiptWidth", receiptWidth));
 
         status = 1;
 

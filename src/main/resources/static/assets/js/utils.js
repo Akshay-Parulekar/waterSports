@@ -55,6 +55,40 @@ function confirmClearLogs(url)
       })
 }
 
+function confirmDeleteReferee(id)
+{
+    axios.get("/ref/delete/" + id + "/")
+    .then((response) =>
+      {
+          var status = response.data;
+          console.log("status = " + status);
+
+          if(status == 1)
+          {
+                Swal.fire(
+                      'Deleted!',
+                      'Record has been deleted successfully.',
+                      'success'
+                    ).then((result) =>
+                    {
+                         if (result.isConfirmed)
+                         {
+                            window.location.replace('/ref/');
+                         }
+                     });
+          }
+          else
+          {
+              Swal.fire('Oops!', 'Before deleting, please remove all Referees and Orders associated with this Owner', 'error');
+          }
+      })
+      .catch((error) =>
+      {
+          console.log("error " + error);
+          Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+      })
+}
+
 function confirmDelete(url)
 {
     Swal.fire({
@@ -111,6 +145,20 @@ function showRefData(id, name, idOwner)
     $('#id').val(id);
     $('#name').val(name);
     $('#idOwner').val(idOwner);
+    $('#idOwner').trigger('change');
+}
+
+function showParaData(para)
+{
+    $('#id').val(para.id);
+    $('#name').val(para.name);
+    $('#idRef').val(para.idRef);
+    $('#idRef').trigger('change');
+    $('#serialNo').val(para.serialNo);
+    $('#customer').val(para.customerName);
+    $('#contact').val(para.contact);
+    $('#rate').val(para.rate);
+    $('#nPerson').val(para.nPerson);
 }
 
 function showData(billNo)
@@ -351,6 +399,7 @@ $(document).ready(function() {
             data.append('contact', $('#contactNo').val());
             data.append('address', $('#address').val());
             data.append('printer', $('#printer').val());
+            data.append('receiptWidth', $('#receiptWidth').val());
 
             axios.post(endpoint, data)
             .then((response) =>
