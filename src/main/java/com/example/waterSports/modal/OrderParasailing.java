@@ -15,6 +15,8 @@ public class OrderParasailing
     String customerName;
     String contact;
     Long idRef;
+    String receiptNo;
+    Boolean bigRound;
     String serialNo;
     Double rate;
     Integer nPerson;
@@ -24,13 +26,15 @@ public class OrderParasailing
     public OrderParasailing() {
     }
 
-    public OrderParasailing(Long billNo, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String serialNo) {
+    public OrderParasailing(Long billNo, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, Boolean bigRound, String serialNo) {
         this.billNo = billNo;
         this.customerName = customerName;
         this.contact = contact;
         this.rate = rate;
         this.nPerson = nPerson;
         this.idRef = idRef;
+        this.receiptNo = receiptNo;
+        this.bigRound = bigRound;
         this.serialNo = serialNo;
     }
 
@@ -106,6 +110,22 @@ public class OrderParasailing
         this.serialNo = serialNo;
     }
 
+    public Boolean isBigRound() {
+        return bigRound;
+    }
+
+    public void setBigRound(Boolean bigRound) {
+        this.bigRound = bigRound;
+    }
+
+    public String getReceiptNo() {
+        return receiptNo;
+    }
+
+    public void setReceiptNo(String receiptNo) {
+        this.receiptNo = receiptNo;
+    }
+
     @Override
     public String toString() {
         return "OrderParasailing{" +
@@ -114,6 +134,8 @@ public class OrderParasailing
                 ", customerName='" + customerName + '\'' +
                 ", contact='" + contact + '\'' +
                 ", idRef=" + idRef +
+                ", receiptNo='" + receiptNo + '\'' +
+                ", isBigRound=" + bigRound +
                 ", serialNo='" + serialNo + '\'' +
                 ", rate=" + rate +
                 ", nPerson=" + nPerson +

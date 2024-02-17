@@ -17,6 +17,7 @@ public class OrderWaterSport
     String customerName;
     String contact;
     Long idRef;
+    String receiptNo;
     String serialNo;
     @CreationTimestamp
     LocalDate date;
@@ -24,11 +25,12 @@ public class OrderWaterSport
     public OrderWaterSport() {
     }
 
-    public OrderWaterSport(Long billNo, String customerName, String contact, Long idRef, String serialNo) {
+    public OrderWaterSport(Long billNo, String customerName, String contact, Long idRef, String receiptNo, String serialNo) {
         this.billNo = billNo;
         this.customerName = customerName;
         this.contact = contact;
         this.idRef = idRef;
+        this.receiptNo = receiptNo;
         this.serialNo = serialNo;
     }
 
@@ -88,6 +90,14 @@ public class OrderWaterSport
         this.serialNo = serialNo;
     }
 
+    public String getReceiptNo() {
+        return receiptNo;
+    }
+
+    public void setReceiptNo(String receiptNo) {
+        this.receiptNo = receiptNo;
+    }
+
     @Override
     public String toString() {
         return "OrderWaterSport{" +
@@ -96,6 +106,7 @@ public class OrderWaterSport
                 ", customerName='" + customerName + '\'' +
                 ", contact='" + contact + '\'' +
                 ", idRef=" + idRef +
+                ", receiptNo='" + receiptNo + '\'' +
                 ", serialNo='" + serialNo + '\'' +
                 ", date=" + date +
                 '}';

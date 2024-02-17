@@ -13,15 +13,17 @@ public class OrderDetailsWaterSport
     Long id;
     Long billNo;
     Integer idActivity;
+    Boolean bigRound;
     Integer persons;
     Double rate;
 
     public OrderDetailsWaterSport() {
     }
 
-    public OrderDetailsWaterSport(Long billNo, Integer idActivity, Integer persons, Double rate) {
+    public OrderDetailsWaterSport(Long billNo, Integer idActivity, Boolean bigRound, Integer persons, Double rate) {
         this.billNo = billNo;
         this.idActivity = idActivity;
+        this.bigRound = bigRound;
         this.persons = persons;
         this.rate = rate;
     }
@@ -66,12 +68,21 @@ public class OrderDetailsWaterSport
         this.rate = rate;
     }
 
+    public Boolean isBigRound() {
+        return bigRound;
+    }
+
+    public void setBigRound(Boolean bigRound) {
+        this.bigRound = bigRound;
+    }
+
     @Override
     public String toString() {
         return "OrderDetailsWaterSport{" +
                 "id=" + id +
                 ", billNo=" + billNo +
                 ", idActivity=" + idActivity +
+                ", isBigRound=" + bigRound +
                 ", persons=" + persons +
                 ", rate=" + rate +
                 '}';

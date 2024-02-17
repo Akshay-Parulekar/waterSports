@@ -141,11 +141,15 @@
 
                     <div class="text-center mb-3" style="padding-right: 10px;padding-left: 10px;">
                         <div class="row">
-                            <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 2px;">
+                            <div class="col" style="min-width: 50%;padding-right: 2px;padding-left: 2px;">
                                 <select id="idRef" class="js-example-basic-single" name="idRef" required="true" title="Please Select Referee">
                                     <option> </option>
                                     <option th:each="ref : ${listRef}" th:value="${ref.id}" th:text="${ref.id == ref.idOwner} ? ${ref.name} : ${ref.name + ' / ' + repoRef.getReferenceById(ref.idOwner).name}"></option>
                                 </select>
+                            </div>
+
+                            <div class="col"  style="padding-left: 2px;padding-right: 2px;">
+                                <input class="form-control" type="text" id="receiptNo" placeholder="Receipt No" name="receiptNo">
                             </div>
 
                             <div class="col"  style="padding-left: 2px;padding-right: 2px;">
@@ -166,6 +170,11 @@
                                 <option value="4">Seating Bumper</option>
                                 <option value="5">Sleeping Bumper</option>
                             </select></div>
+
+                            <div class="col d-flex d-sm-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" style="max-width: 20px;" title="Big Round">
+                                <input type="checkbox" id="bigRound" style="transform: scale(1.40);">
+                            </div>
+
                             <div class="col" id="rate2" style="padding-left: 2px;padding-right: 2px;"><input class="form-control" type="number" id="rate" name="rate" min="0" placeholder="Rate" required></div>
                             <div class="col" style="padding-left: 2px;padding-right: 2px;"><input class="form-control" type="number" id="persons" name="persons" min="1" value="1" placeholder="Persons" required></div>
                             <div class="col" style="padding-left: 2px;padding-right: 2px;"><button class="btn btn-primary" id="btnAddOrder" type="submit"><i class="fa fa-plus"></i>&nbsp;Add</button></div>

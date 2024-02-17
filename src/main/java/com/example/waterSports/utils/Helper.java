@@ -114,7 +114,9 @@ public class Helper
         {
             for (OrderDetailsWaterSport orderDet:listOrderDet)
             {
-                String row = generateReceiptRow(Helper.arrayActivity[orderDet.getIdActivity()-1], orderDet.getPersons());
+                String activity = Helper.arrayActivity[orderDet.getIdActivity()-1];
+
+                String row = generateReceiptRow(orderDet.isBigRound() ? activity + " (Big Round)":activity, orderDet.getPersons());
                 expected.writeBytes((row).getBytes());
             }
         }

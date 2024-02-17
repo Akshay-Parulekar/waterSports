@@ -45,6 +45,8 @@ public class RefereeController
     @PostMapping("/")
     public String add(Referee referee)
     {
+        Long idRef = referee.getId();
+
         System.out.println("referee = " + referee.toString());
         Referee refSaved = repo.save(referee);
 
@@ -54,7 +56,14 @@ public class RefereeController
             repo.save(refSaved);
         }
 
-        repoActivityLog.save(new ActivityLog("Refereee : New Record added. Referee = " + referee.getName() + ", Owner = " + repo.getReferenceById(referee.getIdOwner()).getName()));
+        if(idRef == null)
+        {
+            repoActivityLog.save(new ActivityLog("Referee : New Record added. Referee = " + referee.getName() + ", Owner = " + repo.getReferenceById(referee.getIdOwner()).getName()));
+        }
+        else
+        {
+            repoActivityLog.save(new ActivityLog("Referee : Record Updated. Id = " + idRef + ", Referee = " + referee.getName() + ", Owner = " + repo.getReferenceById(referee.getIdOwner()).getName()));
+        }
 
         return "redirect:/ref/";
     }
@@ -68,7 +77,7 @@ public class RefereeController
         if(repo.checkOwner(id) <= 1 && repoWs.countReferences(id) == 0 && repoPs.countReferences(id) == 0)
         {
             Referee referee = repo.getReferenceById(id);
-            repoActivityLog.save(new ActivityLog("Refereee : Recorded Deleted. Referee = " + referee.getName() + ", Owner = " + repo.getReferenceById(referee.getIdOwner()).getName()));
+            repoActivityLog.save(new ActivityLog("Referee : Record Deleted. Referee = " + referee.getName() + ", Owner = " + repo.getReferenceById(referee.getIdOwner()).getName()));
             repo.deleteById(id);
             status = 1;
         }

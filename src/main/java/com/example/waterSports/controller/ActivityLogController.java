@@ -29,7 +29,7 @@ public class ActivityLogController
     public String showData(Model model)
     {
         LocalDateTime dateFrom = LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1, 0, 0);
-        LocalDateTime dateTo = LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth(), LocalTime.now().getHour(), LocalTime.now().getMinute());
+        LocalDateTime dateTo = LocalDateTime.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), LocalDate.now().getDayOfMonth(), 23, 00);
 
         List<ActivityLog> list = repo.findByTimestampActBetweenOrderByTimestampActDesc(dateFrom, dateTo);
         model.addAttribute("list", list);

@@ -155,6 +155,8 @@ function showParaData(para)
     $('#idRef').val(para.idRef);
     $('#idRef').trigger('change');
     $('#serialNo').val(para.serialNo);
+    $('#receiptNo').val(para.receiptNo);
+    $('#bigRound').prop('checked', para.bigRound);
     $('#customer').val(para.customerName);
     $('#contact').val(para.contact);
     $('#rate').val(para.rate);
@@ -184,7 +186,9 @@ function showData(billNo)
 //                      row.append($("<td style='text-align: left;padding: 4px;'>").text($("#idActivity option[value='" + obj.idActivity + "']").text()));
 //                      row.append($("<td style='text-align: right;padding: 4px;'>").text(obj.rate));
 
-                      var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
+                      strRound = "";
+                      strRound = obj.bigRound ? strRound + " (Big Round)" : strRound;
+                      var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + strRound + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
                       $('#tblOrder > tbody').append(str);
                   });
 
@@ -227,6 +231,8 @@ function showData(billNo)
                   $('#serialNo').val(obj.serialNo);
                   $('#idRef').val(obj.idRef);
                   $('#idRef').trigger('change');
+                  $('#receiptNo').val(obj.receiptNo);
+                  $('#bigRound').prop('checked', obj.bigRound);
               }
           })
           .catch((error) =>
@@ -322,9 +328,11 @@ $(document).ready(function() {
               contact: $('#contact').val(),
               serialNo: $('#serialNo').val(),
               idRef: $('#idRef').val(),
+              receiptNo: $('#receiptNo').val(),
               rate: $('#rate').val(),
               persons: $('#persons').val(),
-              idActivity: $('#idActivity').val()
+              idActivity: $('#idActivity').val(),
+              bigRound: $('#bigRound').prop('checked')
             };
 
             axios.post(endpoint, {}, {params:data})
@@ -338,7 +346,9 @@ $(document).ready(function() {
                       }
                       else
                       {
-                          var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
+                          var strRound = "";
+                          strRound = obj.bigRound ? strRound + " (Big Round)" : strRound;
+                          var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + strRound + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
 
                            if ($("#tblOrder td:nth-child(1):contains('" + $("#idActivity option[value='" + obj.idActivity + "']").text() + "')").length > 0)
                            {
@@ -355,6 +365,7 @@ $(document).ready(function() {
                           $('#persons').val('');
                           $('#billNo').val(obj.billNo);
                           $('#idOrder').val(obj.id);
+                          $('#bigRound').prop('checked', false);
 
                           var columnIndex = 3;
                           var sum = 0;
@@ -551,6 +562,8 @@ $(document).ready(function() {
 
         $('#idOrder').val('');
         $('#billNo').val('');
+        $('#idRef').val(-1);
+        $('#idRef').trigger('change');
     });
 
     $("#filter").on("keyup", function() {

@@ -96,9 +96,11 @@ public class ParasailingController
     }
 
     @PostMapping("/")
-    public String addData(Model model, Long id, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String serialNo)
+    public String addData(Model model, Long id, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, @RequestParam(defaultValue = "false") Boolean bigRound, String serialNo)
     {
         OrderParasailing orderSaved = null;
+
+        System.out.println("isBigRound = " + bigRound);
 
         if(id != null)
         {
@@ -108,6 +110,8 @@ public class ParasailingController
             orderSaved.setRate(rate);
             orderSaved.setnPerson(nPerson);
             orderSaved.setIdRef(idRef);
+            orderSaved.setReceiptNo(receiptNo);
+            orderSaved.setBigRound(bigRound);
             orderSaved.setSerialNo(serialNo);
             repo.save(orderSaved);
 
@@ -127,7 +131,7 @@ public class ParasailingController
                 maxBillNo = topRecord.getBillNo();
             }
 
-            OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, contact, rate, nPerson, idRef, serialNo);
+            OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, contact, rate, nPerson, idRef, receiptNo, bigRound, serialNo);
             orderSaved = repo.save(order);
 
             repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact() + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
@@ -149,7 +153,7 @@ public class ParasailingController
                 refName,
                 ownerName,
                 orderSaved.getCustomerName(),
-                "Parasailing",
+                orderSaved.isBigRound() ? "Parasailing (Big Round)":"Parasailing",
                 orderSaved.getnPerson(),
                 orderSaved.getRate(),
                 Helper.formatter.format(orderSaved.getDate()),
@@ -184,7 +188,7 @@ public class ParasailingController
                 refName,
                 ownerName,
                 order.getCustomerName(),
-                "Parasailing",
+                order.isBigRound() ? "Parasailing (Big Round)":"Parasailing",
                 order.getnPerson(),
                 order.getRate(),
                 Helper.formatter.format(order.getDate()),
