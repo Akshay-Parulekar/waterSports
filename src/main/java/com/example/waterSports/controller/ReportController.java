@@ -1,5 +1,6 @@
 package com.example.waterSports.controller;
 
+import com.example.waterSports.modal.Referee;
 import com.example.waterSports.modal.Report;
 import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.OrderDetailsWaterSportRepo;
@@ -30,60 +31,72 @@ public class ReportController
 
 
     @PostMapping("/")
-    public String showReport(Model model, LocalDate dateFrom, LocalDate dateTo, Integer idGroup, Integer idReport)
+    public String showReport(Model model, LocalDate dateFrom, LocalDate dateTo, Integer idReport)
     {
-        List<Report> list = null;
+        List<Report> listReport = null;
+        List<Referee> listRef = null;
+        String resultPage = "report";
 
-        if(idReport == 0) // Watersports
-        {
-            if(idGroup == 0)
-            {
-                list = orderWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
-            }
-            else if(idGroup == 1)
-            {
-                list = orderWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
-            }
-            else if(idGroup == 2)
-            {
-                list = orderWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
-            }
-        }
-        else if(idReport == 1) // Parasailing
-        {
-            if(idGroup == 0)
-            {
-                list = orderParasalingRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
-            }
-            else if(idGroup == 1)
-            {
-                list = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
-            }
-            else if(idGroup == 2)
-            {
-                list = orderParasalingRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
-            }
-        }
-        else if(idReport == 2) // Watersport Referee Report
-        {
-            list = orderWatersportRepo.getReportReferee(dateFrom, dateTo.plusDays(1));
-        }
-        else if(idReport == 3) // Parasailing Referee Report
-        {
-            list = orderParasalingRepo.getReportReferee(dateFrom, dateTo.plusDays(1));
-        }
-
-        model.addAttribute("list", list);
         model.addAttribute("repoRef", repoRef);
         model.addAttribute("repoWS", orderWatersportRepo);
         model.addAttribute("repoPar", orderParasalingRepo);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
-        model.addAttribute("idGroup", idGroup);
         model.addAttribute("idReport", idReport);
         model.addAttribute("arrayMonth", Helper.arrayMonth);
         model.addAttribute("title", configRepo.findOneByProp("title").getVal());
 
-        return "report";
+        if(idReport == 0)
+        {
+            listReport = orderWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            model.addAttribute("list", listReport);
+        }
+        else if(idReport == 1)
+        {
+            listReport = orderWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            model.addAttribute("list", listReport);
+        }
+        else if(idReport == 2)
+        {
+            listReport = orderWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            model.addAttribute("list", listReport);
+        }
+        if(idReport == 3)
+        {
+            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            model.addAttribute("list", listReport);
+        }
+        else if(idReport == 4)
+        {
+            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            model.addAttribute("list", listReport);
+        }
+        else if(idReport == 5)
+        {
+            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            model.addAttribute("list", listReport);
+        }
+        else if(idReport == 6)
+        {
+            listRef = repoRef.findOwners();
+            model.addAttribute("list", listRef);
+            resultPage = "reportMarketer";
+        }
+        else if(idReport == 7)
+        {
+            listRef = repoRef.findAllByOrderByIdOwnerAscName();
+            model.addAttribute("list", listRef);
+            resultPage = "reportMarketer";
+        }
+        else if(idReport == 8)
+        {
+
+        }
+        else if(idReport == 9)
+        {
+
+        }
+
+        return resultPage;
     }
 }

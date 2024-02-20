@@ -12,15 +12,6 @@
         var idReport = [[${idReport}]];
         var indexAmt = 2;
 
-        if(idReport == 2)
-        {
-            indexAmt = 4;
-        }
-        else if(idReport == 3)
-        {
-            indexAmt = 3;
-        }
-
         $('#tbl tr').each(function() {
           let value = parseFloat($(this).find('td:nth-child(' + indexAmt + ')').text().replace(',',''));
           if (!isNaN(value)) {
@@ -45,49 +36,34 @@
 <body>
 <h2 th:text="${title}">  </h2>
 
-<h2 th:if="${idReport == 0 && idGroup == 0}"> WATER SPORTS DAY-WISE REPORT </h2>
-<h2 th:if="${idReport == 0 && idGroup == 1}"> WATER SPORTS MONTH-WISE REPORT </h2>
-<h2 th:if="${idReport == 0 && idGroup == 2}"> WATER SPORTS YEAR-WISE REPORT </h2>
+<h2 th:if="${idReport == 0}"> WATER SPORTS DAY-WISE SUMMARY REPORT </h2>
+<h2 th:if="${idReport == 1}"> WATER SPORTS MONTH-WISE SUMMARY REPORT </h2>
+<h2 th:if="${idReport == 2}"> WATER SPORTS YEAR-WISE SUMMARY REPORT </h2>
 
-<h2 th:if="${idReport == 1 && idGroup == 0}"> PARASAILING DAY-WISE REPORT </h2>
-<h2 th:if="${idReport == 1 && idGroup == 1}"> PARASAILING MONTH-WISE REPORT </h2>
-<h2 th:if="${idReport == 1 && idGroup == 2}"> PARASAILING YEAR-WISE REPORT </h2>
+<h2 th:if="${idReport == 3}"> PARASAILING DAY-WISE SUMMARY REPORT </h2>
+<h2 th:if="${idReport == 4}"> PARASAILING MONTH-WISE SUMMARY REPORT </h2>
+<h2 th:if="${idReport == 5}"> PARASAILING YEAR-WISE SUMMARY REPORT </h2>
 
-<h2 th:if="${idReport == 2}"> WATER SPORTS REPORT </h2>
-<h2 th:if="${idReport == 3}"> PARASAILING REPORT </h2>
-
-<h3 th:if="${idActivity == 0}"> Water Sports</h3>
-<h3 th:if="${idActivity == 1}"> Parasailing</h3>
 <h4 th:text="|From ${#temporals.format(dateFrom, 'dd-MM-yyyy')} To ${#temporals.format(dateTo, 'dd-MM-yyyy')}|"></h4>
 <hr>
 <div align="center">
     <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
         <tr>
-            <th th:if="${idReport >= 2}"> REFEREE </th>
-            <th th:if="${idReport == 2}"> ALL PKG </th>
-            <th th:if="${idReport == 2}"> EXTRA QTY </th>
-            <th th:if="${idReport == 3}"> Qty </th>
-            <th th:if="${idReport < 2 && idGroup == 0}"> DAY </th>
-            <th th:if="${idReport < 2 && idGroup == 1}"> MONTH </th>
-            <th th:if="${idReport < 2 && idGroup == 2}"> YEAR </th>
+            <th th:if="${idReport == 0 || idReport == 3}"> DAY </th>
+            <th th:if="${idReport == 1 || idReport == 4}"> MONTH </th>
+            <th th:if="${idReport == 2 || idReport == 5}"> YEAR </th>
             <th> AMOUNT </th>
         </tr>
 
         <tr th:each="report : ${list}">
-            <td align="left" th:if="${idReport >= 2}" th:text="${repoRef.getReferenceById(report.idRef).name}"></td>
-            <td align="right" th:if="${idReport == 2}" th:text="${repoWS.countPerson(report.idRef, 1, dateFrom, dateTo)}"></td>
-            <td align="right" th:if="${idReport == 2}" th:text="${(repoWS.countPerson(report.idRef, 2, dateFrom, dateTo)?:0) + (repoWS.countPerson(report.idRef, 3, dateFrom, dateTo)?:0) + (repoWS.countPerson(report.idRef, 4, dateFrom, dateTo)?:0) + (repoWS.countPerson(report.idRef, 5, dateFrom, dateTo)?:0)}"></td>
-            <td align="right" th:if="${idReport == 3}" th:text="${(repoPar.countPerson(report.idRef, dateFrom, dateTo)?:0)}"></td>
-            <td align="right" th:if="${idReport < 2 && idGroup == 0}" th:text="|${report.day}-${arrayMonth[report.month-1]}-${report.year}|"></td>
-            <td align="right" th:if="${idReport < 2 && idGroup == 1}" th:text="|${arrayMonth[report.month-1]}-${report.year}|"></td>
-            <td align="right" th:if="${idReport < 2 && idGroup == 2}" th:text="${report.year}"></td>
+            <td align="right" th:if="${idReport == 0 || idReport == 3}" th:text="|${report.day}-${arrayMonth[report.month-1]}-${report.year}|"></td>
+            <td align="right" th:if="${idReport == 1 || idReport == 4}" th:text="|${arrayMonth[report.month-1]}-${report.year}|"></td>
+            <td align="right" th:if="${idReport == 2 || idReport == 5}" th:text="${report.year}"></td>
 
             <td align="right" th:text="${#numbers.formatDecimal(report.rate, 0, 'COMMA', 2, 'POINT')}"></td>
         </tr>
 
         <tr>
-            <th align="right" th:if="${idReport >= 2}">  </th>
-            <th align="right" th:if="${idReport == 2}">  </th>
             <th align="right"> Total </th>
             <th align="right" id="total"> </th>
         </tr>

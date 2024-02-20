@@ -40,15 +40,47 @@ public interface OrderDetailsWaterSportRepo extends JpaRepository<OrderDetailsWa
             "where o.date between :dateFrom and :dateTo group by EXTRACT(YEAR from o.date)")
     List<Report> getYearlyReportWaterSport(LocalDate dateFrom, LocalDate dateTo);
 
-    @Query("SELECT new com.example.waterSports.modal.Report(0, 0, 0, sum(od.rate * od.persons), r.idOwner) FROM OrderWaterSport o inner join Referee r on o.idRef = r.id\n" +
-            "inner join OrderDetailsWaterSport od\n" +
-            "on o.billNo = od.billNo\n" +
-            "where o.date between :dateFrom and :dateTo group by r.idOwner")
-    List<Report> getReportReferee(LocalDate dateFrom, LocalDate dateTo);
-
     @Query("select sum(if(od.persons is null or cast(od.persons as text)='', 0, od.persons)) from OrderDetailsWaterSport od " +
             "inner join OrderWaterSport o on od.billNo = o.billNo " +
             "inner join Referee r on o.idRef = r.id " +
             "where o.date between :dateFrom and :dateTo and r.idOwner = :idOwner and od.idActivity = :idActivity group by r.idOwner")
     Integer countPerson(Long idOwner, Integer idActivity, LocalDate dateFrom, LocalDate dateTo);
+
+    // for marketers
+
+    @Query("select if(sum(persons) is null or cast(sum(persons) as text)='', 0, sum(persons)) from OrderDetailsWaterSport where billNo = :billNo and idActivity = 1")
+    Integer getQtyAllRides(Long billNo);
+
+    @Query("select if(sum(persons) is null or cast(sum(persons) as text)='', 0, sum(persons)) from OrderDetailsWaterSport where billNo = :billNo and idActivity != 1")
+    Integer getQtyExtraRides(Long billNo);
+
+    @Query("select if(sum(persons) is null or cast(sum(persons) as text)='', 0, sum(persons)) from OrderDetailsWaterSport where idActivity = 1 and billNo in (select billNo from OrderWaterSport where idRef = :idRef and date between :dateFrom and :dateTo)")
+    Integer getQtyAllRides(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(persons) is null or cast(sum(persons) as text)='', 0, sum(persons)) from OrderDetailsWaterSport where idActivity != 1 and billNo in (select billNo from OrderWaterSport where idRef = :idRef and date between :dateFrom and :dateTo)")
+    Integer getQtyExtraRides(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(persons * rate) is null or cast(sum(persons * rate) as text)='', 0, sum(persons * rate)) from OrderDetailsWaterSport where idActivity = 1 and billNo in (select billNo from OrderWaterSport where idRef = :idRef and date between :dateFrom and :dateTo)")
+    Integer getAmountAllRides(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(persons * rate) is null or cast(sum(persons * rate) as text)='', 0, sum(persons * rate)) from OrderDetailsWaterSport where idActivity != 1 and billNo in (select billNo from OrderWaterSport where idRef = :idRef and date between :dateFrom and :dateTo)")
+    Integer getAmountExtraRides(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(persons * rate) is null or cast(sum(persons * rate) as text)='', 0, sum(persons * rate)) from OrderDetailsWaterSport where billNo = :billNo")
+    Integer getAmount(Long billNo);
+
+    // for owners
+
+    @Query("select if(sum(persons) is null or cast(sum(persons) as text)='', 0, sum(persons)) from OrderDetailsWaterSport where idActivity = 1 and billNo in (select billNo from OrderWaterSport where idRef in (select id from Referee where idOwner = :idRef) and date between :dateFrom and :dateTo)")
+    Integer getQtyAllRidesOwner(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(persons) is null or cast(sum(persons) as text)='', 0, sum(persons)) from OrderDetailsWaterSport where idActivity != 1 and billNo in (select billNo from OrderWaterSport where idRef in (select id from Referee where idOwner = :idRef) and date between :dateFrom and :dateTo)")
+    Integer getQtyExtraRidesOwner(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(persons * rate) is null or cast(sum(persons * rate) as text)='', 0, sum(persons * rate)) from OrderDetailsWaterSport where idActivity = 1 and billNo in (select billNo from OrderWaterSport where idRef in (select id from Referee where idOwner = :idRef) and date between :dateFrom and :dateTo)")
+    Integer getAmountAllRidesOwner(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(persons * rate) is null or cast(sum(persons * rate) as text)='', 0, sum(persons * rate)) from OrderDetailsWaterSport where idActivity != 1 and billNo in (select billNo from OrderWaterSport where idRef in (select id from Referee where idOwner = :idRef) and date between :dateFrom and :dateTo)")
+    Integer getAmountExtraRidesOwner(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
 }

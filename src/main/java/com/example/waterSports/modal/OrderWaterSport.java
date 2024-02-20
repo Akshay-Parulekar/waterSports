@@ -15,22 +15,22 @@ public class OrderWaterSport
     Long id;
     Long billNo;
     String customerName;
-    String contact;
     Long idRef;
     String receiptNo;
     String serialNo;
+    Boolean paid;
     @CreationTimestamp
     LocalDate date;
 
     public OrderWaterSport() {
     }
 
-    public OrderWaterSport(Long billNo, String customerName, String contact, Long idRef, String receiptNo, String serialNo) {
+    public OrderWaterSport(Long billNo, String customerName, Long idRef, String receiptNo, Boolean paid, String serialNo) {
         this.billNo = billNo;
         this.customerName = customerName;
-        this.contact = contact;
         this.idRef = idRef;
         this.receiptNo = receiptNo;
+        this.paid = paid;
         this.serialNo = serialNo;
     }
 
@@ -56,14 +56,6 @@ public class OrderWaterSport
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
     }
 
     public LocalDate getDate() {
@@ -98,16 +90,24 @@ public class OrderWaterSport
         this.receiptNo = receiptNo;
     }
 
+    public Boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Boolean paid) {
+        this.paid = paid;
+    }
+
     @Override
     public String toString() {
         return "OrderWaterSport{" +
                 "id=" + id +
                 ", billNo=" + billNo +
                 ", customerName='" + customerName + '\'' +
-                ", contact='" + contact + '\'' +
                 ", idRef=" + idRef +
                 ", receiptNo='" + receiptNo + '\'' +
                 ", serialNo='" + serialNo + '\'' +
+                ", paid=" + paid +
                 ", date=" + date +
                 '}';
     }

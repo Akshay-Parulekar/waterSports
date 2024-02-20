@@ -83,12 +83,17 @@
                 <thead>
                 <tr>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Bill No</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Sr No</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Date</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Round</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Referee</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Customer Name</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Contact</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Rate</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Big Round</th>
+                    <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Owner</th>
+                    <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Marketer</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Rcpt No</th>
+                    <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Customer Name</th>
+                    <th style="background: var(--bs-blue);text-align: right;color: var(--bs-card-bg);">Qty</th>
+                    <th style="background: var(--bs-blue);text-align: right;color: var(--bs-card-bg);">Rate</th>
+                    <th style="background: var(--bs-blue);text-align: right;color: var(--bs-card-bg);">Amount</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Payment</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Action</th>
                 </tr>
                 </thead>
@@ -97,12 +102,22 @@
                 <tr th:each="order : ${list}">
 
                     <td style="text-align: right;padding: 4px;" th:text="${order.billNo}">1</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${order.serialNo}">1</td>
                     <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
                     <td style="text-align: center;padding: 4px;" th:text="${order.isBigRound}?'Big Round'"> Big </td>
-                    <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).idOwner == order.idRef} ? ${repoRef.getReferenceById(order.idRef).name} : ${repoRef.getReferenceById(order.idRef).name} + ' / ' + ${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
-                    <td style="text-align: left;padding: 4px;" th:text="${order.customerName + ' (' + order.nPerson + ' Person)'}">Akshay Parulekar</td>
-                    <td style="text-align: center;padding: 4px;" th:text="${order.contact}">9966332211</td>
-                    <td style="text-align: right;padding: 4px;" th:text="${order.rate}">1000</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${order.receiptNo}">1</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${order.customerName}">Akshay Parulekar</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${order.rate}">1</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${order.nPerson * order.rate}">1</td>
+                    <td style="text-align: left;left: 4px;">
+                        <input type="checkbox" th:id="${'chkPayment' + order.billNo}" style="transform: scale(1.40);" th:onchange="|document.location.href='/para/paid/${order.billNo}/' + this.checked + '/'|" th:checked="${order.paid}">
+                        <label th:styleappend="${order.paid}?'color:green':'color:red'" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'" class="form-check-label" th:for="${'chkPayment' + order.billNo}">
+                            paid
+                        </label>
+                    </td>
 
                     <td style="text-align: center;padding: 4px;">
                         <div class="btn-group" role="group">
@@ -142,11 +157,15 @@
                         <input type="hidden" id="id" name="id">
 
                         <div class="row">
-                            <div class="col" style="min-width: 50%;padding-right: 2px;padding-left: 13px;">
+                            <div class="col" style="min-width: 45%;padding-right: 2px;padding-left: 13px;">
                                 <select id="idRef" class="js-example-basic-single" name="idRef" required="true" title="Please Select Referee">
                                     <option> </option>
                                     <option th:each="ref : ${listRef}" th:value="${ref.id}" th:text="${ref.idOwner == ref.id} ? ${ref.name} : ${ref.name + ' / ' + repoRef.getReferenceById(ref.idOwner).name}"></option>
                                 </select>
+                            </div>
+
+                            <div class="col d-flex d-sm-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" style="max-width: 20px;" title="Paid">
+                                <input type="checkbox" id="paid" style="transform: scale(1.40);">
                             </div>
 
                             <div class="col"  style="padding-left: 2px;padding-right: 2px;">
@@ -159,8 +178,7 @@
                         </div>
 
                         <div class="row">
-                            <div class="col" style="padding-right: 2px;min-width: 40%;"><input id="customer" class="form-control" type="text" placeholder="Name of Customer" name="customerName" required /></div>
-                            <div class="col" style="padding-left: 2px;min-width: 20%;padding-right: 2px;"><input id="contact" class="form-control" type="text" placeholder="Contact No" name="contact" inputmode="numeric" required=""></div>
+                            <div class="col" style="padding-right: 2px;min-width: 45%;"><input id="customer" class="form-control" type="text" placeholder="Name of Customer" name="customerName" required /></div>
                             <div class="col d-flex d-sm-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" style="max-width: 20px;" title="Big Round">
                                 <input type="checkbox" id="bigRound" name="bigRound" style="transform: scale(1.40);">
                             </div>

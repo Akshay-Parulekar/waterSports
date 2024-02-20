@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <script src="/assets/js/jquery.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:inline="javascript">
+      $(document).ready(function() {
+      // Calculate and show total amount
+        let sum = 0;
+        var idReport = [[${idReport}]];
+        var indexAmt = 6;
+
+        if(idReport == 6)
+        {
+            indexAmt = 5;
+        }
+
+        $('#tbl tr').each(function() {
+          let value = parseFloat($(this).find('td:nth-child(' + indexAmt + ')').text().replace(',',''));
+          if (!isNaN(value)) {
+            sum += value;
+          }
+        });
+
+        $('#total').text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
+
+          // Merge identical cells
+          //assumption: the column that you wish to rowspan is sorted.
+          //this is where you put in your settings
+          var indexOfColumnToRowSpan = 0;
+          var $table = $('#tbl');
+
+          //this is the code to do spanning, should work for any table
+          var rowSpanMap = {};
+          $table.find('tr').each(function(){
+            var valueOfTheSpannableCell = $($(this).children('td')[indexOfColumnToRowSpan]).text();
+            $($(this).children('td')[indexOfColumnToRowSpan]).attr('data-original-value', valueOfTheSpannableCell);
+            rowSpanMap[valueOfTheSpannableCell] = true;
+          });
+
+          for(var rowGroup in rowSpanMap)
+          {
+            var $cellsToSpan = $('td[data-original-value="'+rowGroup+'"]');
+            var numberOfRowsToSpan = $cellsToSpan.length;
+            $cellsToSpan.each(function(index)
+            {
+              if(index==0)
+              {
+                $(this).attr('rowspan', numberOfRowsToSpan);
+              }
+              else
+              {
+                $(this).hide();
+              }
+            });
+          }
+      });
+
+    </script>
+
+    <style>
+        h1, h2, h3, h4, h5, h6
+        {
+            text-align:center;
+            margin-top: 0;
+            margin-bottom: 0.25em;
+        }
+    </style>
+
+</head>
+<body>
+<h2 th:text="${title}">  </h2>
+
+<h2 th:if="${idReport == 9}"> WATERSPORTS MASTER </h2>
+<h2 th:if="${idReport == 10}"> PARASAILING MASTER </h2>
+
+<h4 th:text="|From ${#temporals.format(dateFrom, 'dd-MM-yyyy')} To ${#temporals.format(dateTo, 'dd-MM-yyyy')}|"></h4>
+<hr>
+<div align="center">
+    <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
+        <tr>
+            <th> OWNER </th>
+            <th th:if="${idReport == 7}"> MARKETER </th>
+            <th> WS ALL </th>
+            <th> WS EXTRA </th>
+            <th> PS QTY </th>
+            <th> AMOUNT </th>
+        </tr>
+
+        <tr th:each="ref : ${list}">
+            <td align="left" th:text="${repoRef.getReferenceById(ref.idOwner).name}"></td>
+            <td align="left" th:if="${idReport == 7}" th:text="${ref.name}"></td>
+            <td align="right" th:if="${idReport == 7}" th:text="${repoWS.getQtyAllRides(ref.id, dateFrom, dateTo)}"></td>
+            <td align="right" th:if="${idReport == 6}" th:text="${repoWS.getQtyAllRidesOwner(ref.id, dateFrom, dateTo)}"></td>
+            <td align="right" th:if="${idReport == 7}" th:text="${repoWS.getQtyExtraRides(ref.id, dateFrom, dateTo)}"></td>
+            <td align="right" th:if="${idReport == 6}" th:text="${repoWS.getQtyExtraRidesOwner(ref.id, dateFrom, dateTo)}"></td>
+            <td align="right" th:if="${idReport == 7}" th:text="${repoPar.getQty(ref.id, dateFrom, dateTo)}"></td>
+            <td align="right" th:if="${idReport == 6}" th:text="${repoPar.getQtyOwner(ref.id, dateFrom, dateTo)}"></td>
+
+            <td align="right" th:if="${idReport == 7}" th:text="${#numbers.formatDecimal((repoWS.getAmountAllRides(ref.id, dateFrom, dateTo) + repoWS.getAmountExtraRides(ref.id, dateFrom, dateTo) + repoPar.getAmount(ref.id, dateFrom, dateTo)), 1, 'COMMA', 2, 'POINT')}"></td>
+            <td align="right" th:if="${idReport == 6}" th:text="${#numbers.formatDecimal((repoWS.getAmountAllRidesOwner(ref.id, dateFrom, dateTo) + repoWS.getAmountExtraRidesOwner(ref.id, dateFrom, dateTo) + repoPar.getAmountOwner(ref.id, dateFrom, dateTo)), 1, 'COMMA', 2, 'POINT')}"></td>
+        </tr>
+
+        <tr>
+            <th align="right" th:colspan="${idReport == 6}?4:5"> Total </th>
+            <th align="right" id="total"> </th>
+        </tr>
+    </table>
+</div>
+<br><br><br><br><br>
+<h4>Authorized Signature & Stamp</h4>
+</body>
+</html>

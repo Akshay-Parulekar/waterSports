@@ -13,10 +13,10 @@ public class OrderParasailing
     Long id;
     Long billNo;
     String customerName;
-    String contact;
     Long idRef;
     String receiptNo;
     Boolean bigRound;
+    Boolean paid;
     String serialNo;
     Double rate;
     Integer nPerson;
@@ -26,15 +26,15 @@ public class OrderParasailing
     public OrderParasailing() {
     }
 
-    public OrderParasailing(Long billNo, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, Boolean bigRound, String serialNo) {
+    public OrderParasailing(Long billNo, String customerName, Double rate, Integer nPerson, Long idRef, String receiptNo, Boolean bigRound, Boolean paid, String serialNo) {
         this.billNo = billNo;
         this.customerName = customerName;
-        this.contact = contact;
         this.rate = rate;
         this.nPerson = nPerson;
         this.idRef = idRef;
         this.receiptNo = receiptNo;
         this.bigRound = bigRound;
+        this.paid = paid;
         this.serialNo = serialNo;
     }
 
@@ -60,14 +60,6 @@ public class OrderParasailing
 
     public void setCustomerName(String customerName) {
         this.customerName = customerName;
-    }
-
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
     }
 
     public Double getRate() {
@@ -126,16 +118,24 @@ public class OrderParasailing
         this.receiptNo = receiptNo;
     }
 
+    public Boolean getPaid() {
+        return paid;
+    }
+
+    public void setPaid(Boolean paid) {
+        this.paid = paid;
+    }
+
     @Override
     public String toString() {
         return "OrderParasailing{" +
                 "id=" + id +
                 ", billNo=" + billNo +
                 ", customerName='" + customerName + '\'' +
-                ", contact='" + contact + '\'' +
                 ", idRef=" + idRef +
                 ", receiptNo='" + receiptNo + '\'' +
-                ", isBigRound=" + bigRound +
+                ", bigRound=" + bigRound +
+                ", paid=" + paid +
                 ", serialNo='" + serialNo + '\'' +
                 ", rate=" + rate +
                 ", nPerson=" + nPerson +

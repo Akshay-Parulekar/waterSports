@@ -42,6 +42,7 @@ public class ParasailingController
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);
         model.addAttribute("repoRef", repoRef);
+        model.addAttribute("repoOrder", repo);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("title",configRepo.findOneByProp("title").getVal());
@@ -72,6 +73,7 @@ public class ParasailingController
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);
         model.addAttribute("repoRef", repoRef);
+        model.addAttribute("repoOrder", repo);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("title",configRepo.findOneByProp("title").getVal());
@@ -90,13 +92,24 @@ public class ParasailingController
     {
         OrderParasailing order = repo.getReferenceById(id);
         repo.deleteById(id);
-        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails Deleted with BillNo = " + order.getBillNo() + ", persons = " + order.getnPerson() + ", rate = " + order.getRate() + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact()));
+        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails Deleted with BillNo = " + order.getBillNo() + ", persons = " + order.getnPerson() + ", rate = " + order.getRate() + ", customer = " + order.getCustomerName()));
+
+        return "redirect:/para/";
+    }
+
+    @GetMapping("/paid/{billNo}/{checked}/")
+    public String setPaymentStatus(@PathVariable Long billNo, @PathVariable Boolean checked)
+    {
+        OrderParasailing order = repo.getByBillNo(billNo);
+        order.setPaid(checked);
+
+        repoActivityLog.save(new ActivityLog("Parasailing : Record Updated. Bill No " + billNo + ", Payment Status = " + checked));
 
         return "redirect:/para/";
     }
 
     @PostMapping("/")
-    public String addData(Model model, Long id, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, @RequestParam(defaultValue = "false") Boolean bigRound, String serialNo)
+    public String addData(Model model, Long id, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid, String serialNo)
     {
         OrderParasailing orderSaved = null;
 
@@ -106,16 +119,16 @@ public class ParasailingController
         {
             orderSaved = repo.getReferenceById(id);
             orderSaved.setCustomerName(customerName);
-            orderSaved.setContact(contact);
             orderSaved.setRate(rate);
             orderSaved.setnPerson(nPerson);
             orderSaved.setIdRef(idRef);
             orderSaved.setReceiptNo(receiptNo);
             orderSaved.setBigRound(bigRound);
+            orderSaved.setPaid(paid);
             orderSaved.setSerialNo(serialNo);
             repo.save(orderSaved);
 
-            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Updated with BillNo = " + orderSaved.getBillNo() + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + orderSaved.getCustomerName() + ", contact = " + orderSaved.getContact() + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
+            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Updated with BillNo = " + orderSaved.getBillNo() + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + orderSaved.getCustomerName() + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
         }
         else
         {
@@ -131,10 +144,10 @@ public class ParasailingController
                 maxBillNo = topRecord.getBillNo();
             }
 
-            OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, contact, rate, nPerson, idRef, receiptNo, bigRound, serialNo);
+            OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, rate, nPerson, idRef, receiptNo, bigRound, paid, serialNo);
             orderSaved = repo.save(order);
 
-            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", contact = " + order.getContact() + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
+            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
         }
 
         Referee ref = repoRef.getReferenceById(orderSaved.getIdRef());

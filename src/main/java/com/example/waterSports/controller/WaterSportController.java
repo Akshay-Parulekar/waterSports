@@ -41,6 +41,7 @@ public class WaterSportController
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);
         model.addAttribute("repoRef", repoRef);
+        model.addAttribute("repoOrderDet", repoOrderDet);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("title",configRepo.findOneByProp("title").getVal());
@@ -71,6 +72,7 @@ public class WaterSportController
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);
         model.addAttribute("repoRef", repoRef);
+        model.addAttribute("repoOrderDet", repoOrderDet);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
         model.addAttribute("title",configRepo.findOneByProp("title").getVal());
@@ -87,7 +89,6 @@ public class WaterSportController
     @GetMapping("/delete/{id}/")
     public String delete(@PathVariable Long id)
     {
-
         Long billNo = repoOrder.getReferenceById(id).getBillNo();
         repoOrder.deleteById(id);
         repoOrderDet.deleteByBillNo(billNo);
@@ -97,11 +98,22 @@ public class WaterSportController
         return "redirect:/water/";
     }
 
+    @GetMapping("/paid/{billNo}/{checked}/")
+    public String setPaymentStatus(@PathVariable Long billNo, @PathVariable Boolean checked)
+    {
+        OrderWaterSport order = repoOrder.getByBillNo(billNo);
+        order.setPaid(checked);
+
+        repoActivityLog.save(new ActivityLog("WaterSports : Record Updated. Bill No " + billNo + ", Payment Status = " + checked));
+
+        return "redirect:/water/";
+    }
+
     @GetMapping("/order/{billNo}/")
     @ResponseBody
     public OrderWaterSport getOrder(@PathVariable Long billNo)
     {
-        return repoOrder.findByBillNo(billNo);
+        return repoOrder.getByBillNo(billNo);
     }
 
     @GetMapping("/orderdet/{billNo}/")
@@ -127,7 +139,7 @@ public class WaterSportController
 
     @PostMapping("/add/")
     @ResponseBody
-    public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, String contact, Double rate, Integer persons, Integer idActivity, @RequestParam(defaultValue = "false") Boolean bigRound, Long idRef, String receiptNo, String serialNo)
+    public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, Double rate, Integer persons, Integer idActivity, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid, Long idRef, String receiptNo, String serialNo)
     {
         System.out.println("billNo = " + billNo);
         OrderWaterSport orderSaved;
@@ -145,7 +157,7 @@ public class WaterSportController
                 billNo = orderSaved.getBillNo() + 1;
             }
 
-            OrderWaterSport order = new OrderWaterSport(billNo, customerName, contact, idRef, receiptNo, serialNo);
+            OrderWaterSport order = new OrderWaterSport(billNo, customerName, idRef, receiptNo, paid, serialNo);
             repoOrder.save(order);
         }
 
@@ -163,7 +175,7 @@ public class WaterSportController
         }
         OrderDetailsWaterSport orderDetailsSaved = repoOrderDet.save(orderDetails);
 
-        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", contact = " + contact + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
+        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
 
         return orderDetailsSaved;
     }
@@ -174,7 +186,7 @@ public class WaterSportController
     {
         Integer status = 0;
 
-        OrderWaterSport order = repoOrder.findByBillNo(id);
+        OrderWaterSport order = repoOrder.getByBillNo(id);
 
         System.out.println("order = " + order.toString());
 

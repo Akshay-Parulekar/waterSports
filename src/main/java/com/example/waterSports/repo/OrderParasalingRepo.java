@@ -1,6 +1,7 @@
 package com.example.waterSports.repo;
 
 import com.example.waterSports.modal.OrderParasailing;
+import com.example.waterSports.modal.OrderWaterSport;
 import com.example.waterSports.modal.Report;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -12,7 +13,11 @@ import java.util.List;
 @Repository
 public interface OrderParasalingRepo extends JpaRepository<OrderParasailing, Long>
 {
+    OrderParasailing getByBillNo(Long billNo);
+
     List<OrderParasailing> findByDateBetweenOrderByBillNoDesc(LocalDate startDate, LocalDate endDate);
+    List<OrderParasailing> findByDateBetweenOrderByBillNo(LocalDate startDate, LocalDate endDate);
+
     OrderParasailing findTopByOrderByBillNoDesc();
 
     @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM date), EXTRACT(MONTH FROM date), EXTRACT(YEAR FROM date), sum(rate * nPerson), 0L) FROM OrderParasailing\n" +
@@ -37,4 +42,16 @@ public interface OrderParasalingRepo extends JpaRepository<OrderParasailing, Lon
 
     @Query("select count(id) from OrderParasailing where idRef = :idRef")
     Integer countReferences(Long idRef);
+
+    @Query("select if(sum(nPerson) is null or cast(sum(nPerson) as text)='', 0, sum(nPerson)) from OrderParasailing where idRef = :idRef and date between :dateFrom and :dateTo")
+    Integer getQty(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(nPerson * rate) is null or cast(sum(nPerson * rate) as text)='', 0, sum(nPerson * rate)) from OrderParasailing where idRef = :idRef and date between :dateFrom and :dateTo")
+    Integer getAmount(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(nPerson) is null or cast(sum(nPerson) as text)='', 0, sum(nPerson)) from OrderParasailing where idRef in (select id from Referee where idOwner = :idRef) and date between :dateFrom and :dateTo")
+    Integer getQtyOwner(Long idRef, LocalDate dateFrom, LocalDate dateTo);
+
+    @Query("select if(sum(nPerson * rate) is null or cast(sum(nPerson * rate) as text)='', 0, sum(nPerson * rate)) from OrderParasailing where idRef in (select id from Referee where idOwner = :idRef) and date between :dateFrom and :dateTo")
+    Integer getAmountOwner(Long idRef, LocalDate dateFrom, LocalDate dateTo);
 }

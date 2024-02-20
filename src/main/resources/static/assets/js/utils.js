@@ -1,5 +1,39 @@
 var isNew = 0;
 
+function changePaymentStatus(billNo, checked)
+{
+    axios.get("/water/paid/" + billNo + "/" + checked + "/")
+    .then((response) =>
+      {
+          var status = response.data;
+          console.log("status = " + status);
+
+          if(status == 1)
+          {
+                Swal.fire(
+                      'Done!',
+                      'Payment status updated successfully.',
+                      'success'
+                    ).then((result) =>
+                    {
+                         if (result.isConfirmed)
+                         {
+                            window.location.replace('/water/');
+                         }
+                     });
+          }
+          else
+          {
+              Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+          }
+      })
+      .catch((error) =>
+      {
+          console.log("error " + error);
+          Swal.fire('Oops!', 'Some Error occured while saving data. Please try again later.', 'error');
+      })
+}
+
 function confirmClearLogs(url)
 {
     axios.get("/config/adminpassword/")
@@ -157,8 +191,8 @@ function showParaData(para)
     $('#serialNo').val(para.serialNo);
     $('#receiptNo').val(para.receiptNo);
     $('#bigRound').prop('checked', para.bigRound);
+    $('#paid').prop('checked', para.paid);
     $('#customer').val(para.customerName);
-    $('#contact').val(para.contact);
     $('#rate').val(para.rate);
     $('#nPerson').val(para.nPerson);
 }
@@ -227,12 +261,12 @@ function showData(billNo)
                   $('#idOrder').val(obj.id);
                   $('#billNo').val(obj.billNo);
                   $('#customerName').val(obj.customerName);
-                  $('#contact').val(obj.contact);
                   $('#serialNo').val(obj.serialNo);
                   $('#idRef').val(obj.idRef);
                   $('#idRef').trigger('change');
                   $('#receiptNo').val(obj.receiptNo);
                   $('#bigRound').prop('checked', obj.bigRound);
+                  $('#paid').prop('checked', obj.paid);
               }
           })
           .catch((error) =>
@@ -325,14 +359,14 @@ $(document).ready(function() {
             var data = {
               billNo:  $('#billNo').val(),
               customerName: $('#customerName').val(),
-              contact: $('#contact').val(),
               serialNo: $('#serialNo').val(),
               idRef: $('#idRef').val(),
               receiptNo: $('#receiptNo').val(),
               rate: $('#rate').val(),
               persons: $('#persons').val(),
               idActivity: $('#idActivity').val(),
-              bigRound: $('#bigRound').prop('checked')
+              bigRound: $('#bigRound').prop('checked'),
+              paid: $('#paid').prop('checked')
             };
 
             axios.post(endpoint, {}, {params:data})
@@ -366,6 +400,7 @@ $(document).ready(function() {
                           $('#billNo').val(obj.billNo);
                           $('#idOrder').val(obj.id);
                           $('#bigRound').prop('checked', false);
+                     //     $('#paid').prop('checked', false);
 
                           var columnIndex = 3;
                           var sum = 0;

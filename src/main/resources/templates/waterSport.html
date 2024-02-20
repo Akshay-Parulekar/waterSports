@@ -83,22 +83,38 @@
                 <thead>
                 <tr>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Bill No</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Sr No</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Date</th>
-                    <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Referee</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Customer Name</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Contact</th>
+                    <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Owner</th>
+                    <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Marketer</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Rcpt No</th>
+                    <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Customer Name</th>
+                    <th style="background: var(--bs-blue);text-align: right;color: var(--bs-card-bg);">All Rides</th>
+                    <th style="background: var(--bs-blue);text-align: right;color: var(--bs-card-bg);">Extra Ride</th>
+                    <th style="background: var(--bs-blue);text-align: right;color: var(--bs-card-bg);">Amount</th>
+                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Payment</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Action</th>
                 </tr>
                 </thead>
                 <tbody>
 
                 <tr th:each="order : ${list}">
-
                     <td style="text-align: right;padding: 4px;" th:text="${order.billNo}">1</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${order.serialNo}">1</td>
                     <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
-                    <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).idOwner == order.idRef} ? ${repoRef.getReferenceById(order.idRef).name} : ${repoRef.getReferenceById(order.idRef).name} + ' / ' + ${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
+                    <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${order.receiptNo}">1</td>
                     <td style="text-align: left;padding: 4px;" th:text="${order.customerName}">Akshay Parulekar</td>
-                    <td style="text-align: center;padding: 4px;" th:text="${order.contact}">9966332211</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${repoOrderDet.getQtyAllRides(order.billNo)}">1</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${repoOrderDet.getQtyExtraRides(order.billNo)}">1</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${repoOrderDet.getAmount(order.billNo)}">1</td>
+                    <td style="text-align: left;left: 4px;">
+                        <input type="checkbox" th:id="${'chkPayment' + order.billNo}" style="transform: scale(1.40);" th:onchange="|document.location.href='/water/paid/${order.billNo}/' + this.checked + '/'|" th:checked="${order.paid}">
+                        <label th:styleappend="${order.paid}?'color:green':'color:red'" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'" class="form-check-label" th:for="${'chkPayment' + order.billNo}">
+                            paid
+                        </label>
+                    </td>
 
                     <td style="text-align: center;padding: 4px;">
                         <div class="btn-group" role="group">
@@ -140,27 +156,34 @@
                     <input type="hidden" id="billNo">
 
                     <div class="text-center mb-3" style="padding-right: 10px;padding-left: 10px;">
+
                         <div class="row">
-                            <div class="col" style="min-width: 50%;padding-right: 2px;padding-left: 2px;">
+                            <div class="col"  style="padding-left: 2px;padding-right: 2px;">
+                                <input class="form-control" type="text" id="receiptNo" placeholder="Receipt No" name="receiptNo">
+                            </div>
+
+                            <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 2px;">
                                 <select id="idRef" class="js-example-basic-single" name="idRef" required="true" title="Please Select Referee">
                                     <option> </option>
                                     <option th:each="ref : ${listRef}" th:value="${ref.id}" th:text="${ref.id == ref.idOwner} ? ${ref.name} : ${ref.name + ' / ' + repoRef.getReferenceById(ref.idOwner).name}"></option>
                                 </select>
                             </div>
 
-                            <div class="col"  style="padding-left: 2px;padding-right: 2px;">
-                                <input class="form-control" type="text" id="receiptNo" placeholder="Receipt No" name="receiptNo">
-                            </div>
+                        </div>
 
+                        <div class="row" style="margin-top:5px">
                             <div class="col"  style="padding-left: 2px;padding-right: 2px;">
                                 <input class="form-control" type="text" id="serialNo" placeholder="Serial No" name="serialNo" required="">
                             </div>
+
+                            <div class="col d-flex d-sm-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" style="max-width: 20px;" title="Paid">
+                                <input type="checkbox" id="paid" style="transform: scale(1.40);">
+                            </div>
+
+                            <div class="col" style="min-width: 55%;padding-right: 2px;padding-left: 2px;"><input class="form-control" type="text" id="customerName" placeholder="Name of Customer" name="customerName" required=""></div>
                         </div>
 
-                        <div class="row">
-                            <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 2px;"><input class="form-control" type="text" id="customerName" placeholder="Name of Customer" name="customerName" required=""></div>
-                            <div class="col" style="padding-left: 2px;padding-right: 2px;"><input class="form-control" type="text" id="contact" placeholder="Cotnact No" name="contact" inputmode="numeric" required=""></div>
-                        </div>
+
                         <div class="row" style="padding-top: 10px;">
                             <div class="col" style="padding-right: 2px;padding-left: 2px;min-width: 40%;"><select class="form-select" id="idActivity" name="idActivity" required>
                                 <option value="" selected="" disabled>Select Activity</option>
