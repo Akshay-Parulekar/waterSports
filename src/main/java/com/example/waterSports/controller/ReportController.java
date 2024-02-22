@@ -107,14 +107,24 @@ public class ReportController
     }
 
     @GetMapping("/owner/{idOwner}/{dateFrom}/{dateTo}/")
-    @ResponseBody
-    public Integer printOwnerRcpt(@PathVariable Long idOwner, @PathVariable LocalDate dateFrom, @PathVariable LocalDate dateTo)
+    public String printOwnerRcpt(Model model, @PathVariable Long idOwner, @PathVariable LocalDate dateFrom, @PathVariable LocalDate dateTo)
     {
         Integer status = 0;
         System.out.println("dateFrom = " + dateFrom);
         System.out.println("dateTo = " + dateTo);
-    //    List<Referee> listRef = repoRef.findByIdOwnerOrderByName(idOwner);
 
-        return status;
+        List<OrderWaterSport> listOrderWs = orderWaterSportRepo.findReferences(idOwner, dateFrom, dateTo);
+        List<OrderParasailing> listOrderPar = orderParasalingRepo.findReferences(idOwner, dateFrom, dateTo);
+        model.addAttribute("listOrderWs", listOrderWs);
+        model.addAttribute("listOrderPs", listOrderPar);
+        model.addAttribute("repoWS", orderDetWatersportRepo);
+        model.addAttribute("repoPS", orderParasalingRepo);
+        model.addAttribute("repoRef", repoRef);
+        model.addAttribute("idOwner", idOwner);
+        model.addAttribute("dateFrom", dateFrom);
+        model.addAttribute("dateTo", dateTo);
+        model.addAttribute("title",configRepo.findOneByProp("title").getVal());
+
+        return "reportOwner";
     }
 }

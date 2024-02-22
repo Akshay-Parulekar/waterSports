@@ -106,7 +106,9 @@
             <td align="right" th:if="${idReport == 7}" th:text="${#numbers.formatDecimal((repoWS.getAmountAllRides(ref.id, dateFrom, dateTo) + repoWS.getAmountExtraRides(ref.id, dateFrom, dateTo) + repoPar.getAmount(ref.id, dateFrom, dateTo)), 1, 'COMMA', 2, 'POINT')}"></td>
             <td align="right" th:if="${idReport == 6}" th:text="${#numbers.formatDecimal((repoWS.getAmountAllRidesOwner(ref.id, dateFrom, dateTo) + repoWS.getAmountExtraRidesOwner(ref.id, dateFrom, dateTo) + repoPar.getAmountOwner(ref.id, dateFrom, dateTo)), 1, 'COMMA', 2, 'POINT')}"></td>
 
-            <td><button th:onclick="printOwnerRcpt([[${ref.idOwner}]], [[${dateFrom}]], [[${dateTo}]])"> Print </button></td>
+            <td>
+                <a th:href="@{/report/owner/{idOwner}/{dateFrom}/{dateTo}/(idOwner=${ref.id}, dateFrom=${dateFrom}, dateTo=${dateTo})}" target="_blank">Details</a>
+            </td>
         </tr>
 
         <tr>

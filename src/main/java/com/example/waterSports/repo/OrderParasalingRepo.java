@@ -16,7 +16,9 @@ public interface OrderParasalingRepo extends JpaRepository<OrderParasailing, Lon
     OrderParasailing getByBillNo(Long billNo);
 
     List<OrderParasailing> findByDateBetweenOrderByBillNoDesc(LocalDate startDate, LocalDate endDate);
-    List<OrderParasailing> findByDateBetweenOrderByBillNo(LocalDate startDate, LocalDate endDate);
+
+    @Query("from OrderParasailing where date between :startDate and :endDate and idRef in (select id from Referee where idOwner = :idOwner) order by billNo")
+    List<OrderParasailing> findReferences(Long idOwner, LocalDate startDate, LocalDate endDate);
 
     OrderParasailing findTopByOrderByBillNoDesc();
 
