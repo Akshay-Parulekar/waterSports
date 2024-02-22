@@ -1,5 +1,30 @@
 var isNew = 0;
 
+function printOwnerRcpt(idOwner, dateFrom, dateTo)
+{
+    axios
+      .get('/report/owner/' + idOwner + '/' + dateFrom + '/' + dateTo + '/')
+      .then((response) =>
+      {
+          var status = response.data;
+          console.log("status = " + status);
+
+          if(status == 1)
+          {
+              Swal.fire('Success', 'Receipt is ready', 'success');
+          }
+          else
+          {
+              Swal.fire('Oops!', 'Something went wrong. Please Try again', 'error');
+          }
+      })
+      .catch((error) =>
+      {
+          console.log("error " + error);
+              Swal.fire('Oops!', 'Printer may not be Connected or Check power supply', 'error');
+      });
+}
+
 function changePaymentStatus(billNo, checked)
 {
     axios.get("/water/paid/" + billNo + "/" + checked + "/")

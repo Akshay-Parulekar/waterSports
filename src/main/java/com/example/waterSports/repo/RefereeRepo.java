@@ -19,4 +19,6 @@ public interface RefereeRepo extends JpaRepository<Referee, Long>
 
     @Query("from Referee where id = idOwner order by name")
     List<Referee> findOwners();
+
+    List<Referee> findByIdOwnerOrderByName(Long idOwner);
 }

@@ -1,17 +1,15 @@
 package com.example.waterSports.controller;
 
+import com.example.waterSports.modal.OrderParasailing;
+import com.example.waterSports.modal.OrderWaterSport;
 import com.example.waterSports.modal.Referee;
 import com.example.waterSports.modal.Report;
-import com.example.waterSports.repo.ConfigRepo;
-import com.example.waterSports.repo.OrderDetailsWaterSportRepo;
-import com.example.waterSports.repo.OrderParasalingRepo;
-import com.example.waterSports.repo.RefereeRepo;
+import com.example.waterSports.repo.*;
 import com.example.waterSports.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -21,7 +19,9 @@ import java.util.List;
 public class ReportController
 {
     @Autowired
-    OrderDetailsWaterSportRepo orderWatersportRepo;
+    OrderDetailsWaterSportRepo orderDetWatersportRepo;
+    @Autowired
+    OrderWaterSportRepo orderWaterSportRepo;
     @Autowired
     OrderParasalingRepo orderParasalingRepo;
     @Autowired
@@ -35,10 +35,12 @@ public class ReportController
     {
         List<Report> listReport = null;
         List<Referee> listRef = null;
+        List<OrderWaterSport> listWsOrder = null;
+        List<OrderParasailing> listPsOrder = null;
         String resultPage = "report";
 
         model.addAttribute("repoRef", repoRef);
-        model.addAttribute("repoWS", orderWatersportRepo);
+        model.addAttribute("repoWS", orderDetWatersportRepo);
         model.addAttribute("repoPar", orderParasalingRepo);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
@@ -48,17 +50,17 @@ public class ReportController
 
         if(idReport == 0)
         {
-            listReport = orderWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
             model.addAttribute("list", listReport);
         }
         else if(idReport == 1)
         {
-            listReport = orderWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
             model.addAttribute("list", listReport);
         }
         else if(idReport == 2)
         {
-            listReport = orderWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
             model.addAttribute("list", listReport);
         }
         if(idReport == 3)
@@ -90,13 +92,29 @@ public class ReportController
         }
         else if(idReport == 8)
         {
-
+            listWsOrder = orderWaterSportRepo.findAll();
+            model.addAttribute("list", listWsOrder);
+            resultPage = "reportMaster";
         }
         else if(idReport == 9)
         {
-
+            listPsOrder = orderParasalingRepo.findAll();
+            model.addAttribute("list", listPsOrder);
+            resultPage = "reportMaster";
         }
 
         return resultPage;
+    }
+
+    @GetMapping("/owner/{idOwner}/{dateFrom}/{dateTo}/")
+    @ResponseBody
+    public Integer printOwnerRcpt(@PathVariable Long idOwner, @PathVariable LocalDate dateFrom, @PathVariable LocalDate dateTo)
+    {
+        Integer status = 0;
+        System.out.println("dateFrom = " + dateFrom);
+        System.out.println("dateTo = " + dateTo);
+    //    List<Referee> listRef = repoRef.findByIdOwnerOrderByName(idOwner);
+
+        return status;
     }
 }

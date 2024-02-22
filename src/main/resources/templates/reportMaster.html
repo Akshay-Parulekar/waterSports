@@ -11,12 +11,7 @@
       // Calculate and show total amount
         let sum = 0;
         var idReport = [[${idReport}]];
-        var indexAmt = 6;
-
-        if(idReport == 6)
-        {
-            indexAmt = 5;
-        }
+        var indexAmt = 10;
 
         $('#tbl tr').each(function() {
           let value = parseFloat($(this).find('td:nth-child(' + indexAmt + ')').text().replace(',',''));
@@ -26,39 +21,7 @@
         });
 
         $('#total').text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
-
-          // Merge identical cells
-          //assumption: the column that you wish to rowspan is sorted.
-          //this is where you put in your settings
-          var indexOfColumnToRowSpan = 0;
-          var $table = $('#tbl');
-
-          //this is the code to do spanning, should work for any table
-          var rowSpanMap = {};
-          $table.find('tr').each(function(){
-            var valueOfTheSpannableCell = $($(this).children('td')[indexOfColumnToRowSpan]).text();
-            $($(this).children('td')[indexOfColumnToRowSpan]).attr('data-original-value', valueOfTheSpannableCell);
-            rowSpanMap[valueOfTheSpannableCell] = true;
-          });
-
-          for(var rowGroup in rowSpanMap)
-          {
-            var $cellsToSpan = $('td[data-original-value="'+rowGroup+'"]');
-            var numberOfRowsToSpan = $cellsToSpan.length;
-            $cellsToSpan.each(function(index)
-            {
-              if(index==0)
-              {
-                $(this).attr('rowspan', numberOfRowsToSpan);
-              }
-              else
-              {
-                $(this).hide();
-              }
-            });
-          }
-      });
-
+    });
     </script>
 
     <style>
@@ -82,30 +45,43 @@
 <div align="center">
     <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
         <tr>
-            <th> OWNER </th>
-            <th th:if="${idReport == 7}"> MARKETER </th>
-            <th> WS ALL </th>
-            <th> WS EXTRA </th>
-            <th> PS QTY </th>
-            <th> AMOUNT </th>
+            <th>Bill No</th>
+            <th>Sr No</th>
+            <th>Date</th>
+            <th>Owner</th>
+            <th>Marketer</th>
+            <th>Rcpt No</th>
+            <th>Customer Name</th>
+            <th th:if="${idReport == 8}">All Rides</th>
+            <th th:if="${idReport == 8}">Extra Ride</th>
+            <th th:if="${idReport == 9}">Qty</th>
+            <th th:if="${idReport == 9}">Rate</th>
+            <th>Amount</th>
+            <th>Payment</th>
         </tr>
 
-        <tr th:each="ref : ${list}">
-            <td align="left" th:text="${repoRef.getReferenceById(ref.idOwner).name}"></td>
-            <td align="left" th:if="${idReport == 7}" th:text="${ref.name}"></td>
-            <td align="right" th:if="${idReport == 7}" th:text="${repoWS.getQtyAllRides(ref.id, dateFrom, dateTo)}"></td>
-            <td align="right" th:if="${idReport == 6}" th:text="${repoWS.getQtyAllRidesOwner(ref.id, dateFrom, dateTo)}"></td>
-            <td align="right" th:if="${idReport == 7}" th:text="${repoWS.getQtyExtraRides(ref.id, dateFrom, dateTo)}"></td>
-            <td align="right" th:if="${idReport == 6}" th:text="${repoWS.getQtyExtraRidesOwner(ref.id, dateFrom, dateTo)}"></td>
-            <td align="right" th:if="${idReport == 7}" th:text="${repoPar.getQty(ref.id, dateFrom, dateTo)}"></td>
-            <td align="right" th:if="${idReport == 6}" th:text="${repoPar.getQtyOwner(ref.id, dateFrom, dateTo)}"></td>
+        <tr th:each="order : ${list}">
+            <td th:text="${order.billNo}">1</td>
+            <td th:text="${order.serialNo}">1</td>
+            <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
+            <td th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
+            <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
+            <td th:text="${order.receiptNo}">1</td>
+            <td th:text="${order.customerName}">Akshay Parulekar</td>
 
-            <td align="right" th:if="${idReport == 7}" th:text="${#numbers.formatDecimal((repoWS.getAmountAllRides(ref.id, dateFrom, dateTo) + repoWS.getAmountExtraRides(ref.id, dateFrom, dateTo) + repoPar.getAmount(ref.id, dateFrom, dateTo)), 1, 'COMMA', 2, 'POINT')}"></td>
-            <td align="right" th:if="${idReport == 6}" th:text="${#numbers.formatDecimal((repoWS.getAmountAllRidesOwner(ref.id, dateFrom, dateTo) + repoWS.getAmountExtraRidesOwner(ref.id, dateFrom, dateTo) + repoPar.getAmountOwner(ref.id, dateFrom, dateTo)), 1, 'COMMA', 2, 'POINT')}"></td>
+            <td th:if="${idReport == 8}" th:text="${repoWS.getQtyAllRides(order.billNo)}">1</td>
+            <td th:if="${idReport == 8}" th:text="${repoWS.getQtyExtraRides(order.billNo)}">1</td>
+            <td th:if="${idReport == 8}" th:text="${repoWS.getAmount(order.billNo)}">1</td>
+
+            <td th:if="${idReport == 9}" style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
+            <td th:if="${idReport == 9}" style="text-align: right;padding: 4px;" th:text="${order.rate}">1</td>
+            <td th:if="${idReport == 9}" style="text-align: right;padding: 4px;" th:text="${order.nPerson * order.rate}">1</td>
+
+            <td th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'">1</td>
         </tr>
 
         <tr>
-            <th align="right" th:colspan="${idReport == 6}?4:5"> Total </th>
+            <th align="right" colspan="9"> Total </th>
             <th align="right" id="total"> </th>
         </tr>
     </table>
