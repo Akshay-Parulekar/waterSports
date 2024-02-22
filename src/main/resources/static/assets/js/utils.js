@@ -595,9 +595,16 @@ $(document).ready(function() {
             window.location.replace('/water/');
         }
 
+        $('#receiptNo').val('');
+        $('#serialNo').val('');
+        $('#customer').val('');
+        $('#rate').val('');
+        $('#nPerson').val('');
         $('#idOrder').val('');
         $('#billNo').val('');
         $('#idRef').val(-1);
+        $('#bigRound').prop('checked', false);
+        $('#paid').prop('checked', false);
         $('#idRef').trigger('change');
     });
 

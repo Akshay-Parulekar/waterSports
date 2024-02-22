@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Report</title>
+    <script src="/assets/js/jquery.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script th:inline="javascript">
+
+      function mergeCells(indexOfColumnToRowSpan)
+      {
+        // Merge identical cells
+          //assumption: the column that you wish to rowspan is sorted.
+          //this is where you put in your settings
+          var $table = $('#tbl');
+
+          //this is the code to do spanning, should work for any table
+          var rowSpanMap = {};
+          $table.find('tr').each(function(){
+            var valueOfTheSpannableCell = $($(this).children('td')[indexOfColumnToRowSpan]).text();
+            $($(this).children('td')[indexOfColumnToRowSpan]).attr('data-original-value', valueOfTheSpannableCell);
+            rowSpanMap[valueOfTheSpannableCell] = true;
+          });
+
+          for(var rowGroup in rowSpanMap)
+          {
+            var $cellsToSpan = $('td[data-original-value="'+rowGroup+'"]');
+            var numberOfRowsToSpan = $cellsToSpan.length;
+            $cellsToSpan.each(function(index)
+            {
+              if(index==0)
+              {
+                $(this).attr('rowspan', numberOfRowsToSpan);
+              }
+              else
+              {
+                $(this).hide();
+              }
+            });
+          }
+        }
+
+      function displaySum(index, targetID)
+        {
+            // Calculate and show total amount
+            let sum = 0;
+
+            $('#tbl tr').each(function() {
+              let value = parseFloat($(this).find('td:nth-child(' + index + ')').text().replace(',',''));
+              if (!isNaN(value)) {
+                sum += value;
+              }
+            });
+
+            if(index == 11)
+            {
+                $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
+            }
+            else
+            {
+                $(targetID).text(sum);
+            }
+        }
+
+      $(document).ready(function() {
+        displaySum(10, '#totalP');
+        displaySum(11, '#total');
+        mergeCells(0);
+      });
+    </script>
+
+    <style>
+        h1, h2, h3, h4, h5, h6
+        {
+            text-align:center;
+            margin-top: 0;
+            margin-bottom: 0.25em;
+        }
+    </style>
+
+</head>
+<body>
+<h2 th:text="${title}">  </h2>
+
+<h2> WATERSPORTS ORDER DETAILS REPORT </h2>
+
+<h4 th:text="|From ${#temporals.format(dateFrom, 'dd-MM-yyyy')} To ${#temporals.format(dateTo, 'dd-MM-yyyy')}|"></h4>
+<hr>
+<div align="center">
+    <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
+        <tr>
+            <th>Bill No</th>
+            <th>Sr No</th>
+            <th>Date</th>
+            <th>Owner</th>
+            <th>Marketer</th>
+            <th>Rcpt No</th>
+            <th>Customer Name</th>
+            <th>Activity</th>
+            <th>Rate</th>
+            <th>Qty</th>
+            <th>Amount</th>
+        </tr>
+
+        <tr th:each="orderDet : ${list}">
+            <td align="right" th:text="${orderDet.billNo}">1</td>
+            <td align="right" th:text="${(repoOrderWs.getByBillNo(orderDet.billNo)).serialNo}">1</td>
+            <td th:text="${#temporals.format((repoOrderWs.getByBillNo(orderDet.billNo)).date, 'dd-MM-yyyy')}">date</td>
+            <td th:text="${repoRef.getReferenceById(repoRef.getReferenceById((repoOrderWs.getByBillNo(orderDet.billNo)).idRef).idOwner).name}">Akshay Parulekar</td>
+            <td th:text="${repoRef.getReferenceById((repoOrderWs.getByBillNo(orderDet.billNo)).idRef).name}">Akshay Parulekar</td>
+            <td align="right" th:text="${(repoOrderWs.getByBillNo(orderDet.billNo)).receiptNo}">1</td>
+            <td th:text="${(repoOrderWs.getByBillNo(orderDet.billNo)).customerName}">Akshay Parulekar</td>
+            <td th:text="${orderDet.bigRound?arrayActivity[orderDet.idActivity] + '&nbsp;(Big Round)':arrayActivity[orderDet.idActivity]}">Akshay Parulekar</td>
+            <td align="right" th:text="${orderDet.rate}">1</td>
+            <td align="right" th:text="${orderDet.persons}">1</td>
+            <td align="right" th:text="${orderDet.persons * orderDet.rate}">1</td>
+        </tr>
+
+        <tr>
+            <th colspan="9" align="right"> Total </th>
+            <th align="right" id="totalP"> </th>
+            <th align="right" id="total"> </th>
+        </tr>
+    </table>
+</div>
+<br><br><br><br><br>
+<h4>Authorized Signature & Stamp</h4>
+</body>
+</html>

@@ -7,21 +7,33 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:inline="javascript">
+      function displaySum(index, targetID)
+        {
+            // Calculate and show total amount
+            let sum = 0;
+
+            $('#tbl tr').each(function() {
+              let value = parseFloat($(this).find('td:nth-child(' + index + ')').text().replace(',',''));
+              if (!isNaN(value)) {
+                sum += value;
+              }
+            });
+
+            if(index == 10)
+            {
+                $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
+            }
+            else
+            {
+                $(targetID).text(sum);
+            }
+        }
+
       $(document).ready(function() {
-      // Calculate and show total amount
-        let sum = 0;
-        var idReport = [[${idReport}]];
-        var indexAmt = 10;
-
-        $('#tbl tr').each(function() {
-          let value = parseFloat($(this).find('td:nth-child(' + indexAmt + ')').text().replace(',',''));
-          if (!isNaN(value)) {
-            sum += value;
-          }
-        });
-
-        $('#total').text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
-    });
+        displaySum(8, '#totalE');
+        displaySum(9, '#totalP');
+        displaySum(10, '#total');
+      });
     </script>
 
     <style>
@@ -37,8 +49,8 @@
 <body>
 <h2 th:text="${title}">  </h2>
 
-<h2 th:if="${idReport == 9}"> WATERSPORTS MASTER </h2>
-<h2 th:if="${idReport == 10}"> PARASAILING MASTER </h2>
+<h2 th:if="${idReport == 8}"> WATERSPORTS ORDER REPORT </h2>
+<h2 th:if="${idReport == 10}"> PARASAILING ORDER REPORT </h2>
 
 <h4 th:text="|From ${#temporals.format(dateFrom, 'dd-MM-yyyy')} To ${#temporals.format(dateTo, 'dd-MM-yyyy')}|"></h4>
 <hr>
@@ -54,35 +66,38 @@
             <th>Customer Name</th>
             <th th:if="${idReport == 8}">All Rides</th>
             <th th:if="${idReport == 8}">Extra Ride</th>
-            <th th:if="${idReport == 9}">Qty</th>
-            <th th:if="${idReport == 9}">Rate</th>
+            <th th:if="${idReport == 10}">Qty</th>
+            <th th:if="${idReport == 10}">Rate</th>
             <th>Amount</th>
             <th>Payment</th>
         </tr>
 
         <tr th:each="order : ${list}">
-            <td th:text="${order.billNo}">1</td>
-            <td th:text="${order.serialNo}">1</td>
+            <td align="right" th:text="${order.billNo}">1</td>
+            <td align="right" th:text="${order.serialNo}">1</td>
             <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
             <td th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
             <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
-            <td th:text="${order.receiptNo}">1</td>
+            <td align="right" th:text="${order.receiptNo}">1</td>
             <td th:text="${order.customerName}">Akshay Parulekar</td>
 
-            <td th:if="${idReport == 8}" th:text="${repoWS.getQtyAllRides(order.billNo)}">1</td>
-            <td th:if="${idReport == 8}" th:text="${repoWS.getQtyExtraRides(order.billNo)}">1</td>
-            <td th:if="${idReport == 8}" th:text="${repoWS.getAmount(order.billNo)}">1</td>
+            <td align="right" th:if="${idReport == 8}" th:text="${repoWS.getQtyAllRides(order.billNo)}">1</td>
+            <td align="right" th:if="${idReport == 8}" th:text="${repoWS.getQtyExtraRides(order.billNo)}">1</td>
+            <td align="right" th:if="${idReport == 8}" th:text="${repoWS.getAmount(order.billNo)}">1</td>
 
-            <td th:if="${idReport == 9}" style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
-            <td th:if="${idReport == 9}" style="text-align: right;padding: 4px;" th:text="${order.rate}">1</td>
-            <td th:if="${idReport == 9}" style="text-align: right;padding: 4px;" th:text="${order.nPerson * order.rate}">1</td>
+            <td align="right" th:if="${idReport == 10}" style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
+            <td align="right" th:if="${idReport == 10}" style="text-align: right;padding: 4px;" th:text="${#strings.format('%d', order.rate)}">1</td>
+            <td align="right" th:if="${idReport == 10}" style="text-align: right;padding: 4px;" th:text="${#strings.format('%d', order.nPerson * order.rate)}">1</td>
 
-            <td th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'">1</td>
+            <td align="center" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'">1</td>
         </tr>
 
         <tr>
-            <th align="right" colspan="9"> Total </th>
+            <th colspan="7" align="right"> Total </th>
+            <th align="right" id="totalE"> </th>
+            <th align="right" id="totalP"> </th>
             <th align="right" id="total"> </th>
+            <th> </th>
         </tr>
     </table>
 </div>

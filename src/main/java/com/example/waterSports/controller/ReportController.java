@@ -1,9 +1,6 @@
 package com.example.waterSports.controller;
 
-import com.example.waterSports.modal.OrderParasailing;
-import com.example.waterSports.modal.OrderWaterSport;
-import com.example.waterSports.modal.Referee;
-import com.example.waterSports.modal.Report;
+import com.example.waterSports.modal.*;
 import com.example.waterSports.repo.*;
 import com.example.waterSports.utils.Helper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,11 +33,14 @@ public class ReportController
         List<Report> listReport = null;
         List<Referee> listRef = null;
         List<OrderWaterSport> listWsOrder = null;
+        List<OrderDetailsWaterSport> listWsOrderDet = null;
         List<OrderParasailing> listPsOrder = null;
         String resultPage = "report";
 
+        model.addAttribute("arrayActivity", Helper.arrayActivity);
         model.addAttribute("repoRef", repoRef);
         model.addAttribute("repoWS", orderDetWatersportRepo);
+        model.addAttribute("repoOrderWs", orderWaterSportRepo);
         model.addAttribute("repoPar", orderParasalingRepo);
         model.addAttribute("dateFrom", dateFrom);
         model.addAttribute("dateTo", dateTo);
@@ -92,13 +92,19 @@ public class ReportController
         }
         else if(idReport == 8)
         {
-            listWsOrder = orderWaterSportRepo.findAll();
+            listWsOrder = orderWaterSportRepo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
             model.addAttribute("list", listWsOrder);
             resultPage = "reportMaster";
         }
         else if(idReport == 9)
         {
-            listPsOrder = orderParasalingRepo.findAll();
+            listWsOrderDet = orderDetWatersportRepo.findByDateBetweenOrderByBillNo(dateFrom, dateTo);
+            model.addAttribute("list", listWsOrderDet);
+            resultPage = "reportOrderDet";
+        }
+        else if(idReport == 10)
+        {
+            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
             model.addAttribute("list", listPsOrder);
             resultPage = "reportMaster";
         }

@@ -46,6 +46,9 @@ public interface OrderDetailsWaterSportRepo extends JpaRepository<OrderDetailsWa
             "where o.date between :dateFrom and :dateTo and r.idOwner = :idOwner and od.idActivity = :idActivity group by r.idOwner")
     Integer countPerson(Long idOwner, Integer idActivity, LocalDate dateFrom, LocalDate dateTo);
 
+    @Query("from OrderDetailsWaterSport where billNo in (select billNo from OrderWaterSport where date between :dateFrom and :dateTo) order by billNo")
+    List<OrderDetailsWaterSport> findByDateBetweenOrderByBillNo(LocalDate dateFrom, LocalDate dateTo);
+
     // for marketers
 
     @Query("select if(sum(persons) is null or cast(sum(persons) as text)='', 0, sum(persons)) from OrderDetailsWaterSport where billNo = :billNo and idActivity = 1")
