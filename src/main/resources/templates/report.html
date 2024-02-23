@@ -19,7 +19,7 @@
           }
         });
 
-        $('#total').text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
+        $('#total').text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
       });
     </script>
 
@@ -60,7 +60,7 @@
             <td align="right" th:if="${idReport == 1 || idReport == 4}" th:text="|${arrayMonth[report.month-1]}-${report.year}|"></td>
             <td align="right" th:if="${idReport == 2 || idReport == 5}" th:text="${report.year}"></td>
 
-            <td align="right" th:text="${#numbers.formatDecimal(report.rate, 0, 'COMMA', 2, 'POINT')}"></td>
+            <td align="right" th:text="${#numbers.formatDecimal(report.rate, 0, 'COMMA', 0, 'POINT')}"></td>
         </tr>
 
         <tr>

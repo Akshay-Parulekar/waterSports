@@ -110,8 +110,8 @@
                     <td style="text-align: right;padding: 4px;" th:text="${order.receiptNo}">1</td>
                     <td style="text-align: left;padding: 4px;" th:text="${order.customerName}">Akshay Parulekar</td>
                     <td style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
-                    <td style="text-align: right;padding: 4px;" th:text="${order.rate}">1</td>
-                    <td style="text-align: right;padding: 4px;" th:text="${order.nPerson * order.rate}">1</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${#numbers.formatDecimal(order.rate, 1, 0)}">1</td>
+                    <td style="text-align: right;padding: 4px;" th:text="${#numbers.formatDecimal(order.nPerson * order.rate, 1, 0)}">1</td>
                     <td style="text-align: left;left: 4px;">
                         <input type="checkbox" th:id="${'chkPayment' + order.billNo}" style="transform: scale(1.40);" th:onchange="|document.location.href='/para/paid/${order.billNo}/' + this.checked + '/'|" th:checked="${order.paid}">
                         <label th:styleappend="${order.paid}?'color:green':'color:red'" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'" class="form-check-label" th:for="${'chkPayment' + order.billNo}">

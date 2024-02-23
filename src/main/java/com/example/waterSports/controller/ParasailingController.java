@@ -103,7 +103,7 @@ public class ParasailingController
         OrderParasailing order = repo.getByBillNo(billNo);
         order.setPaid(checked);
 
-        repoActivityLog.save(new ActivityLog("Parasailing : Record Updated. Bill No " + billNo + ", Payment Status = " + checked));
+        repoActivityLog.save(new ActivityLog("Parasailing : Record Updated. Bill No " + billNo + ", Payment Status = " + (checked?"Paid":"Pending")));
 
         return "redirect:/para/";
     }

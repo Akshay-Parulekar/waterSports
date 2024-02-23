@@ -24,7 +24,7 @@
 
             if(index == 8)
             {
-                $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
+                $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             }
             else
             {
@@ -99,7 +99,7 @@
             <td align="right">0</td>
             <td align="right">0</td>
             <td style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
-            <td style="text-align: right;padding: 4px;" th:text="${order.nPerson * order.rate}">1</td>
+            <td style="text-align: right;padding: 4px;" th:text="${#numbers.formatDecimal(order.nPerson * order.rate, 1, 0)}">1</td>
 
             <td align="center" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'">1</td>
         </tr>

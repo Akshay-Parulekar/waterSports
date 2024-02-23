@@ -55,7 +55,7 @@
 
             if(index == 11)
             {
-                $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR' }));
+                $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             }
             else
             {
@@ -112,9 +112,9 @@
             <td align="right" th:text="${(repoOrderWs.getByBillNo(orderDet.billNo)).receiptNo}">1</td>
             <td th:text="${(repoOrderWs.getByBillNo(orderDet.billNo)).customerName}">Akshay Parulekar</td>
             <td th:text="${orderDet.bigRound?arrayActivity[orderDet.idActivity] + '&nbsp;(Big Round)':arrayActivity[orderDet.idActivity]}">Akshay Parulekar</td>
-            <td align="right" th:text="${orderDet.rate}">1</td>
+            <td align="right" th:text="${#numbers.formatDecimal(orderDet.rate, 1, 0)}">1</td>
             <td align="right" th:text="${orderDet.persons}">1</td>
-            <td align="right" th:text="${orderDet.persons * orderDet.rate}">1</td>
+            <td align="right" th:text="${#numbers.formatDecimal(orderDet.persons * orderDet.rate, 1, 0)}">1</td>
         </tr>
 
         <tr>

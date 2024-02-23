@@ -104,7 +104,7 @@ public class WaterSportController
         OrderWaterSport order = repoOrder.getByBillNo(billNo);
         order.setPaid(checked);
 
-        repoActivityLog.save(new ActivityLog("WaterSports : Record Updated. Bill No " + billNo + ", Payment Status = " + checked));
+        repoActivityLog.save(new ActivityLog("WaterSports : Record Updated. Bill No " + billNo + ", Payment Status = " + (checked?"Paid":"Pending")));
 
         return "redirect:/water/";
     }

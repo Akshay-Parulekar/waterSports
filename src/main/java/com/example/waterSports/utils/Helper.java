@@ -18,7 +18,6 @@ public class Helper
     public static DecimalFormat decimalFormat = new DecimalFormat("#.##");
     public static String[] arrayActivity = {"All Rides", "Jet Ski Ride", "Banana Ride", "Seating Bumper", "Sleeping Bumper"};
     public static String[] arrayMonth = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};
-
     public static int particularsWidth = 25;
     public static int quantityWidth = 7;
     public static int maxChars = 32;
