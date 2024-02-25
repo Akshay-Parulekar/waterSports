@@ -339,6 +339,7 @@ $(document).ready(function() {
     var formInfo = $('#formInfo');
     var formLogin = $('#formLogin');
     var formOrderDet = $('#formOrderDet');
+    var formOrderDetPs = $('#formOrderDetPs');
     var formAdminPassword = $('#formAdminPassword');
     var btnSaveInfo = $('#btnSaveInfo');
     var btnSaveLogin = $('#btnSaveLogin');
@@ -577,6 +578,7 @@ $(document).ready(function() {
         $('#billNo').val('');
 
         $('#formOrderDet')[0].reset();
+        $('#formOrderDetPs')[0].reset();
         $('#tblOrder > tbody').empty();
     });
 
