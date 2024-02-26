@@ -70,6 +70,13 @@
             margin-top: 0;
             margin-bottom: 0.25em;
         }
+
+        /* Hide the TD in print view */
+        @media print {
+        .hide-in-print {
+            display: none;
+          }
+        }
     </style>
 
 </head>
@@ -90,7 +97,7 @@
             <th> WS EXTRA </th>
             <th> PS QTY </th>
             <th> AMOUNT </th>
-            <th th:if="${idReport==6}">  </th>
+            <th th:if="${idReport==6}" class="hide-in-print">  </th>
         </tr>
 
         <tr th:each="ref : ${list}">
@@ -106,7 +113,7 @@
             <td align="right" th:if="${idReport == 7}" th:text="${#numbers.formatDecimal((repoWS.getAmountAllRides(ref.id, dateFrom, dateTo) + repoWS.getAmountExtraRides(ref.id, dateFrom, dateTo) + repoPar.getAmount(ref.id, dateFrom, dateTo)), 1, 'COMMA', 0, 'POINT')}"></td>
             <td align="right" th:if="${idReport == 6}" th:text="${#numbers.formatDecimal((repoWS.getAmountAllRidesOwner(ref.id, dateFrom, dateTo) + repoWS.getAmountExtraRidesOwner(ref.id, dateFrom, dateTo) + repoPar.getAmountOwner(ref.id, dateFrom, dateTo)), 1, 'COMMA', 0, 'POINT')}"></td>
 
-            <td th:if="${idReport==6}">
+            <td th:if="${idReport==6}" class="hide-in-print">
                 <a th:href="@{/report/owner/{idOwner}/{dateFrom}/{dateTo}/(idOwner=${ref.id}, dateFrom=${dateFrom}, dateTo=${dateTo})}" target="_blank">Details</a>
             </td>
         </tr>

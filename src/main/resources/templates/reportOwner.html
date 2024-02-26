@@ -9,34 +9,49 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:inline="javascript">
+        var sumWs = 0;
+        var sumPs = 0;
 
-        function displaySum(index, targetID)
+        function displaySum(tblID, index, targetID)
         {
             // Calculate and show total amount
             let sum = 0;
 
-            $('#tbl tr').each(function() {
+            $('#' + tblID + ' tr').each(function() {
               let value = parseFloat($(this).find('td:nth-child(' + index + ')').text().replace(',',''));
               if (!isNaN(value)) {
                 sum += value;
               }
             });
 
-            if(index == 8)
+            if((index == 7 && tblID === 'tblWs') || (index == 6 && tblID === 'tblPs'))
             {
                 $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
-            }
-            else
-            {
-                $(targetID).text(sum);
+
+                if(tblID === 'tblWs')
+                {
+                    sumWs = sum;
+                }
+                else if(tblID === 'tblPs')
+                {
+                    sumPs = sum;
+                }
             }
         }
 
       $(document).ready(function() {
-        displaySum(5, '#totalA');
-        displaySum(6, '#totalE');
-        displaySum(7, '#totalP');
-        displaySum(8, '#total');
+        displaySum('tblWs', 5, '#totalA');
+        displaySum('tblWs', 6, '#totalE');
+        displaySum('tblWs', 7, '#totalWs');
+        displaySum('tblPs', 5, '#totalP');
+        displaySum('tblPs', 6, '#totalPs');
+
+        $('#ttlWs').text($('#totalWs').text());
+        $('#ttlPs').text($('#totalPs').text());
+
+        var gTotal = sumWs + sumPs;
+        $('#ttlGrand').text(gTotal.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+
       });
     </script>
 
@@ -54,11 +69,14 @@
 <h2 th:text="${title}">  </h2>
 
 <h2> ORDER SUMMARY </h2>
+<h3 th:text="|From ${#temporals.format(dateFrom, 'dd-MM-yyyy')} To ${#temporals.format(dateTo, 'dd-MM-yyyy')}|"></h3>
+
 <h3 th:text="${repoRef.getReferenceById(idOwner).name}"></h3>
-<h4 th:text="|From ${#temporals.format(dateFrom, 'dd-MM-yyyy')} To ${#temporals.format(dateTo, 'dd-MM-yyyy')}|"></h4>
 <hr>
+<h3> WATER SPORTS </h3>
+
 <div align="center">
-    <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
+    <table id="tblWs" border="1" style="border-collapse: collapse;" cellpadding="5">
         <tr>
 <!--            <th>Bill No</th>-->
 <!--            <th>Sr.No</th>-->
@@ -66,11 +84,9 @@
             <th>Customer</th>
             <th>Marketer</th>
             <th>Rcpt.No</th>
-            <th>All WS Qty</th>
-            <th>Extra WS Qty</th>
-            <th>PS Qty</th>
+            <th>All Qty</th>
+            <th>Extra Qty</th>
             <th>Amount</th>
-            <th>Payment</th>
         </tr>
 
         <tr th:each="order : ${listOrderWs}">
@@ -84,35 +100,65 @@
             <td align="right" th:text="${repoWS.getQtyAllRides(order.billNo)}">1</td>
             <td align="right" th:text="${repoWS.getQtyExtraRides(order.billNo)}">1</td>
 <!--            <td style="text-align: right;padding: 4px;" th:text="${order.nPerson * order.rate}">1</td>-->
-            <td align="right">0</td>
             <td align="right" th:text="${repoWS.getAmount(order.billNo)}">1</td>
-
-            <td align="center" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'">1</td>
-        </tr>
-        <tr th:each="order : ${listOrderPs}">
-<!--            <td align="right" th:text="${order.billNo}">1</td>-->
-<!--            <td align="right" th:text="${order.serialNo}">1</td>-->
-            <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
-            <td th:text="${order.customerName}">Akshay Parulekar</td>
-            <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
-            <td align="right" th:text="${order.receiptNo}">1</td>
-            <td align="right">0</td>
-            <td align="right">0</td>
-            <td style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
-            <td style="text-align: right;padding: 4px;" th:text="${#numbers.formatDecimal(order.nPerson * order.rate, 1, 0)}">1</td>
-
-            <td align="center" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'">1</td>
         </tr>
 
         <tr>
             <th colspan="4" align="right"> Total </th>
             <th align="right" id="totalA"> </th>
             <th align="right" id="totalE"> </th>
+            <th align="right" id="totalWs"> </th>
+        </tr>
+
+    </table>
+    <br>
+    <h3> PARASAILING </h3>
+    <table id="tblPs" border="1" style="border-collapse: collapse;" cellpadding="5">
+
+        <tr>
+            <!--            <th>Bill No</th>-->
+            <!--            <th>Sr.No</th>-->
+            <th>Date</th>
+            <th>Customer</th>
+            <th>Marketer</th>
+            <th>Rcpt.No</th>
+            <th>Qty</th>
+            <th>Amount</th>
+        </tr>
+            <tr th:each="order : ${listOrderPs}">
+    <!--            <td align="right" th:text="${order.billNo}">1</td>-->
+    <!--            <td align="right" th:text="${order.serialNo}">1</td>-->
+                <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
+                <td th:text="${order.customerName}">Akshay Parulekar</td>
+                <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
+                <td align="right" th:text="${order.receiptNo}">1</td>
+                <td style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
+                <td style="text-align: right;padding: 4px;" th:text="${#numbers.formatDecimal(order.nPerson * order.rate, 1, 0)}">1</td>
+            </tr>
+
+        <tr>
+            <th colspan="4" align="right"> Total </th>
             <th align="right" id="totalP"> </th>
-            <th align="right" id="total"> </th>
-            <th> </th>
+            <th align="right" id="totalPs"> </th>
+        </tr>
+
+    </table>
+    <br>
+    <br>
+    <table border="1" style="border-collapse: collapse;" cellpadding="5">
+        <tr>
+            <th>Total WS</th>
+            <th>Total PS</th>
+            <th>Grand Total</th>
+        </tr>
+        <tr>
+            <td id="ttlWs"></td>
+            <td id="ttlPs"></td>
+            <th id="ttlGrand"></th>
         </tr>
     </table>
+
+
 </div>
 <!--<br><br><br><br><br>-->
 <!--<h4>Authorized Signature & Stamp</h4>-->

@@ -104,7 +104,7 @@ public class ReportController
         }
         else if(idReport == 10)
         {
-            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNo(dateFrom, dateTo);
             model.addAttribute("list", listPsOrder);
             resultPage = "reportMaster";
         }
