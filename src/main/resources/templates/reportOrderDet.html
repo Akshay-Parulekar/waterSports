@@ -111,7 +111,7 @@
             <td th:text="${repoRef.getReferenceById((repoOrderWs.getByBillNo(orderDet.billNo)).idRef).name}">Akshay Parulekar</td>
             <td align="right" th:text="${(repoOrderWs.getByBillNo(orderDet.billNo)).receiptNo}">1</td>
             <td th:text="${(repoOrderWs.getByBillNo(orderDet.billNo)).customerName}">Akshay Parulekar</td>
-            <td th:text="${orderDet.bigRound?arrayActivity[orderDet.idActivity] + '&nbsp;(Big Round)':arrayActivity[orderDet.idActivity]}">Akshay Parulekar</td>
+            <td th:text="${orderDet.bigRound?arrayActivity[orderDet.idActivity-1] + '&nbsp;(Big Round)':arrayActivity[orderDet.idActivity-1]}">Akshay Parulekar</td>
             <td align="right" th:text="${#numbers.formatDecimal(orderDet.rate, 1, 0)}">1</td>
             <td align="right" th:text="${orderDet.persons}">1</td>
             <td align="right" th:text="${#numbers.formatDecimal(orderDet.persons * orderDet.rate, 1, 0)}">1</td>
