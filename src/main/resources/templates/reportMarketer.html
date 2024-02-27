@@ -52,6 +52,7 @@
               if(index==0)
               {
                 $(this).attr('rowspan', numberOfRowsToSpan);
+                $(this).attr('style', 'vertical-align: top');
               }
               else
               {
@@ -59,7 +60,11 @@
               }
             });
           }
+
+          makeZerosGray('tbl');
       });
+
+
 
     </script>
 

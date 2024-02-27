@@ -34,7 +34,8 @@ public class ParasailingController
     public String showData(Model model)
     {
 
-        LocalDate dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+    //    LocalDate dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+        LocalDate dateFrom = LocalDate.now();
         LocalDate dateTo = LocalDate.now();
 
         List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);

@@ -68,8 +68,16 @@ public class Helper
         // Preparing the content
         ByteArrayOutputStream expected = new ByteArrayOutputStream();
 
+        if(activities != null) // Parasailing
+        {
+            expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.Bold));
+            expected.writeBytes(POS.POSPrinter.CharSize.DoubleHeight4());
+            expected.writeBytes(("|".repeat(maxChars) + "\n").getBytes());
+        }
+
         expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Center));
         expected.writeBytes(POS.POSPrinter.CharSize.Normal());
+        expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
         expected.writeBytes((header.replaceAll("/","\n") + "\n").getBytes());
 
         expected.writeBytes(POS.POSPrinter.CharSize.DoubleHeight2());
@@ -97,7 +105,7 @@ public class Helper
         middleSpace = maxChars - ("Own:" + owner).length() - ("Ref:" + referee).length();
         String strOwnRef = String.format("%s%" + middleSpace + "s%s", "Own:" + owner, "", "Ref:" + referee + "\n");
         expected.writeBytes((strOwnRef).getBytes());
-        
+
         expected.writeBytes(("Date:" + date + "\n").getBytes());
         expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
 

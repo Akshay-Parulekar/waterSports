@@ -1,5 +1,13 @@
 var isNew = 0;
 
+function makeZerosGray(tableID) {
+    $('#' + tableID + ' td').each(function() {
+        if ($(this).text().trim() === '0') {
+            $(this).css('color', 'lightgray');
+        }
+    });
+}
+
 function changePaymentStatus(billNo, checked)
 {
     axios.get("/water/paid/" + billNo + "/" + checked + "/")
@@ -616,4 +624,5 @@ $(document).ready(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
         });
     });
+
 });

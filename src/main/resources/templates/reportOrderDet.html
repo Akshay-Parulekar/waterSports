@@ -3,6 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>Report</title>
+
+    <style>
+        h1, h2, h3, h4, h5, h6
+        {
+            text-align:center;
+            margin-top: 0;
+            margin-bottom: 0.25em;
+        }
+
+    </style>
+
     <script src="/assets/js/jquery.js"></script>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -32,6 +43,7 @@
               if(index==0)
               {
                 $(this).attr('rowspan', numberOfRowsToSpan);
+                $(this).attr('style', 'vertical-align: top');
               }
               else
               {
@@ -67,17 +79,11 @@
         displaySum(10, '#totalP');
         displaySum(11, '#total');
         mergeCells(0);
+        makeZerosGray('tbl');
       });
     </script>
 
-    <style>
-        h1, h2, h3, h4, h5, h6
-        {
-            text-align:center;
-            margin-top: 0;
-            margin-bottom: 0.25em;
-        }
-    </style>
+
 
 </head>
 <body>

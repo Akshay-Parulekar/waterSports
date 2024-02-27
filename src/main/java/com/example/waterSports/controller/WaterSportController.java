@@ -33,7 +33,8 @@ public class WaterSportController
     public String showData(Model model)
     {
 
-        LocalDate dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+    //    LocalDate dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+        LocalDate dateFrom = LocalDate.now();
         LocalDate dateTo = LocalDate.now();
 
         List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
