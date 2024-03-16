@@ -50,32 +50,32 @@ public class ReportController
 
         if(idReport == 0)
         {
-            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo);
             model.addAttribute("list", listReport);
         }
         else if(idReport == 1)
         {
-            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo);
             model.addAttribute("list", listReport);
         }
         else if(idReport == 2)
         {
-            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo);
             model.addAttribute("list", listReport);
         }
         if(idReport == 3)
         {
-            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom, dateTo);
             model.addAttribute("list", listReport);
         }
         else if(idReport == 4)
         {
-            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom, dateTo);
             model.addAttribute("list", listReport);
         }
         else if(idReport == 5)
         {
-            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom, dateTo.plusDays(1));
+            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom, dateTo);
             model.addAttribute("list", listReport);
         }
         else if(idReport == 6)

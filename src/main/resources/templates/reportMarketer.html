@@ -9,27 +9,53 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script th:inline="javascript">
-      $(document).ready(function() {
-      // Calculate and show total amount
-        let sum = 0;
+
+        function displaySum(index, targetID)
+        {
+            // Calculate and show total amount
+            let sum = 0;
+
+            $('#tbl tr').each(function() {
+              let value = parseFloat($(this).find('td:nth-child(' + index + ')').text().replace(',',''));
+              if (!isNaN(value)) {
+                sum += value;
+              }
+            });
+
+            console.log('sum = ' + sum);
+
+            if(targetID === '#total')
+            {
+                $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
+            }
+            else
+            {
+                $(targetID).text(sum);
+            }
+        }
+
+    $(document).ready(function() {
+
         var idReport = [[${idReport}]];
-        var indexAmt = 6;
 
         if(idReport == 6)
         {
-            indexAmt = 5;
+            displaySum(2, '#ttlWsAll');
+            displaySum(3, '#ttlWsExtra');
+            displaySum(4, '#ttlPs');
+            displaySum(5, '#total');
+        }
+        else
+        {
+            displaySum(3, '#ttlWsAll');
+            displaySum(4, '#ttlWsExtra');
+            displaySum(5, '#ttlPs');
+            displaySum(6, '#total');
         }
 
-        $('#tbl tr').each(function() {
-          let value = parseFloat($(this).find('td:nth-child(' + indexAmt + ')').text().replace(',',''));
-          if (!isNaN(value)) {
-            sum += value;
-          }
-        });
+        makeZerosGray('tbl');
 
-        $('#total').text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
-
-          // Merge identical cells
+        // Merge identical cells
           //assumption: the column that you wish to rowspan is sorted.
           //this is where you put in your settings
           var indexOfColumnToRowSpan = 0;
@@ -60,11 +86,7 @@
               }
             });
           }
-
-          makeZerosGray('tbl');
       });
-
-
 
     </script>
 
@@ -124,7 +146,10 @@
         </tr>
 
         <tr>
-            <th align="right" th:colspan="${idReport == 6}?4:5"> Total </th>
+            <th align="right" th:colspan="${idReport==7}?'2'"> Total </th>
+            <th align="right" id="ttlWsAll"> </th>
+            <th align="right" id="ttlWsExtra"> </th>
+            <th align="right" id="ttlPs"> </th>
             <th align="right" id="total"> </th>
         </tr>
     </table>
