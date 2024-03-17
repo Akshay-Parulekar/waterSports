@@ -83,7 +83,6 @@
                 <thead>
                 <tr>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Bill No</th>
-                    <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Sr No</th>
                     <th style="background: var(--bs-blue);text-align: center;color: var(--bs-card-bg);">Date</th>
                     <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Owner</th>
                     <th style="background: var(--bs-blue);text-align: left;color: var(--bs-card-bg);">Marketer</th>
@@ -100,7 +99,6 @@
 
                 <tr th:each="order : ${list}">
                     <td style="text-align: right;padding: 4px;" th:text="${order.billNo}">1</td>
-                    <td style="text-align: right;padding: 4px;" th:text="${order.serialNo}">1</td>
                     <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
                     <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
                     <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
@@ -158,29 +156,23 @@
                     <div class="text-center mb-3" style="padding-right: 10px;padding-left: 10px;">
 
                         <div class="row">
-                            <div class="col"  style="padding-left: 2px;padding-right: 2px;">
+                            <div class="col"  style="min-width: 20%;padding-left: 2px;padding-right: 2px;">
                                 <input class="form-control" type="text" id="receiptNo" placeholder="Receipt No" name="receiptNo">
                             </div>
 
-                            <div class="col" style="min-width: 60%;padding-right: 2px;padding-left: 2px;">
+                            <div class="col" style="min-width: 35%;padding-right: 2px;padding-left: 2px;">
                                 <select id="idRef" class="js-example-basic-single" name="idRef" required="true" title="Please Select Referee">
                                     <option> </option>
                                     <option th:each="ref : ${listRef}" th:value="${ref.id}" th:text="${ref.id == ref.idOwner} ? ${ref.name} : ${ref.name + ' / ' + repoRef.getReferenceById(ref.idOwner).name}"></option>
                                 </select>
                             </div>
 
-                        </div>
+                            <div class="col" style="min-width: 35%;padding-right: 2px;padding-left: 2px;"><input class="form-control" type="text" id="customerName" placeholder="Name of Customer" name="customerName" required=""></div>
 
-                        <div class="row" style="margin-top:5px">
-                            <div class="col"  style="padding-left: 2px;padding-right: 2px;">
-                                <input class="form-control" type="text" id="serialNo" placeholder="Serial No" name="serialNo" required="">
-                            </div>
-
-                            <div class="col d-flex d-sm-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" style="max-width: 20px;" title="Paid">
+                            <div class="col d-flex d-sm-flex justify-content-center align-items-center justify-content-sm-center align-items-sm-center" data-bs-toggle="tooltip" data-bss-tooltip="" data-bs-placement="bottom" style="max-width: 5px;" title="Paid">
                                 <input type="checkbox" id="paid" style="transform: scale(1.40);">
                             </div>
 
-                            <div class="col" style="min-width: 55%;padding-right: 2px;padding-left: 2px;"><input class="form-control" type="text" id="customerName" placeholder="Name of Customer" name="customerName" required=""></div>
                         </div>
 
 

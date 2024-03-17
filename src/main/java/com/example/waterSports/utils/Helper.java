@@ -22,7 +22,7 @@ public class Helper
     public static int quantityWidth = 7;
     public static int maxChars = 32;
 
-    public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String serialNo, String referee, String owner, String customerName, String activities, Integer nPerson, Double rate, String date, List<OrderDetailsWaterSport> listOrderDet, Integer receiptWidth)
+    public static int PrintBill(String title, String header, String footer, String address, String contact, String printerName, Long billNo, String referee, String owner, String customerName, String activities, Integer nPerson, Double rate, String date, List<OrderDetailsWaterSport> listOrderDet, Integer receiptWidth)
     {
         if(receiptWidth == 58)
         {
@@ -98,16 +98,13 @@ public class Helper
 
         expected.writeBytes(POS.POSPrinter.CharSize.Normal());
         expected.writeBytes(POS.POSPrinter.Justification(POS.Justifications.Left));
-        int middleSpace = maxChars - ("BillNo:" + billNo).length() - ("SrNo:" + serialNo).length();
-        String strBillNoDate = String.format("%s%" + middleSpace + "s%s", "BillNo:" + billNo, "", "SrNo:" + serialNo + "\n");
+        int middleSpace = maxChars - ("BillNo:" + billNo).length() - ("Date:" + date).length();
+        String strBillNoDate = String.format("%s%" + middleSpace + "s%s", "BillNo:" + billNo, "", "Date:" + date + "\n");
         expected.writeBytes((strBillNoDate).getBytes());
 
         middleSpace = maxChars - ("Own:" + owner).length() - ("Ref:" + referee).length();
         String strOwnRef = String.format("%s%" + middleSpace + "s%s", "Own:" + owner, "", "Ref:" + referee + "\n");
         expected.writeBytes((strOwnRef).getBytes());
-
-        expected.writeBytes(("Date:" + date + "\n").getBytes());
-        expected.writeBytes(POS.POSPrinter.SetStyles(POS.PrintStyle.None));
 
         expected.writeBytes(("-".repeat(maxChars) + "\n").getBytes());
 
@@ -123,7 +120,7 @@ public class Helper
             {
                 String activity = Helper.arrayActivity[orderDet.getIdActivity()-1];
 
-                String row = generateReceiptRow(orderDet.isBigRound() ? activity + " (Big Round)":activity, orderDet.getPersons());
+                String row = generateReceiptRow(orderDet.isBigRound() ? activity + "(Big Round)":activity, orderDet.getPersons());
                 expected.writeBytes((row).getBytes());
             }
         }

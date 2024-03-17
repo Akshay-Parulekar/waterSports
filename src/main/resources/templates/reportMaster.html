@@ -19,7 +19,7 @@
               }
             });
 
-            if(index == 10)
+            if(index == 9)
             {
                 $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             }
@@ -30,9 +30,9 @@
         }
 
       $(document).ready(function() {
-        displaySum(8, '#totalE');
-        displaySum(9, '#totalP');
-        displaySum(10, '#total');
+        displaySum(7, '#totalE');
+        displaySum(8, '#totalP');
+        displaySum(9, '#total');
         makeZerosGray('tbl');
       });
     </script>
@@ -59,7 +59,6 @@
     <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
         <tr>
             <th>Bill No</th>
-            <th>Sr No</th>
             <th>Date</th>
             <th>Owner</th>
             <th>Marketer</th>
@@ -75,7 +74,6 @@
 
         <tr th:each="order : ${list}">
             <td align="right" th:text="${order.billNo}">1</td>
-            <td align="right" th:text="${order.serialNo}">1</td>
             <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
             <td th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
             <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
@@ -94,7 +92,7 @@
         </tr>
 
         <tr>
-            <th colspan="7" align="right"> Total </th>
+            <th colspan="6" align="right"> Total </th>
             <th align="right" id="totalE"> </th>
             <th align="right" id="totalP"> </th>
             <th align="right" id="total"> </th>

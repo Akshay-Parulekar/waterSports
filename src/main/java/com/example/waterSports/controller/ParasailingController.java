@@ -110,7 +110,7 @@ public class ParasailingController
     }
 
     @PostMapping("/")
-    public String addData(Model model, Long id, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid, String serialNo)
+    public String addData(Model model, Long id, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid)
     {
         OrderParasailing orderSaved = null;
 
@@ -126,10 +126,9 @@ public class ParasailingController
             orderSaved.setReceiptNo(receiptNo);
             orderSaved.setBigRound(bigRound);
             orderSaved.setPaid(paid);
-            orderSaved.setSerialNo(serialNo);
             repo.save(orderSaved);
 
-            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Updated with BillNo = " + orderSaved.getBillNo() + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + orderSaved.getCustomerName() + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
+            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Updated with BillNo = " + orderSaved.getBillNo() + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + orderSaved.getCustomerName() + ", referee = " + repoRef.getReferenceById(idRef).getName()));
         }
         else
         {
@@ -145,10 +144,10 @@ public class ParasailingController
                 maxBillNo = topRecord.getBillNo();
             }
 
-            OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, rate, nPerson, idRef, receiptNo, bigRound, paid, serialNo);
+            OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, rate, nPerson, idRef, receiptNo, bigRound, paid);
             orderSaved = repo.save(order);
 
-            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
+            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", referee = " + repoRef.getReferenceById(idRef).getName()));
         }
 
         Referee ref = repoRef.getReferenceById(orderSaved.getIdRef());
@@ -163,7 +162,6 @@ public class ParasailingController
                 configRepo.findOneByProp("contact").getVal(),
                 configRepo.findOneByProp("printer").getVal(),
                 orderSaved.getBillNo(),
-                orderSaved.getSerialNo(),
                 refName,
                 ownerName,
                 orderSaved.getCustomerName(),
@@ -198,7 +196,6 @@ public class ParasailingController
                 configRepo.findOneByProp("contact").getVal(),
                 configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
-                order.getSerialNo(),
                 refName,
                 ownerName,
                 order.getCustomerName(),

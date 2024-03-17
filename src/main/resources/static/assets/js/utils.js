@@ -196,7 +196,6 @@ function showParaData(para)
     $('#name').val(para.name);
     $('#idRef').val(para.idRef);
     $('#idRef').trigger('change');
-    $('#serialNo').val(para.serialNo);
     $('#receiptNo').val(para.receiptNo);
     $('#bigRound').prop('checked', para.bigRound);
     $('#paid').prop('checked', para.paid);
@@ -269,7 +268,6 @@ function showData(billNo)
                   $('#idOrder').val(obj.id);
                   $('#billNo').val(obj.billNo);
                   $('#customerName').val(obj.customerName);
-                  $('#serialNo').val(obj.serialNo);
                   $('#idRef').val(obj.idRef);
                   $('#idRef').trigger('change');
                   $('#receiptNo').val(obj.receiptNo);
@@ -368,7 +366,6 @@ $(document).ready(function() {
             var data = {
               billNo:  $('#billNo').val(),
               customerName: $('#customerName').val(),
-              serialNo: $('#serialNo').val(),
               idRef: $('#idRef').val(),
               receiptNo: $('#receiptNo').val(),
               rate: $('#rate').val(),
@@ -606,7 +603,6 @@ $(document).ready(function() {
         }
 
         $('#receiptNo').val('');
-        $('#serialNo').val('');
         $('#customer').val('');
         $('#rate').val('');
         $('#nPerson').val('');

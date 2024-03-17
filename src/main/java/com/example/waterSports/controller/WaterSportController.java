@@ -140,7 +140,7 @@ public class WaterSportController
 
     @PostMapping("/add/")
     @ResponseBody
-    public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, Double rate, Integer persons, Integer idActivity, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid, Long idRef, String receiptNo, String serialNo)
+    public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, Double rate, Integer persons, Integer idActivity, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid, Long idRef, String receiptNo)
     {
         System.out.println("billNo = " + billNo);
         OrderWaterSport orderSaved;
@@ -158,7 +158,7 @@ public class WaterSportController
                 billNo = orderSaved.getBillNo() + 1;
             }
 
-            OrderWaterSport order = new OrderWaterSport(billNo, customerName, idRef, receiptNo, paid, serialNo);
+            OrderWaterSport order = new OrderWaterSport(billNo, customerName, idRef, receiptNo, paid);
             repoOrder.save(order);
         }
 
@@ -176,7 +176,7 @@ public class WaterSportController
         }
         OrderDetailsWaterSport orderDetailsSaved = repoOrderDet.save(orderDetails);
 
-        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", referee = " + repoRef.getReferenceById(idRef).getName() + ", serial No = " + serialNo));
+        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", referee = " + repoRef.getReferenceById(idRef).getName()));
 
         return orderDetailsSaved;
     }
@@ -207,7 +207,6 @@ public class WaterSportController
                 configRepo.findOneByProp("contact").getVal(),
                 configRepo.findOneByProp("printer").getVal(),
                 order.getBillNo(),
-                order.getSerialNo(),
                 refName,
                 ownerName,
                 order.getCustomerName(),

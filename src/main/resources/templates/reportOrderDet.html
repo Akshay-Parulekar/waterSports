@@ -65,7 +65,7 @@
               }
             });
 
-            if(index == 11)
+            if(index == 10)
             {
                 $(targetID).text(sum.toLocaleString('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 0 }));
             }
@@ -76,8 +76,8 @@
         }
 
       $(document).ready(function() {
-        displaySum(10, '#totalP');
-        displaySum(11, '#total');
+        displaySum(9, '#totalP');
+        displaySum(10, '#total');
         mergeCells(0);
         makeZerosGray('tbl');
       });
@@ -97,7 +97,6 @@
     <table id="tbl" border="1" style="border-collapse: collapse;" cellpadding="5">
         <tr>
             <th>Bill No</th>
-            <th>Sr No</th>
             <th>Date</th>
             <th>Owner</th>
             <th>Marketer</th>
@@ -111,7 +110,6 @@
 
         <tr th:each="orderDet : ${list}">
             <td align="right" th:text="${orderDet.billNo}">1</td>
-            <td align="right" th:text="${(repoOrderWs.getByBillNo(orderDet.billNo)).serialNo}">1</td>
             <td th:text="${#temporals.format((repoOrderWs.getByBillNo(orderDet.billNo)).date, 'dd-MM-yyyy')}">date</td>
             <td th:text="${repoRef.getReferenceById(repoRef.getReferenceById((repoOrderWs.getByBillNo(orderDet.billNo)).idRef).idOwner).name}">Akshay Parulekar</td>
             <td th:text="${repoRef.getReferenceById((repoOrderWs.getByBillNo(orderDet.billNo)).idRef).name}">Akshay Parulekar</td>
@@ -124,7 +122,7 @@
         </tr>
 
         <tr>
-            <th colspan="9" align="right"> Total </th>
+            <th colspan="8" align="right"> Total </th>
             <th align="right" id="totalP"> </th>
             <th align="right" id="total"> </th>
         </tr>
