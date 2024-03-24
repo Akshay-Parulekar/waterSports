@@ -87,8 +87,8 @@
 <!--            <th>Bill No</th>-->
 <!--            <th>Sr.No</th>-->
             <th>Date</th>
-            <th>Customer</th>
             <th>Marketer</th>
+            <th>Customer</th>
             <th>Rcpt.No</th>
             <th>All Qty</th>
             <th>Extra Qty</th>
@@ -99,8 +99,8 @@
 <!--            <td align="right" th:text="${order.billNo}">1</td>-->
 <!--            <td align="right" th:text="${order.serialNo}">1</td>-->
             <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
-            <td th:text="${order.customerName}">Akshay Parulekar</td>
             <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
+            <td th:text="${order.customerName}">Akshay Parulekar</td>
             <td align="right" th:text="${order.receiptNo}">1</td>
 
             <td align="right" th:text="${repoWS.getQtyAllRides(order.billNo)}">1</td>
@@ -125,8 +125,8 @@
             <!--            <th>Bill No</th>-->
             <!--            <th>Sr.No</th>-->
             <th>Date</th>
-            <th>Customer</th>
             <th>Marketer</th>
+            <th>Customer</th>
             <th>Rcpt.No</th>
             <th>Qty</th>
             <th>Amount</th>
@@ -135,8 +135,8 @@
     <!--            <td align="right" th:text="${order.billNo}">1</td>-->
     <!--            <td align="right" th:text="${order.serialNo}">1</td>-->
                 <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
-                <td th:text="${order.customerName}">Akshay Parulekar</td>
                 <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
+                <td th:text="${order.customerName}">Akshay Parulekar</td>
                 <td align="right" th:text="${order.receiptNo}">1</td>
                 <td style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
                 <td style="text-align: right;padding: 4px;" th:text="${#numbers.formatDecimal(order.nPerson * order.rate, 1, 0)}">1</td>

@@ -13,7 +13,7 @@ public interface OrderWaterSportRepo extends JpaRepository<OrderWaterSport, Long
 {
     List<OrderWaterSport> findByDateBetweenOrderByBillNoDesc(LocalDate startDate, LocalDate endDate);
 
-    @Query("from OrderWaterSport where date between :startDate and :endDate and idRef in (select id from Referee where idOwner = :idOwner) order by billNo")
+    @Query("from OrderWaterSport where date between :startDate and :endDate and idRef in (select id from Referee where idOwner = :idOwner) order by date, idRef")
     List<OrderWaterSport> findReferences(Long idOwner, LocalDate startDate, LocalDate endDate);
 
     OrderWaterSport findTopByOrderByBillNoDesc();
