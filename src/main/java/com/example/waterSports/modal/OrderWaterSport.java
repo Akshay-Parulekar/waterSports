@@ -3,7 +3,7 @@ package com.example.waterSports.modal;
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,7 +19,8 @@ public class OrderWaterSport
     String receiptNo;
     Boolean paid;
     @CreationTimestamp
-    LocalDate date;
+    @Column(columnDefinition = "DATETIME")
+    LocalDateTime date;
 
     public OrderWaterSport() {
     }
@@ -56,11 +57,11 @@ public class OrderWaterSport
         this.customerName = customerName;
     }
 
-    public LocalDate getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -28,7 +28,7 @@ public class ReportController
 
 
     @PostMapping("/")
-    public String showReport(Model model, LocalDate dateFrom, LocalDate dateTo, Integer idReport)
+    public String showReport(Model model, LocalDateTime dateFrom, LocalDateTime dateTo, Integer idReport)
     {
         List<Report> listReport = null;
         List<Referee> listRef = null;
@@ -113,7 +113,7 @@ public class ReportController
     }
 
     @GetMapping("/owner/{idOwner}/{dateFrom}/{dateTo}/")
-    public String printOwnerRcpt(Model model, @PathVariable Long idOwner, @PathVariable LocalDate dateFrom, @PathVariable LocalDate dateTo)
+    public String printOwnerRcpt(Model model, @PathVariable Long idOwner, @PathVariable LocalDateTime dateFrom, @PathVariable LocalDateTime dateTo)
     {
         Integer status = 0;
         System.out.println("dateFrom = " + dateFrom);

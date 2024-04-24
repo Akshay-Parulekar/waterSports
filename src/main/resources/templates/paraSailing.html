@@ -101,7 +101,7 @@
                 <tr th:each="order : ${list}">
 
                     <td style="text-align: right;padding: 4px;" th:text="${order.billNo}">1</td>
-                    <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
+                    <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy hh:mm a')}">date</td>
                     <td style="text-align: center;padding: 4px;" th:text="${order.isBigRound}?'Big Round'"> Big </td>
                     <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
                     <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>

@@ -74,7 +74,7 @@
 
         <tr th:each="order : ${list}">
             <td align="right" th:text="${order.billNo}">1</td>
-            <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
+            <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy hh:mm a')}">date</td>
             <td th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
             <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
             <td align="right" th:text="${order.receiptNo}">1</td>

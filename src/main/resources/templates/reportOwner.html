@@ -98,7 +98,7 @@
         <tr th:each="order : ${listOrderWs}">
 <!--            <td align="right" th:text="${order.billNo}">1</td>-->
 <!--            <td align="right" th:text="${order.serialNo}">1</td>-->
-            <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
+            <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy hh:mm a')}">date</td>
             <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
             <td th:text="${order.customerName}">Akshay Parulekar</td>
             <td align="right" th:text="${order.receiptNo}">1</td>
@@ -134,7 +134,7 @@
             <tr th:each="order : ${listOrderPs}">
     <!--            <td align="right" th:text="${order.billNo}">1</td>-->
     <!--            <td align="right" th:text="${order.serialNo}">1</td>-->
-                <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy')}">date</td>
+                <td th:text="${#temporals.format(order.date, 'dd-MM-yyyy hh:mm a')}">date</td>
                 <td th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
                 <td th:text="${order.customerName}">Akshay Parulekar</td>
                 <td align="right" th:text="${order.receiptNo}">1</td>

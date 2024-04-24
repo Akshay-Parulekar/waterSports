@@ -8,13 +8,15 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Sides;
 import java.io.ByteArrayOutputStream;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Helper
 {
-    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    public static SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy hh:mm a ");
+//    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     public static DecimalFormat decimalFormat = new DecimalFormat("#.##");
     public static String[] arrayActivity = {"All Rides", "Jet Ski Ride", "Banana Ride", "Seating Bumper", "Sleeping Bumper"};
     public static String[] arrayMonth = {"JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"};

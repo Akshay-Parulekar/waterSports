@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Controller
@@ -33,10 +34,9 @@ public class ParasailingController
     @GetMapping("/")
     public String showData(Model model)
     {
-
-    //    LocalDate dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
-        LocalDate dateFrom = LocalDate.now();
-        LocalDate dateTo = LocalDate.now();
+    //    LocalDateTime dateFrom = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), 1);
+        LocalDateTime dateFrom = LocalDateTime.now();
+        LocalDateTime dateTo = LocalDateTime.now();
 
         List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
         List<Referee> listRef = repoRef.findAll();
@@ -62,14 +62,14 @@ public class ParasailingController
     {
         if(dateFrom == null)
         {
-            dateFrom = LocalDate.of(LocalDate.now().getYear(), LocalDate.now().getMonth(), 1);
+            dateFrom = LocalDate.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), 1);
         }
         if(dateTo == null)
         {
             dateTo = LocalDate.now();
         }
 
-        List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
         List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);
