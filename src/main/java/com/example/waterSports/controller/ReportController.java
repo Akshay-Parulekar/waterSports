@@ -51,32 +51,32 @@ public class ReportController
 
         if(idReport == 0)
         {
-            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 1)
         {
-            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 2)
         {
-            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listReport);
         }
         if(idReport == 3)
         {
-            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 4)
         {
-            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 5)
         {
-            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 6)
@@ -93,19 +93,19 @@ public class ReportController
         }
         else if(idReport == 8)
         {
-            listWsOrder = orderWaterSportRepo.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listWsOrder = orderWaterSportRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listWsOrder);
             resultPage = "reportMaster";
         }
         else if(idReport == 9)
         {
-            listWsOrderDet = orderDetWatersportRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listWsOrderDet = orderDetWatersportRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listWsOrderDet);
             resultPage = "reportOrderDet";
         }
         else if(idReport == 10)
         {
-            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
             model.addAttribute("list", listPsOrder);
             resultPage = "reportMaster";
         }

@@ -35,10 +35,10 @@ public class WaterSportController
     {
 
     //    LocalDateTime dateFrom = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), 1);
-        LocalDateTime dateFrom = LocalDateTime.now();
-        LocalDateTime dateTo = LocalDateTime.now();
+        LocalDate dateFrom = LocalDate.now();
+        LocalDate dateTo = LocalDate.now();
 
-        List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay().plusDays(1));
         List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);
@@ -69,7 +69,7 @@ public class WaterSportController
             dateTo = LocalDate.now();
         }
 
-        List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+        List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay().plusDays(1));
         List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);

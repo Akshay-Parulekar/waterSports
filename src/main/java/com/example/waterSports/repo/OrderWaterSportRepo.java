@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface OrderWaterSportRepo extends JpaRepository<OrderWaterSport, Long>
 {
+    List<OrderWaterSport> findByDateBetweenOrderByBillNo(LocalDateTime startDate, LocalDateTime endDate);
     List<OrderWaterSport> findByDateBetweenOrderByBillNoDesc(LocalDateTime startDate, LocalDateTime endDate);
 
     @Query("from OrderWaterSport where date between :startDate and :endDate and idRef in (select id from Referee where idOwner = :idOwner) order by date, idRef")

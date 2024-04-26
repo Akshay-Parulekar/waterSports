@@ -35,10 +35,10 @@ public class ParasailingController
     public String showData(Model model)
     {
     //    LocalDateTime dateFrom = LocalDateTime.of(LocalDateTime.now().getYear(), LocalDateTime.now().getMonth(), 1);
-        LocalDateTime dateFrom = LocalDateTime.now();
-        LocalDateTime dateTo = LocalDateTime.now();
+        LocalDate dateFrom = LocalDate.now();
+        LocalDate dateTo = LocalDate.now();
 
-        List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+        List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay().plusDays(1));
         List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);
@@ -69,7 +69,7 @@ public class ParasailingController
             dateTo = LocalDate.now();
         }
 
-        List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
+        List<OrderParasailing> list = repo.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay().plusDays(1));
         List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);
