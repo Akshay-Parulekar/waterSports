@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class ReportController
 
 
     @PostMapping("/")
-    public String showReport(Model model, LocalDateTime dateFrom, LocalDateTime dateTo, Integer idReport)
+    public String showReport(Model model, LocalDate dateFrom, LocalDate dateTo, Integer idReport)
     {
         List<Report> listReport = null;
         List<Referee> listRef = null;
@@ -42,40 +43,40 @@ public class ReportController
         model.addAttribute("repoWS", orderDetWatersportRepo);
         model.addAttribute("repoOrderWs", orderWaterSportRepo);
         model.addAttribute("repoPar", orderParasalingRepo);
-        model.addAttribute("dateFrom", dateFrom);
-        model.addAttribute("dateTo", dateTo);
+        model.addAttribute("dateFrom", dateFrom.atStartOfDay());
+        model.addAttribute("dateTo", dateTo.atStartOfDay());
         model.addAttribute("idReport", idReport);
         model.addAttribute("arrayMonth", Helper.arrayMonth);
         model.addAttribute("title", configRepo.findOneByProp("title").getVal());
 
         if(idReport == 0)
         {
-            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom, dateTo);
+            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 1)
         {
-            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom, dateTo);
+            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 2)
         {
-            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom, dateTo);
+            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listReport);
         }
         if(idReport == 3)
         {
-            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom, dateTo);
+            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 4)
         {
-            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom, dateTo);
+            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 5)
         {
-            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom, dateTo);
+            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listReport);
         }
         else if(idReport == 6)
@@ -92,19 +93,19 @@ public class ReportController
         }
         else if(idReport == 8)
         {
-            listWsOrder = orderWaterSportRepo.findByDateBetweenOrderByBillNoDesc(dateFrom, dateTo);
+            listWsOrder = orderWaterSportRepo.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listWsOrder);
             resultPage = "reportMaster";
         }
         else if(idReport == 9)
         {
-            listWsOrderDet = orderDetWatersportRepo.findByDateBetweenOrderByBillNo(dateFrom, dateTo);
+            listWsOrderDet = orderDetWatersportRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listWsOrderDet);
             resultPage = "reportOrderDet";
         }
         else if(idReport == 10)
         {
-            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNo(dateFrom, dateTo);
+            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.atStartOfDay());
             model.addAttribute("list", listPsOrder);
             resultPage = "reportMaster";
         }
