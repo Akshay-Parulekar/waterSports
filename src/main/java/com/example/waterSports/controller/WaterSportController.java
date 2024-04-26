@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -69,7 +70,7 @@ public class WaterSportController
             dateTo = LocalDate.now();
         }
 
-        List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atStartOfDay().plusDays(1));
+        List<OrderWaterSport> list = repoOrder.findByDateBetweenOrderByBillNoDesc(dateFrom.atStartOfDay(), dateTo.atTime(LocalTime.MAX));
         List<Referee> listRef = repoRef.findAll();
         model.addAttribute("list", list);
         model.addAttribute("listRef", listRef);

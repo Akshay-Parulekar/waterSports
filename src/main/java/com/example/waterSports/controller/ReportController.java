@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Controller
@@ -44,39 +45,39 @@ public class ReportController
         model.addAttribute("repoOrderWs", orderWaterSportRepo);
         model.addAttribute("repoPar", orderParasalingRepo);
         model.addAttribute("dateFrom", dateFrom.atStartOfDay());
-        model.addAttribute("dateTo", dateTo.atStartOfDay());
+        model.addAttribute("dateTo", dateTo.atTime(LocalTime.MAX));
         model.addAttribute("idReport", idReport);
         model.addAttribute("arrayMonth", Helper.arrayMonth);
         model.addAttribute("title", configRepo.findOneByProp("title").getVal());
 
         if(idReport == 0)
         {
-            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listReport = orderDetWatersportRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listReport);
         }
         else if(idReport == 1)
         {
-            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listReport = orderDetWatersportRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listReport);
         }
         else if(idReport == 2)
         {
-            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listReport = orderDetWatersportRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listReport);
         }
         if(idReport == 3)
         {
-            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listReport = orderParasalingRepo.getDailyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listReport);
         }
         else if(idReport == 4)
         {
-            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listReport = orderParasalingRepo.getMonthlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listReport);
         }
         else if(idReport == 5)
         {
-            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listReport = orderParasalingRepo.getYearlyReportWaterSport(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listReport);
         }
         else if(idReport == 6)
@@ -93,19 +94,19 @@ public class ReportController
         }
         else if(idReport == 8)
         {
-            listWsOrder = orderWaterSportRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listWsOrder = orderWaterSportRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listWsOrder);
             resultPage = "reportMaster";
         }
         else if(idReport == 9)
         {
-            listWsOrderDet = orderDetWatersportRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listWsOrderDet = orderDetWatersportRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listWsOrderDet);
             resultPage = "reportOrderDet";
         }
         else if(idReport == 10)
         {
-            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atStartOfDay());
+            listPsOrder = orderParasalingRepo.findByDateBetweenOrderByBillNo(dateFrom.atStartOfDay(), dateTo.plusDays(1).atTime(LocalTime.MAX));
             model.addAttribute("list", listPsOrder);
             resultPage = "reportMaster";
         }
