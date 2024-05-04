@@ -300,6 +300,8 @@ function confirmLogout()
 
 function printPos(id, type)
 {
+    $(this).prop("disabled", true);
+
     var endpoint;
 
     if(type == 1)
@@ -315,6 +317,8 @@ function printPos(id, type)
       .get(endpoint)
       .then((response) =>
       {
+          $(this).prop("disabled", false);
+
           var status = response.data;
           console.log("status = " + status);
 
@@ -329,6 +333,8 @@ function printPos(id, type)
       })
       .catch((error) =>
       {
+          $(this).prop("disabled", false);
+
           console.log("error " + error);
               Swal.fire('Oops!', 'Printer may not be Connected or Check power supply', 'error');
       });

@@ -23,7 +23,7 @@ public interface OrderParasalingRepo extends JpaRepository<OrderParasailing, Lon
     OrderParasailing findTopByOrderByBillNoDesc();
 
     @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM date), EXTRACT(MONTH FROM date), EXTRACT(YEAR FROM date), sum(rate * nPerson), 0L) FROM OrderParasailing\n" +
-            "where date between :dateFrom and :dateTo group by date")
+            "where date between :dateFrom and :dateTo group by function('DATE', date)")
     List<Report> getDailyReportWaterSport(LocalDateTime dateFrom, LocalDateTime dateTo);
 
     @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM date), EXTRACT(MONTH FROM date), EXTRACT(YEAR FROM date), sum(rate * nPerson), 0L) FROM OrderParasailing\n" +

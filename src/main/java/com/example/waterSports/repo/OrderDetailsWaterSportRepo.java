@@ -25,7 +25,7 @@ public interface OrderDetailsWaterSportRepo extends JpaRepository<OrderDetailsWa
     @Query("SELECT new com.example.waterSports.modal.Report(EXTRACT(DAY FROM o.date), EXTRACT(MONTH FROM o.date), EXTRACT(YEAR FROM o.date), sum(od.rate * od.persons), o.idRef) FROM OrderWaterSport o\n" +
             "inner join OrderDetailsWaterSport od\n" +
             "on o.billNo = od.billNo\n" +
-            "where o.date between :dateFrom and :dateTo group by o.date")
+            "where o.date between :dateFrom and :dateTo group by function('DATE', o.date)")
     List<Report> getDailyReportWaterSport(LocalDateTime dateFrom, LocalDateTime dateTo);
 
     @Query("SELECT new com.example.waterSports.modal.Report(0, EXTRACT(MONTH FROM o.date), EXTRACT(YEAR FROM o.date), sum(od.rate * od.persons), o.idRef) FROM OrderWaterSport o\n" +
