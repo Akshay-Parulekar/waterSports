@@ -29,26 +29,33 @@ public class MySecurityConfig
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeHttpRequests()
-                .requestMatchers(mvc.pattern("/assets/**")).permitAll()
-                .requestMatchers(mvc.pattern("/water/**"), mvc.pattern("/para/**"), mvc.pattern("/backup/**")).hasRole("ADMIN")
+        http.authorizeHttpRequests((request)->request
+                .requestMatchers("/assets/**").permitAll()
+                .requestMatchers("/water/**", "/para/**", "/backup/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
-                .and()
-                .formLogin()
-                //    .loginPage("customLoginPage.html")
-                //    .usernameParameter("customHtmlNameValueForUsername")
-                //    .passwordParameter("customHtmlNameValueForPassword")
-                //    .loginProcessingUrl("/login")
+        )
+        .formLogin((login)->login
+                //        .loginPage("/customlogin/")
+//                .usernameParameter("username")
+//                .passwordParameter("password")
+//                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/", true)
-                .and()
-                .logout().invalidateHttpSession(true).clearAuthentication(true)
+                .permitAll()
+        )
+        .logout((logout)->logout
                 .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-        //        .logoutSuccessUrl("/login").permitAll()
-                .and()
-                .rememberMe().rememberMeParameter("remember_me").key("mySecreteKey").tokenValiditySeconds(60 * 60 * 60 * 24 * 7);
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .clearAuthentication(true)
+                .permitAll()
+        )
+        .rememberMe((rememberMe)-> rememberMe
+                .rememberMeParameter("remember_me")
+                .key("mySecreteKey")
+                .tokenValiditySeconds(60 * 60 * 60 * 24 * 7)
+        )
+        .csrf((csrf)->csrf.disable());
 
         return http.build();
     }
