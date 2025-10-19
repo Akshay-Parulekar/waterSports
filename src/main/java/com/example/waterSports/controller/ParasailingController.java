@@ -1,9 +1,6 @@
 package com.example.waterSports.controller;
 
-import com.example.waterSports.modal.ActivityLog;
-import com.example.waterSports.modal.OrderParasailing;
-import com.example.waterSports.modal.OrderWaterSport;
-import com.example.waterSports.modal.Referee;
+import com.example.waterSports.modal.*;
 import com.example.waterSports.repo.ActivityLogRepo;
 import com.example.waterSports.repo.ConfigRepo;
 import com.example.waterSports.repo.OrderParasalingRepo;
@@ -92,9 +89,11 @@ public class ParasailingController
     @GetMapping("/delete/{id}/")
     public String delete(@PathVariable Long id)
     {
+
         OrderParasailing order = repo.getReferenceById(id);
+        repoActivityLog.save(new ActivityLog("<b style='color:red'> Parasailing : DELETED</b> <br>" + getBillDetails(order.getBillNo())));
+
         repo.deleteById(id);
-        repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails Deleted with BillNo = " + order.getBillNo() + ", persons = " + order.getnPerson() + ", rate = " + order.getRate() + ", customer = " + order.getCustomerName()));
 
         return "redirect:/para/";
     }
@@ -105,7 +104,7 @@ public class ParasailingController
         OrderParasailing order = repo.getByBillNo(billNo);
         order.setPaid(checked);
 
-        repoActivityLog.save(new ActivityLog("Parasailing : Record Updated. Bill No " + billNo + ", Payment Status = " + (checked?"Paid":"Pending")));
+        repoActivityLog.save(new ActivityLog("<b style='color:blue'> Parasailing : PAYMENT STATUS CHANGED </b> <br>" + getBillDetails(billNo)));
 
         return "redirect:/para/";
     }
@@ -129,7 +128,7 @@ public class ParasailingController
             orderSaved.setPaid(paid);
             repo.save(orderSaved);
 
-            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Updated with BillNo = " + orderSaved.getBillNo() + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + orderSaved.getCustomerName() + ", referee = " + repoRef.getReferenceById(idRef).getName()));
+            repoActivityLog.save(new ActivityLog("<b style='color:blue'> Parasailing : UPDATED </b> <br>" + getBillDetails(orderSaved.getBillNo())));
         }
         else
         {
@@ -148,7 +147,7 @@ public class ParasailingController
             OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, rate, nPerson, idRef, receiptNo, bigRound, paid);
             orderSaved = repo.save(order);
 
-            repoActivityLog.save(new ActivityLog("Parasailing : OrderDetails were Added with BillNo = " + maxBillNo + 1 + ", persons = " + nPerson + ", rate = " + rate + ", customer = " + order.getCustomerName() + ", referee = " + repoRef.getReferenceById(idRef).getName()));
+            repoActivityLog.save(new ActivityLog("<b style='color:green'> Parasailing : ADDED NEW ORDER </b> <br>" + getBillDetails(orderSaved.getBillNo())));
         }
 
         Referee ref = repoRef.getReferenceById(orderSaved.getIdRef());
@@ -166,7 +165,7 @@ public class ParasailingController
                 refName,
                 ownerName,
                 orderSaved.getCustomerName(),
-                orderSaved.isBigRound() ? "Parasailing (Big Round)":"Parasailing",
+                orderSaved.isBigRound() ? "Parasailing(B)":"Parasailing",
                 orderSaved.getnPerson(),
                 orderSaved.getRate(),
                 Helper.formatter.format(orderSaved.getDate()),
@@ -200,7 +199,7 @@ public class ParasailingController
                 refName,
                 ownerName,
                 order.getCustomerName(),
-                order.isBigRound() ? "Parasailing (Big Round)":"Parasailing",
+                order.isBigRound() ? "Parasailing(B)":"Parasailing",
                 order.getnPerson(),
                 order.getRate(),
                 Helper.formatter.format(order.getDate()),
@@ -209,5 +208,22 @@ public class ParasailingController
         );
 
         return status;
+    }
+
+    String getBillDetails(Long billNo)
+    {
+        StringBuilder str = new StringBuilder();
+        OrderParasailing order = repo.getByBillNo(billNo);
+        str.append("BNO: " + order.getBillNo() + "<br>");
+        str.append("CUS: " + order.getCustomerName() + "<br>");
+        str.append("DAT: " + Helper.formatter.format(order.getDate()) + "<br>");
+        str.append("REF: " + order.getIdRef() + "<br>");
+
+        str.append("<table><tr><th>ACTIVITY</th><th>QTY</th></tr>");
+        str.append("<tr><td>" + (order.isBigRound() ? "Parasailing(B)":"Parasailing") + "</td>");
+        str.append("<td ALIGN=RIGHT>" + order.getnPerson() + "</td></tr>");
+        str.append("</table>");
+        
+        return str.toString();
     }
 }

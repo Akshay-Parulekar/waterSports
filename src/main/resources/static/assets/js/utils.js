@@ -228,7 +228,7 @@ function showData(billNo)
 //                      row.append($("<td style='text-align: right;padding: 4px;'>").text(obj.rate));
 
                       strRound = "";
-                      strRound = obj.bigRound ? strRound + " (Big Round)" : strRound;
+                      strRound = obj.bigRound ? strRound + "(B)" : strRound;
                       var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + strRound + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
                       $('#tblOrder > tbody').append(str);
                   });
@@ -393,7 +393,7 @@ $(document).ready(function() {
                       else
                       {
                           var strRound = "";
-                          strRound = obj.bigRound ? strRound + " (Big Round)" : strRound;
+                          strRound = obj.bigRound ? strRound + "(B)" : strRound;
                           var str = "<tr style='background: var(--bs-modal-bg);'> <td style='text-align: left;padding: 4px;'> " + $("#idActivity option[value='" + obj.idActivity + "']").text() + strRound + " </td> <td style='text-align: right;padding: 4px;'>" + obj.rate + "</td> <td style='text-align: right;padding: 4px;'>" + obj.persons + "</td> <td style='text-align: right;padding: 4px;'>" + (obj.rate * obj.persons) + "</td> <td style='text-align: center;padding: 4px;'> <div class='btn-group' role='group'> <button class='btn btn-danger' id='btnDelete2' type='button' style='border-color: var(--bs-pink);' onclick='deleteOrderDet(" + obj.id + ", this)'> <i class='fas fa-trash'></i> </button></div> </td> </tr>";
 
                            if ($("#tblOrder td:nth-child(1):contains('" + $("#idActivity option[value='" + obj.idActivity + "']").text() + "')").length > 0)

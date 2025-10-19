@@ -60,7 +60,7 @@
                 <tr th:each="log : ${list}">
                     <td style="text-align: right;padding: 4px;" th:text="${log.id}"></td>
                     <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(log.timestampAct, 'dd-MM-yyyy hh:mm:ss')}"></td>
-                    <td style="text-align: left;padding: 4px;" th:text="${log.details}"></td>
+                    <td style="text-align: left;padding: 4px;" th:utext="${log.details}"></td>
                 </tr>
                 </tbody>
             </table>

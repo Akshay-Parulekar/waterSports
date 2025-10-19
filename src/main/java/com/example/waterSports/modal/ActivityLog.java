@@ -14,6 +14,7 @@ public class ActivityLog
     @CreationTimestamp
     @Column(columnDefinition = "TIMESTAMP")
     LocalDateTime timestampAct;
+    @Column(length = 500)
     String details;
 
     public ActivityLog() {

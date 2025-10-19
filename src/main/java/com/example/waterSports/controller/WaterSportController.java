@@ -92,11 +92,14 @@ public class WaterSportController
     @GetMapping("/delete/{id}/")
     public String delete(@PathVariable Long id)
     {
-        Long billNo = repoOrder.getReferenceById(id).getBillNo();
+        OrderWaterSport order = repoOrder.getReferenceById(id);
+        Long billNo = order.getBillNo();
+
+        repoActivityLog.save(new ActivityLog("<b style='color:red'> Watersport : DELETED</b> <br>" + getBillDetails(billNo)));
+
         repoOrder.deleteById(id);
         repoOrderDet.deleteByBillNo(billNo);
 
-        repoActivityLog.save(new ActivityLog("WaterSports : Order was Deleted with BillNo = " + billNo));
 
         return "redirect:/water/";
     }
@@ -106,8 +109,9 @@ public class WaterSportController
     {
         OrderWaterSport order = repoOrder.getByBillNo(billNo);
         order.setPaid(checked);
+        repoOrder.save(order);
 
-        repoActivityLog.save(new ActivityLog("WaterSports : Record Updated. Bill No " + billNo + ", Payment Status = " + (checked?"Paid":"Pending")));
+        repoActivityLog.save(new ActivityLog("<b style='color:blue'> Watersport : PAYMENT STATUS CHANGED </b> <br>" + getBillDetails(billNo)));
 
         return "redirect:/water/";
     }
@@ -135,7 +139,7 @@ public class WaterSportController
         repoOrderDet.deleteById(id);
         status = 1;
 
-        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Deleted with BillNo = " + orderDet.getBillNo() + ", Activity = " + Helper.arrayActivity[orderDet.getIdActivity()-1] + ", persons = " + orderDet.getPersons() + ", rate = " + orderDet.getRate()));
+        repoActivityLog.save(new ActivityLog("<b style='color:red'> Watersport : DELETED ORDER SUBITEM </b> <br>" + getBillDetails(orderDet.getBillNo())));
 
         return status;
     }
@@ -178,7 +182,7 @@ public class WaterSportController
         }
         OrderDetailsWaterSport orderDetailsSaved = repoOrderDet.save(orderDetails);
 
-        repoActivityLog.save(new ActivityLog("WaterSports : OrderDetails were Added with BillNo = " + billNo + ", Activity = " + Helper.arrayActivity[idActivity-1] + ", persons = " + persons + ", rate = " + rate + ", customer = " + customerName + ", referee = " + repoRef.getReferenceById(idRef).getName()));
+        repoActivityLog.save(new ActivityLog("<b style='color:green'> Watersport : ADDED NEW ORDER </b> <br>" + getBillDetails(billNo)));
 
         return orderDetailsSaved;
     }
@@ -221,6 +225,26 @@ public class WaterSportController
         );
 
         return status;
+    }
+
+    String getBillDetails(Long billNo)
+    {
+        StringBuilder str = new StringBuilder();
+        OrderWaterSport order = repoOrder.getByBillNo(billNo);
+        str.append("BNO: " + order.getBillNo() + "<br>");
+        str.append("CUS: " + order.getCustomerName() + "<br>");
+        str.append("DAT: " + Helper.formatter.format(order.getDate()) + "<br>");
+        str.append("REF: " + order.getIdRef() + "<br>");
+
+        str.append("<table><tr><th>ACTIVITY</th><th>QTY</th></tr>");
+        for(OrderDetailsWaterSport orderDetails : repoOrderDet.findByBillNo(order.getBillNo()))
+        {
+            String activity = Helper.arrayActivity[orderDetails.getIdActivity()-1];
+            str.append("<tr><td>" + (orderDetails.isBigRound() ? activity + "(B)":activity) + "</td>");
+            str.append("<td ALIGN=RIGHT>" + orderDetails.getPersons() + "</td></tr>");
+        }
+        str.append("</table>");
+        return str.toString();
     }
 
 }
