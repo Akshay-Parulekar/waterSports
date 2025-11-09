@@ -80,8 +80,13 @@
 			<artifactId>escpos-coffee</artifactId>
 			<version>4.1.0</version>
 		</dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
-	</dependencies>
+    </dependencies>
 
 	<build>
 		<finalName>ROOT</finalName>

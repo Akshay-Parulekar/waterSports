@@ -357,6 +357,8 @@ $(document).ready(function() {
     var btnSaveLogin = $('#btnSaveLogin');
     var btnAddOrder = $('#btnAddOrder');
     var btnSaveAdminPassword = $('#btnSaveAdminPassword');
+    var btnRestore = $('#btnRestore');
+    var btnBackup = $('#btnBackup');
     var tbl = $('#tblOrder > tbody');
 
     formOrderDet.on('submit', function(event) 
@@ -624,6 +626,78 @@ $(document).ready(function() {
         var value = $(this).val().toLowerCase();
         $("#tbl tbody tr").filter(function() {
             $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1);
+        });
+    });
+
+    $('#btnBackup').click(function () {
+        $('#btnBackup').addClass('disabled');
+        $('#btnBackup').text('Wait');
+
+        axios.get('/db/backup/', { responseType: 'blob' })
+            .then(function (response) {
+
+            // ✅ Extract filename from header
+            const disposition = response.headers['content-disposition'];
+            let filename = "backup.sql";
+
+            if (disposition && disposition.indexOf('filename=') !== -1) {
+                filename = disposition.split('filename=')[1].replace(/"/g, '');
+            }
+
+            // ✅ Create download link
+            const url = window.URL.createObjectURL(response.data);
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', filename);
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            Swal.fire('Success', 'Backup is ready!', 'success');
+            $('#btnBackup').removeClass('disabled');
+            $('#btnBackup').text('Restore');
+        })
+            .catch(function (error) {
+            Swal.fire('Oops!', 'Backup Failed!', 'error');
+            $('#btnBackup').removeClass('disabled');
+            $('#btnBackup').text('Restore');
+        });
+    });
+
+
+    $('#btnRestore').click(function() {
+        $('#btnRestore').addClass('disabled');
+        $('#btnRestore').text('Wait');
+        var fileInput = $('#restoreFile')[0];
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+
+        axios.post('/db/restore/', formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+            .then(function(response) {
+                $('#btnRestore').removeClass('disabled');
+                $('#btnRestore').text('Restore');
+                var status = response.data;
+                console.log("status = " + status);
+
+                if(status == 1)
+                {
+                    Swal.fire('Success', 'Database Restored Successfully!', 'success');
+                    $('#restoreFile').val('');
+                }
+                else
+                {
+                    Swal.fire('Oops!', 'Database Restoration Failed!', 'error');
+                }
+        })
+            .catch(function(error) {
+            $('#btnRestore').removeClass('disabled');
+            $('#btnRestore').text('Restore');
+            Swal.fire('Something Went Wrong', 'Select a valid file', 'error');
         });
     });
 

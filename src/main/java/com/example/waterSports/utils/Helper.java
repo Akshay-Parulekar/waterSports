@@ -11,6 +11,7 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.Sides;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.format.DateTimeFormatter;
@@ -73,6 +74,9 @@ public class Helper
             Style leftNormal = new Style().setJustification(Style.Justification.Left_Default);
             Style rightNormal = new Style().setJustification(Style.Justification.Right);
 
+            // Highlight Parasailing
+            escpos.writeLF(centerNormal, "|".repeat(24));
+
             // ----------------------------
             // Store Name: Big & Centered
             // ----------------------------
@@ -82,10 +86,10 @@ public class Helper
             escpos.writeLF(leftNormal, "-".repeat(24));
 
             escpos.writeLF(leftBig, "BNO: " + billNo);
-            escpos.writeLF(leftBig, "CUS: " + customerName);
             escpos.writeLF(leftBig, "DAT: " + date);
             escpos.writeLF(leftBig, "OWN: " + owner);
             escpos.writeLF(leftBig, "REF: " + referee);
+            escpos.writeLF(leftBig, "CUS: " + customerName);
 
             // ----------------------------
             // Items: Left aligned, normal size
@@ -365,5 +369,29 @@ public class Helper
             sum = sum + (orderDet.getRate() * orderDet.getPersons());
         }
         return sum;
+    }
+
+    public static boolean backup(String dbUsername, String dbPassword, String dbName, String outputFile)
+            throws IOException, InterruptedException {
+        String command = String.format("mysqldump -u%s -p%s --add-drop-table --databases %s -r %s",
+                dbUsername, dbPassword, dbName, outputFile);
+        Process process = Runtime.getRuntime().exec(command);
+        int processComplete = process.waitFor();
+        return processComplete == 0;
+    }
+
+    public static boolean restore(String dbUsername, String dbPassword, String dbName, String sourceFile)
+            throws IOException, InterruptedException {
+        String[] command = new String[]{
+                "mysql",
+                "-u" + dbUsername,
+                "-p" + dbPassword,
+                "-e",
+                " source " + sourceFile,
+                dbName
+        };
+        Process runtimeProcess = Runtime.getRuntime().exec(command);
+        int processComplete = runtimeProcess.waitFor();
+        return processComplete == 0;
     }
 }

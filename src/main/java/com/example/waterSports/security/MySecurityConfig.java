@@ -31,7 +31,7 @@ public class MySecurityConfig
     protected SecurityFilterChain filterChain(HttpSecurity http, MvcRequestMatcher.Builder mvc) throws Exception {
         http.authorizeHttpRequests((request)->request
                 .requestMatchers("/assets/**").permitAll()
-                .requestMatchers("/water/**", "/para/**", "/backup/**").hasRole("ADMIN")
+                .requestMatchers("/water/**", "/para/**", "/db/**").hasRole("ADMIN")
                 .anyRequest()
                 .authenticated()
         )

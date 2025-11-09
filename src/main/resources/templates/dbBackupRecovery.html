@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Backup and Restore</title>
+    <script src="/assets/js/axios.js"></script>
+    <script src="/assets/js/jquery.js"></script>
+    <script src="/assets/js/sweetalert.js"></script>
+</head>
+<body>
+<h1>Database Backup and Restore</h1>
+<button id="backupBtn">Backup Database</button>
+<br><br>
+<input type="file" id="restoreFile" />
+<button id="restoreBtn">Restore Database</button>
+
+<script>
+    $(document).ready(function() {
+        $('#backupBtn').click(function() {
+            axios.get('/db/backup/', { responseType: 'blob' })
+                .then(function(response) {
+                    const url = window.URL.createObjectURL(new Blob([response.data]));
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.setAttribute('download', 'backup.sql'); // Default filename
+                    document.body.appendChild(link);
+                    link.click();
+                    link.remove();
+                }
+            )
+                .catch(function(error) {
+                alert('Error: ' + error.response.data);
+            });
+        });
+
+        $('#restoreBtn').click(function() {
+            var fileInput = document.getElementById('restoreFile');
+            var file = fileInput.files[0];
+            var formData = new FormData();
+            formData.append('file', file);
+
+            axios.post('/db/restore/', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+                .then(function(response) {
+                alert(response.data);
+            })
+                .catch(function(error) {
+                alert('Error: ' + error.response.data);
+            });
+        });
+    });
+</script>
+</body>
+</html>

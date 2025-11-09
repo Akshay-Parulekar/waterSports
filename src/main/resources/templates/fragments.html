@@ -44,6 +44,21 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body" style="background: var(--bs-gray-200);">
+                <h4 style="text-align: center;"> Database Backup & Recovery </h4>
+
+                    <small class="form-text float-start">Restore from</small>
+                    <input class="form-control" type="file" id="restoreFile">
+
+                    <div class="text-center mb-3" style="margin-top: 10px;margin-bottom: 10px;"></div>
+                    <div class="mb-3"></div>
+                    <div class="mb-3"></div>
+                    <div class="d-xl-flex justify-content-xl-center mb-3">
+                        <button class="btn btn-success" id="btnRestore" style="margin-right: 10px;"> Restore </button>
+                        <button class="btn btn-primary" id="btnBackup"> Backup </button>
+                    </div>
+
+                <hr>
+                <h4 style="text-align: center;"> Organization Details </h4>
                 <form id="formInfo" method="post">
 
                     <small class="form-text float-start">Enter Name of Company</small>

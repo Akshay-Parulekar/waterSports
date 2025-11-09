@@ -178,11 +178,12 @@ public class WaterSportController
         {
             orderDetails.setBigRound(bigRound);
             orderDetails.setPersons(persons);
+            orderDetails.setPersons(persons);
             orderDetails.setRate(rate);
         }
         OrderDetailsWaterSport orderDetailsSaved = repoOrderDet.save(orderDetails);
 
-        repoActivityLog.save(new ActivityLog("<b style='color:green'> Watersport : ADDED NEW ORDER </b> <br>" + getBillDetails(billNo)));
+        repoActivityLog.save(new ActivityLog("<b style='color:green'> Watersport : ADDED ITEM </b> <br>" + getBillDetails(billNo)));
 
         return orderDetailsSaved;
     }

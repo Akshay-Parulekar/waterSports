@@ -147,7 +147,7 @@ public class ParasailingController
             OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, rate, nPerson, idRef, receiptNo, bigRound, paid);
             orderSaved = repo.save(order);
 
-            repoActivityLog.save(new ActivityLog("<b style='color:green'> Parasailing : ADDED NEW ORDER </b> <br>" + getBillDetails(orderSaved.getBillNo())));
+            repoActivityLog.save(new ActivityLog("<b style='color:green'> Parasailing : ADDED NEW ITEM </b> <br>" + getBillDetails(orderSaved.getBillNo())));
         }
 
         Referee ref = repoRef.getReferenceById(orderSaved.getIdRef());
