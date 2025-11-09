@@ -75,7 +75,11 @@ public class Helper
             Style rightNormal = new Style().setJustification(Style.Justification.Right);
 
             // Highlight Parasailing
-            escpos.writeLF(centerNormal, "|".repeat(24));
+            if(activities != null)
+            {
+                escpos.writeLF(centerBig, "|".repeat(24));
+                escpos.feed(1);
+            }
 
             // ----------------------------
             // Store Name: Big & Centered
@@ -83,12 +87,15 @@ public class Helper
             escpos.writeLF(centerNormal, header.replaceAll("/","\n"));
             escpos.writeLF(centerBigLowWidth, title);
             escpos.writeLF(centerNormal, address);
-            escpos.writeLF(leftNormal, "-".repeat(24));
+            escpos.writeLF(tableStyle, "-".repeat(24));
 
             escpos.writeLF(leftBig, "BNO: " + billNo);
             escpos.writeLF(leftBig, "DAT: " + date);
             escpos.writeLF(leftBig, "OWN: " + owner);
             escpos.writeLF(leftBig, "REF: " + referee);
+
+            escpos.writeLF(tableStyle, "-".repeat(24));
+
             escpos.writeLF(leftBig, "CUS: " + customerName);
 
             // ----------------------------
