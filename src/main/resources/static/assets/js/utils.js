@@ -655,12 +655,12 @@ $(document).ready(function() {
 
             Swal.fire('Success', 'Backup is ready!', 'success');
             $('#btnBackup').removeClass('disabled');
-            $('#btnBackup').text('Restore');
+            $('#btnBackup').text('Backup');
         })
             .catch(function (error) {
             Swal.fire('Oops!', 'Backup Failed!', 'error');
             $('#btnBackup').removeClass('disabled');
-            $('#btnBackup').text('Restore');
+            $('#btnBackup').text('Backup');
         });
     });
 
