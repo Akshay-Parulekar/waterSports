@@ -8,6 +8,20 @@ function makeZerosGray(tableID) {
     });
 }
 
+function setCurrentDate(){
+    const now = new Date();
+
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, '0');
+    const day = String(now.getDate()).padStart(2, '0');
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+
+    const formattedDateTime = `${year}-${month}-${day}T${hours}:${minutes}`;
+
+    $('#dateOrder').val(formattedDateTime);
+}
+
 function changePaymentStatus(billNo, checked)
 {
     axios.get("/water/paid/" + billNo + "/" + checked + "/")
@@ -192,7 +206,9 @@ function showRefData(id, name, idOwner)
 
 function showParaData(para)
 {
+    console.log(para.date)
     $('#id').val(para.id);
+    $('#dateOrder').val(para.date.slice(0, 16));
     $('#name').val(para.name);
     $('#idRef').val(para.idRef);
     $('#idRef').trigger('change');
@@ -267,6 +283,7 @@ function showData(billNo)
               {
                   $('#idOrder').val(obj.id);
                   $('#billNo').val(obj.billNo);
+                  $('#dateOrder').val(obj.date.slice(0, 16));
                   $('#customerName').val(obj.customerName);
                   $('#idRef').val(obj.idRef);
                   $('#idRef').trigger('change');
@@ -351,7 +368,6 @@ $(document).ready(function() {
     var formInfo = $('#formInfo');
     var formLogin = $('#formLogin');
     var formOrderDet = $('#formOrderDet');
-    var formOrderDetPs = $('#formOrderDetPs');
     var formAdminPassword = $('#formAdminPassword');
     var btnSaveInfo = $('#btnSaveInfo');
     var btnSaveLogin = $('#btnSaveLogin');
@@ -373,6 +389,7 @@ $(document).ready(function() {
 
             var data = {
               billNo:  $('#billNo').val(),
+              dateOrder:  $('#dateOrder').val(),
               customerName: $('#customerName').val(),
               idRef: $('#idRef').val(),
               receiptNo: $('#receiptNo').val(),
@@ -591,8 +608,9 @@ $(document).ready(function() {
         $('#billNo').val('');
 
         $('#formOrderDet')[0].reset();
-        $('#formOrderDetPs')[0].reset();
         $('#tblOrder > tbody').empty();
+
+        setCurrentDate();
     });
 
     $("#btnAddRef").click(function()

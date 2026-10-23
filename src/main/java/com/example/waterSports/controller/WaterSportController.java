@@ -146,9 +146,10 @@ public class WaterSportController
 
     @PostMapping("/add/")
     @ResponseBody
-    public OrderDetailsWaterSport addOrderDet(Model model, Long billNo, String customerName, Double rate, Integer persons, Integer idActivity, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid, Long idRef, String receiptNo)
+    public OrderDetailsWaterSport addOrderDet(Model model, LocalDateTime dateOrder, Long billNo, String customerName, Double rate, Integer persons, Integer idActivity, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid, Long idRef, String receiptNo)
     {
         System.out.println("billNo = " + billNo);
+        System.out.println("dateOrder = " + dateOrder);
         OrderWaterSport orderSaved;
 
         if(billNo == null) // For New Bill
@@ -164,7 +165,7 @@ public class WaterSportController
                 billNo = orderSaved.getBillNo() + 1;
             }
 
-            OrderWaterSport order = new OrderWaterSport(billNo, customerName, idRef, receiptNo, paid);
+            OrderWaterSport order = new OrderWaterSport(billNo, dateOrder, customerName, idRef, receiptNo, paid);
             repoOrder.save(order);
         }
 

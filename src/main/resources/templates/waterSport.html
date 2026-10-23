@@ -102,12 +102,12 @@
                     <td style="text-align: center;padding: 4px;" th:text="${#temporals.format(order.date, 'dd-MM-yyyy hh:mm a')}">date</td>
                     <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
                     <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
-                    <td style="text-align: right;padding: 4px;" th:text="${order.receiptNo}">1</td>
+                    <td style="text-align: center;padding: 4px;" th:text="${order.receiptNo}">1</td>
                     <td style="text-align: left;padding: 4px;" th:text="${order.customerName}">Akshay Parulekar</td>
                     <td style="text-align: right;padding: 4px;" th:text="${repoOrderDet.getQtyAllRides(order.billNo)}">1</td>
                     <td style="text-align: right;padding: 4px;" th:text="${repoOrderDet.getQtyExtraRides(order.billNo)}">1</td>
                     <td style="text-align: right;padding: 4px;" th:text="${repoOrderDet.getAmount(order.billNo)}">1</td>
-                    <td style="text-align: left;left: 4px;">
+                    <td style="text-align: center;left: 4px;">
                         <input type="checkbox" th:id="${'chkPayment' + order.billNo}" style="transform: scale(1.40);" th:onchange="|document.location.href='/water/paid/${order.billNo}/' + this.checked + '/'|" th:checked="${order.paid}">
                         <label th:styleappend="${order.paid}?'color:green':'color:red'" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'" class="form-check-label" th:for="${'chkPayment' + order.billNo}">
                             paid
@@ -154,6 +154,14 @@
                     <input type="hidden" id="billNo">
 
                     <div class="text-center mb-3" style="padding-right: 10px;padding-left: 10px;">
+
+                        <div class="row d-lg-flex justify-content-lg-center">
+                            <div class="col" style="max-width: 50%;padding-left: 2px;padding-right: 2px;min-width: 15%;">
+                                <input id="dateOrder" class="form-control" type="datetime-local" placeholder="Rate" name="dateOrder" min="0" required="">
+                            </div>
+                        </div>
+
+                        <hr>
 
                         <div class="row">
                             <div class="col"  style="min-width: 20%;padding-left: 2px;padding-right: 2px;">

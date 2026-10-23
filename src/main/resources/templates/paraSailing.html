@@ -58,7 +58,9 @@
             <div class="row">
                 <form method="post" action="/para/find/">
                 <div class="col-md-12">
-                    <button class="btn btn-success" type="button" style="padding: 5px 11px;" data-bs-target="#modalAddNewItem" data-bs-toggle="modal"><i class="fas fa-plus"></i> New</button>
+                    <button class="btn btn-success" type="button" style="padding: 5px 11px;" data-bs-target="#modalAddNewItem" data-bs-toggle="modal" onclick="setCurrentDate();">
+                        <i class="fas fa-plus"></i> New
+                    </button>
 
                             <small class="form-text">&nbsp; Show Report From&nbsp;</small>
                             <input type="date" name="dateFrom" th:value="${dateFrom}" required>
@@ -105,12 +107,12 @@
                     <td style="text-align: center;padding: 4px;" th:text="${order.isBigRound}?'Big Round'"> Big </td>
                     <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(repoRef.getReferenceById(order.idRef).idOwner).name}">Akshay Parulekar</td>
                     <td style="text-align: left;padding: 4px;" th:text="${repoRef.getReferenceById(order.idRef).name}">Akshay Parulekar</td>
-                    <td style="text-align: right;padding: 4px;" th:text="${order.receiptNo}">1</td>
+                    <td style="text-align: ;padding: 4px;" th:text="${order.receiptNo}">1</td>
                     <td style="text-align: left;padding: 4px;" th:text="${order.customerName}">Akshay Parulekar</td>
                     <td style="text-align: right;padding: 4px;" th:text="${order.nPerson}">1</td>
                     <td style="text-align: right;padding: 4px;" th:text="${#numbers.formatDecimal(order.rate, 1, 0)}">1</td>
                     <td style="text-align: right;padding: 4px;" th:text="${#numbers.formatDecimal(order.nPerson * order.rate, 1, 0)}">1</td>
-                    <td style="text-align: left;left: 4px;">
+                    <td style="text-align: center;left: 4px;">
                         <input type="checkbox" th:id="${'chkPayment' + order.billNo}" style="transform: scale(1.40);" th:onchange="|document.location.href='/para/paid/${order.billNo}/' + this.checked + '/'|" th:checked="${order.paid}">
                         <label th:styleappend="${order.paid}?'color:green':'color:red'" th:text="${order.paid}?'&nbsp;paid':'&nbsp;pending'" class="form-check-label" th:for="${'chkPayment' + order.billNo}">
                             paid
@@ -153,6 +155,14 @@
                     <div class="text-center mb-3">
 
                         <input type="hidden" id="id" name="id">
+
+                        <div class="row d-lg-flex justify-content-lg-center">
+                            <div class="col" style="max-width: 50%;padding-left: 2px;padding-right: 2px;min-width: 15%;">
+                                <input id="dateOrder" class="form-control" type="datetime-local" placeholder="Rate" name="dateOrder" min="0" required="">
+                            </div>
+                        </div>
+
+                        <hr>
 
                         <div class="row">
                             <div class="col" style="min-width: 45%;padding-right: 2px;padding-left: 2px;">

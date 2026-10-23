@@ -18,15 +18,15 @@ public class OrderWaterSport
     Long idRef;
     String receiptNo;
     Boolean paid;
-    @CreationTimestamp
     @Column(columnDefinition = "DATETIME")
     LocalDateTime date;
 
     public OrderWaterSport() {
     }
 
-    public OrderWaterSport(Long billNo, String customerName, Long idRef, String receiptNo, Boolean paid) {
+    public OrderWaterSport(Long billNo, LocalDateTime date, String customerName, Long idRef, String receiptNo, Boolean paid) {
         this.billNo = billNo;
+        this.date = date;
         this.customerName = customerName;
         this.idRef = idRef;
         this.receiptNo = receiptNo;

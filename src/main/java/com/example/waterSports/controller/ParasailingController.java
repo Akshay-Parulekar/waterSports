@@ -110,16 +110,18 @@ public class ParasailingController
     }
 
     @PostMapping("/")
-    public String addData(Model model, Long id, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid)
+    public String addData(Model model, Long id, LocalDateTime dateOrder, String customerName, String contact, Double rate, Integer nPerson, Long idRef, String receiptNo, @RequestParam(defaultValue = "false") Boolean bigRound, @RequestParam(defaultValue = "false") Boolean paid)
     {
         OrderParasailing orderSaved = null;
 
         System.out.println("isBigRound = " + bigRound);
+        System.out.println("dateOrder = " + dateOrder);
 
         if(id != null)
         {
             orderSaved = repo.getReferenceById(id);
             orderSaved.setCustomerName(customerName);
+            orderSaved.setDate(dateOrder);
             orderSaved.setRate(rate);
             orderSaved.setnPerson(nPerson);
             orderSaved.setIdRef(idRef);
@@ -144,7 +146,7 @@ public class ParasailingController
                 maxBillNo = topRecord.getBillNo();
             }
 
-            OrderParasailing order = new OrderParasailing(maxBillNo + 1, customerName, rate, nPerson, idRef, receiptNo, bigRound, paid);
+            OrderParasailing order = new OrderParasailing(maxBillNo + 1, dateOrder, customerName, rate, nPerson, idRef, receiptNo, bigRound, paid);
             orderSaved = repo.save(order);
 
             repoActivityLog.save(new ActivityLog("<b style='color:green'> Parasailing : ADDED NEW ITEM </b> <br>" + getBillDetails(orderSaved.getBillNo())));

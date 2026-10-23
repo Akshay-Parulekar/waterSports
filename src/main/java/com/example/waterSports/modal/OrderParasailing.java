@@ -19,15 +19,15 @@ public class OrderParasailing
     Boolean paid;
     Double rate;
     Integer nPerson;
-    @CreationTimestamp
-    @Column(columnDefinition = "DATETIME")        
+    @Column(columnDefinition = "DATETIME")
     LocalDateTime date;
 
     public OrderParasailing() {
     }
 
-    public OrderParasailing(Long billNo, String customerName, Double rate, Integer nPerson, Long idRef, String receiptNo, Boolean bigRound, Boolean paid) {
+    public OrderParasailing(Long billNo, LocalDateTime date, String customerName, Double rate, Integer nPerson, Long idRef, String receiptNo, Boolean bigRound, Boolean paid) {
         this.billNo = billNo;
+        this.date = date;
         this.customerName = customerName;
         this.rate = rate;
         this.nPerson = nPerson;
