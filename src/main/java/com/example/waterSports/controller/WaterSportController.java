@@ -236,7 +236,7 @@ public class WaterSportController
         str.append("BNO: " + order.getBillNo() + "<br>");
         str.append("CUS: " + order.getCustomerName() + "<br>");
         str.append("DAT: " + Helper.formatter.format(order.getDate()) + "<br>");
-        str.append("REF: " + order.getIdRef() + "<br>");
+        str.append("REF: " + repoRef.findById(order.getIdRef()).get().getName() + "<br>");
 
         str.append("<table><tr><th>ACTIVITY</th><th>QTY</th></tr>");
         for(OrderDetailsWaterSport orderDetails : repoOrderDet.findByBillNo(order.getBillNo()))
